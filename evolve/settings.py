@@ -1,5 +1,5 @@
-from usecase import UserProfileUseCases
+from restfulControllers import UserProfileRestfulController
 
 REST_CONTROLLERS = {
-                    "userProfile":UserProfileUseCases
+                    "userProfile":UserProfileRestfulController
                     }
