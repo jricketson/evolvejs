@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+   <head>
+      <title>Evolve the Future</title>
+
+      <meta http-equiv="keywords" content="evolution,javascript" />
+      <meta http-equiv="description" content="Evolution of animals in javascript" />
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+      <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.0/build/reset-fonts-grids/reset-fonts-grids.css" />
+      <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.0/build/assets/skins/sam/layout.css" /> 
+      <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.0/build/assets/skins/sam/resize.css" /> 
+      <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.0/build/tabview/assets/skins/sam/tabview.css" />
+
+      <link rel="stylesheet" type="text/css" href="stylesheets/global.css" />
+      
+      <!-- for logger -->   
+      <link type="text/css" rel="stylesheet" href="http://yui.yahooapis.com/2.5.0/build/logger/assets/skins/sam/logger.css" /> 
+
+      <script src="http://yui.yahooapis.com/2.5.0/build/yahoo-dom-event/yahoo-dom-event.js"></script> 
+      <script src="http://yui.yahooapis.com/2.5.0/build/logger/logger-min.js"></script> 
+      <script src="http://yui.yahooapis.com/2.5.0/build/dragdrop/dragdrop-min.js"></script>  
+      <script src="http://yui.yahooapis.com/2.5.0/build/element/element-beta-min.js"></script> 
+      <script src="http://yui.yahooapis.com/2.5.0/build/resize/resize-beta-min.js"></script> 
+      <script src="http://yui.yahooapis.com/2.5.0/build/layout/layout-beta-min.js"></script> 
+      <script src="http://yui.yahooapis.com/2.5.0/build/tabview/tabview-min.js"></script>
+
+      <script src="javascripts/jquery/jquery-1.2.3.min.js"></script>
+      <script src="javascripts/firebug/firebug.js""></script>
+   </head>
+
+   <body class="yui-skin-sam">
+      <div id="panelLayout"> </div>
+      <div id="gridContainer">
+         <div id="gridDisplay"></div>
+      </div>
+      <div id="ads">
+      <script type="text/javascript"><!--
+         google_ad_client = "pub-7238105427277163";
+         /* 160x600, created 25/02/08 */
+         google_ad_slot = "8673627403";
+         google_ad_width = 160;
+         google_ad_height = 600;
+         //-->
+      </script>
+      <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+      </div>
+      <div id="sidebar">
+         <ul class="yui-nav">
+            <li class="selected"><a href="#about"><em>About</em></a></li>
+            <li><a href="#navTab"><em>Navigation</em></a></li>
+            <li><a href="#infoTab"><em>Information</em></a></li>
+            <li><a href="#processTab"><em>Process Details</em></a></li>
+            <li><a href="#createProcessTab"><em>Create Process</em></a></li>
+            <li><a href="#logTab"><em>Logging</em></a></li>
+         </ul>  
+         <div class="yui-content">
+            <div id="about">
+               <p>If you want to comment on this application, please go to the <a href="http://blog.ricketson.org/2008/evolution-in-javascript/" >blog post</a> and comment there.</p>
+               <p>This application is a "proof of concept" evolution simulator. Each animal (process) has the following properties</p>
+               <ul>
+                  <li>Memory: This is both readable and writable memory addresses starting from address 0 for each animal.</li>
+                  <li>Threads: Each animal can have multiple threads that communicate via it's memory.</li>
+                  <li>CpuTime: Each animal is granted cputime by it's parent when it is born, and after that is given cputime by the environment (like sunshine) each cycle.</li>
+                  <li>Position: Each animal has a current position in the grid</li>
+                  <li>Direction: Each animal is pointing in a certain direction (this is not currently shown in the display.</li>
+               </ul>
+               Each thread in each animal has the following properties:
+               <ul>
+                  <li>Stack: this is essentially current memory. Operations can put information on the stack, manipulate the top item on the stack, or pop information off the stack.</li>
+                  <li>Execution Pointer: Each thread is executing the same program, but potentially at a different address (different function) in memory.</li>
+                  <li>Read Pointer and Write Pointer: These are used for copying operations.</li>
+                  <li>Speed: An animal can choose to operate faster, multiple operations per second. This is expensive for the animal.</li>
+                  <li>SleepCycles: The thread can sleep for a set number of cycles. It will be woken when this counter reaches 0.</li>
+               </ul>
+               There have so far been two Ancestors created:
+               <ol>
+                  <li>A simple non-mobile vegetable. This has a single thread that is devoted to reproduction. 
+                  Once all 8 slots around the animal are full, it sleeps for a period and then checks again. 
+                  </li>
+                  <li>A simple mobile vegetable. This has two threads: one is devoted to reproduction, the other moves in a straight line forever. 
+                  When it reproduces, it turns right. 
+                  </li>
+               </ol>
+               Animals reproduce by allocating memory at the end of their memory, then copying their code into the new memory, and then dividing the new memory. 
+               This creates a new process.
+               The copying process has a non-0 random chance of failing to accurately copy the data requested. 
+               This results in the child not always being the same as the parent, and the chance for evolution is created.
+               Successful species (when a species has had enough animals with the same code, occurs at powers of 10) are sent to the server.
+               When the application starts it requests the 10 best animals from the server.
+               Things you can do:
+               <ul>
+                  <li>Click on an individual to see information about it on the "Process Details" tab</li>
+                  <li>View code of species on server to see what has evolved from the "Progenitors"</li>
+               </ul>
+               Future features:
+               <ul>
+                  <li>Ability to examine the code of any individual.</li>
+                  <li>Allow the user to insert new processes (with new code) into the environment.</li>
+               </ul>
+            </div>
+            <div id="navTab">
+               <ul>
+                  <li><a href="speciesList.html">View Species on Server</a></li>
+                  <li><a href="script/test/run-tests.html">Run Javascript Tests</a></li>
+               </ul>
+            </div>
+            <div id="infoTab">
+               <table>
+                  <tr><td>Loops</td><td><div id="loopCount"></div></td></tr>
+                  <tr><td>Processes</td><td><div id="processCount"></div></td></tr>
+                  <tr><td>Cpu speed (Hz)</td><td><div id="instrRate"></div></td></tr>
+               </table>
+               <div>Species List
+                  <div id="speciesList"></div>
+               </div>
+            </div>
+            <div id="processTab">
+               <table>
+                  <tr><td>id</td><td><div class="id"></div></td></tr>
+                  <tr><td>cpuTime</td><td><div class="cputime"></div></td></tr>
+                  <tr><td>activeThreads</td><td><div class="activeThreadCount"></div></td></tr>
+                  <tr><td>code</td><td><div class="code"></div></td></tr>
+               </table>
+            </div>
+            <div id="createProcessTab">
+               <table>
+                  <tr><td colspan="2"><button id="createProcess">Create Process</button></td></tr>
+                  <tr><td>id</td><td><input id="createProcessId" /></td></tr>
+                  <tr><td>colour</td><td><input id="createProcessColour"/></td></tr>
+                  <tr><td>code</td><td><textarea id="createProcessCode" ></textarea></td></tr>
+               </table>
+            </div>
+            <div id="logTab">
+               <div id="logDisplay"></div>
+            </div>
+         </div>
+      </div>
+      <div id="doc3" class="yui-t2">
+         <div id="hd" class="overlay">
+            <div id="controlButtons">
+               <div id="play"><img src="images/play_up.gif" /></div>
+               <div id="pause"><img src="images/pause_up.gif" /></div>
+            </div>
+            <h1>
+               Evolve the Future
+            </h1>
+            Evolution the way God intended
+         </div>
+         <div id="ft" class="overlay">
+            &copy; Jonathan Ricketson 2008
+         </div>
+      </div>
+      <script src="javascripts/core.js"></script>
+      <script src="javascripts/environment.js"></script>
+      <script src="javascripts/process.js"></script>
+      <script src="javascripts/vm.js"></script>
+      <script src="javascripts/dataAccess.js"></script>
+      <script src="javascripts/species.js"></script>
+      <script src="javascripts/speciesLibrary.js"></script>
+      <script src="javascripts/display.js"></script>
+      <script src="javascripts/assembly.js"></script>
+      <script src="javascripts/index.js"></script>
+   </body>
+</html>

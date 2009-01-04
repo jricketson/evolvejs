@@ -1,0 +1,21 @@
+﻿application: evolve
+version: 1
+runtime: python
+api_version: 1
+
+default_expiration: '3650d'
+
+handlers:
+- url: /media
+  static_dir: _generated_media
+
+- url: /robots.txt
+  static_files: compiled/moolah/robots.txt
+  upload: compiled/moolah/robots.txt
+
+- url: /favicon.ico
+  static_files: compiled/moolah/image/favicon.gif
+  upload: compiled/moolah/images/favicon.ico
+
+- url: /.*
+  script: common/appenginepatch/main.py
