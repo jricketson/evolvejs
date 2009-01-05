@@ -1,0 +1,44 @@
+body {
+	font-family:arial,helvetica,sans-serif;
+	color:#333333;
+	font-size: 62.5%;
+}
+html, body, #viewport {
+	height:100%;
+	width:100%;
+	margin:0;
+	padding:0;
+}
+
+div#loadingMessage {
+   position: absolute;
+   right: 0;
+   top: 2.5em;
+   background: red;
+   color: white;
+   padding: 4px;
+   z-index: 100;   
+}
+#topLinks {
+    position:absolute;
+    top:0;
+    right:0;
+    font-size: 125%;
+	margin:5px;
+}
+
+#topLinks a:link, #topLinks a:visited, #topLinks a:active, #topLinks a:hover {
+    text-decoration: underline;
+	color: black;
+}
+
+div#ads {
+	width: 120px;
+	overflow: hidden;
+	margin:0;
+	border:0;
+	padding:0;
+	position:absolute;
+	right:0px;
+	top:58px;
+}

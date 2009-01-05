@@ -15,6 +15,8 @@ var local=[
          ];
 var foreign = [
             "dojo.parser",
+            "dijit.layout.ContentPane",
+            "dijit.layout.BorderContainer",
             "jquery.jquery-1-2-6",
             "jquery.jquery-log",
             "external.json2"
@@ -36,12 +38,13 @@ dependencies = {
    ],
 
    prefixes: [
-      [ "evolve", myroot+"/evolve/media/js/moolah",  myroot+"/evolve/media/copyright.txt"],
+      [ "evolve", myroot+"/evolve/media/js/evolve",  myroot+"/evolve/media/copyright.txt"],
       [ "fragments", myroot+"/evolve/media/fragments",  myroot+"/evolve/media/copyright.txt" ],
       [ "jquery", myroot+"/evolve/media/js/jquery",  myroot+"/evolve/media/copyright.txt" ],
       [ "external", myroot+"/evolve/media/js/external",  myroot+"/evolve/media/copyright.txt" ],
       [ "image", myroot+"/evolve/media/image",  myroot+"/evolve/media/copyright.txt" ],
-      [ "style", myroot+"/evolve/media/style",  myroot+"/evolve/media/copyright.txt" ]
+      [ "style", myroot+"/evolve/media/style",  myroot+"/evolve/media/copyright.txt" ],
+      [ "dijit", "../dijit"]
       
    ]
 };
