@@ -1,0 +1,1 @@
+./common/.google_appengine/dev_appserver.py --address=0.0.0.0 --port=8000 --datastore_path=/home/jon/temp/django_evolve.datastore --history_path=/home/jon/temp/django_evolve.datastore.history .
