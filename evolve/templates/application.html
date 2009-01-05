@@ -1,38 +1,26 @@
-    {% block css %}
-      <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.0/build/reset-fonts-grids/reset-fonts-grids.css" />
-      <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.0/build/assets/skins/sam/layout.css" /> 
-      <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.0/build/assets/skins/sam/resize.css" /> 
-      <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.0/build/tabview/assets/skins/sam/tabview.css" />
-
-      <link rel="stylesheet" type="text/css" href="stylesheets/global.css" />
+{% block css %}
+   <link rel="stylesheet" type="text/css" href="/static/dijit/themes/tundra/tundra.css" />
+   <link rel="stylesheet" type="text/css" href="/static/dojo/resources/dojo.css" />
+   {% if on_production_server %}
+        <link rel="stylesheet" type="text/css" href="/static/style/application.css" />
+   {% else %}
+        <link rel="stylesheet" type="text/css" href="/static/devStyle/application.css" />
+   {% endif %}
       
-      <!-- for logger -->   
-      <link type="text/css" rel="stylesheet" href="http://yui.yahooapis.com/2.5.0/build/logger/assets/skins/sam/logger.css" /> 
-    {% endblock %}
+{% endblock %}
 
-    {% block js %}
-      <script src="http://yui.yahooapis.com/2.5.0/build/yahoo-dom-event/yahoo-dom-event.js"></script> 
-      <script src="http://yui.yahooapis.com/2.5.0/build/logger/logger-min.js"></script> 
-      <script src="http://yui.yahooapis.com/2.5.0/build/dragdrop/dragdrop-min.js"></script>  
-      <script src="http://yui.yahooapis.com/2.5.0/build/element/element-beta-min.js"></script> 
-      <script src="http://yui.yahooapis.com/2.5.0/build/resize/resize-beta-min.js"></script> 
-      <script src="http://yui.yahooapis.com/2.5.0/build/layout/layout-beta-min.js"></script> 
-      <script src="http://yui.yahooapis.com/2.5.0/build/tabview/tabview-min.js"></script>
-
-      <script src="javascripts/jquery/jquery-1.2.3.min.js"></script>
-
-      <script src="javascripts/core.js"></script>
-      <script src="javascripts/environment.js"></script>
-      <script src="javascripts/process.js"></script>
-      <script src="javascripts/vm.js"></script>
-      <script src="javascripts/dataAccess.js"></script>
-      <script src="javascripts/species.js"></script>
-      <script src="javascripts/speciesLibrary.js"></script>
-      <script src="javascripts/display.js"></script>
-      <script src="javascripts/assembly.js"></script>
-      <script src="javascripts/index.js"></script>
-    {% endblock %}
-    {% block content %}
+{% block js %}
+{% if on_production_server %}
+    <script type="text/javascript" src="/static/dojo/application.min.js"></script>
+{% else %}
+    <script type="text/javascript" src="/static/dojo/foreign.js"></script>
+    <script>
+        dojo.require("evolve-profile", true);
+        loadDependencies("application.js");
+    </script>
+{% endif %}
+{% endblock %}
+{% block content %}
    <body class="yui-skin-sam">
       <div id="panelLayout"> </div>
       <div id="gridContainer">

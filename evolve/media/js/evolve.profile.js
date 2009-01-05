@@ -1,69 +1,29 @@
-var myroot = "/home/jon/data/workspace3.3/moolahgoogle";
+var myroot = "/home/jon/data/workspace3.3/evolveJsgoogle";
 var local=[
-            "moolah.core",
+            "evolve.core",
             "jquery.jquery-depends",
             "jquery.jquery-gadget",
-            "moolah.chartData",
-            "moolah.data",
-            "moolah.application",
-            "moolah.tutorial",
-            "moolah.util",
-            "fragments.accountElement.accountElement",
-            "fragments.accountForm.accountForm",
-            "fragments.accountPanel.accountPanel",
-            "fragments.accountElement.accountElement",
-            "fragments.charts.charts",
-            "fragments.futureTransactionElement.futureTransactionElement",
-            "fragments.futureTransactionForm.futureTransactionForm",
-            "fragments.futureTransactionPanel.futureTransactionPanel",
-            "fragments.invitationForm.invitationForm",
-            "fragments.helpPanel.helpPanel",
-            "fragments.helpElement.helpElement"
+            "evolve.environment",
+            "evolve.process",
+            "evolve.vm",
+            "evolve.dataAccess",
+            "evolve.species",
+            "evolve.speciesLibrary",
+            "evolve.display",
+            "evolve.assembly",
+            "evolve.index"
          ];
 var foreign = [
             "dojo.parser",
-            "dijit.Dialog",
-            "dijit.layout.ContentPane",
-            "dijit.layout.BorderContainer",
-            "dijit.form.CurrencyTextBox",
-            "dijit.form.NumberTextBox",
-            "dijit.form.DateTextBox",
-            "dijit.form.Slider",
-            "dijit.layout.AccordionContainer",
             "jquery.jquery-1-2-6",
             "jquery.jquery-log",
-            "jquery.jquery-flot",
-            "jquery.jquery-form",
-            "jquery.jquery-hoverIntent",
-            "external.dateFunctions",
-            "external.json2",
-            "external.template-1038"
+            "external.json2"
          ];
-var faq=[
-            "jquery.jquery-1-2-6",
-            "jquery.jquery-log",
-            "moolah.core",
-            "jquery.jquery-depends"
-];
-var about=[
-            "jquery.jquery-1-2-6",
-            "jquery.jquery-log",
-            "moolah.core",
-            "jquery.jquery-depends"
-];
 dependencies = {
    layers: [
       {
          name: "local.js",
          dependencies: local
-      },
-      {
-         name: "faq.js",
-         dependencies: faq
-      },
-      {
-         name: "about.js",
-         dependencies: about
       },
       {
          name: "foreign.js",
@@ -72,25 +32,16 @@ dependencies = {
       {
          name: "application.js",
          dependencies: foreign.concat(local)
-      } /*,
-      {
-         name: "testing.js",
-         dependencies: [
-            "dijit.dijit",
-            "dijit.robotx"
-         ]
-      }*/
+      }
    ],
 
    prefixes: [
-      [ "moolah", myroot+"/resources/js/moolah",  myroot+"/resources/copyright.txt"],
-      [ "fragments", myroot+"/resources/fragments",  myroot+"/resources/copyright.txt" ],
-      [ "jquery", myroot+"/resources/js/jquery",  myroot+"/resources/copyright.txt" ],
-      [ "external", myroot+"/resources/js/external",  myroot+"/resources/copyright.txt" ],
-      [ "image", myroot+"/resources/image",  myroot+"/resources/copyright.txt" ],
-      [ "style", myroot+"/resources/style",  myroot+"/resources/copyright.txt" ] /*,
-      [ "doh", "../util/doh"],
-      [ "dojox", "../dojox"]*/
+      [ "evolve", myroot+"/evolve/media/js/moolah",  myroot+"/evolve/media/copyright.txt"],
+      [ "fragments", myroot+"/evolve/media/fragments",  myroot+"/evolve/media/copyright.txt" ],
+      [ "jquery", myroot+"/evolve/media/js/jquery",  myroot+"/evolve/media/copyright.txt" ],
+      [ "external", myroot+"/evolve/media/js/external",  myroot+"/evolve/media/copyright.txt" ],
+      [ "image", myroot+"/evolve/media/image",  myroot+"/evolve/media/copyright.txt" ],
+      [ "style", myroot+"/evolve/media/style",  myroot+"/evolve/media/copyright.txt" ]
       
    ]
 };
