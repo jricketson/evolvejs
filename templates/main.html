@@ -1,5 +1,70 @@
-{% extends 'base.html' %}
-
+{% extends 'base.html' %} 
+    {% block css %}
+    {% endblock %}
+    {% block js %}
+    {% endblock %}
 {% block content %}
-This is the introduction page
+<p>If you want to comment on this application, please go to the <a
+    href="http://blog.ricketson.org/2008/evolution-in-javascript/">blog
+post</a> and comment there.</p>
+<p>This application is a "proof of concept" evolution simulator.
+Each animal (process) has the following properties</p>
+<ul>
+    <li>Memory: This is both readable and writable memory addresses
+    starting from address 0 for each animal.</li>
+    <li>Threads: Each animal can have multiple threads that
+    communicate via it's memory.</li>
+    <li>CpuTime: Each animal is granted cputime by it's parent when
+    it is born, and after that is given cputime by the environment (like
+    sunshine) each cycle.</li>
+    <li>Position: Each animal has a current position in the grid</li>
+    <li>Direction: Each animal is pointing in a certain direction
+    (this is not currently shown in the display.</li>
+</ul>
+Each thread in each animal has the following properties:
+<ul>
+    <li>Stack: this is essentially current memory. Operations can
+    put information on the stack, manipulate the top item on the stack,
+    or pop information off the stack.</li>
+    <li>Execution Pointer: Each thread is executing the same
+    program, but potentially at a different address (different function)
+    in memory.</li>
+    <li>Read Pointer and Write Pointer: These are used for copying
+    operations.</li>
+    <li>Speed: An animal can choose to operate faster, multiple
+    operations per second. This is expensive for the animal.</li>
+    <li>SleepCycles: The thread can sleep for a set number of
+    cycles. It will be woken when this counter reaches 0.</li>
+</ul>
+There have so far been two Ancestors created:
+<ol>
+    <li>A simple non-mobile vegetable. This has a single thread
+    that is devoted to reproduction. Once all 8 slots around the animal
+    are full, it sleeps for a period and then checks again.</li>
+    <li>A simple mobile vegetable. This has two threads: one is
+    devoted to reproduction, the other moves in a straight line forever.
+    When it reproduces, it turns right.</li>
+</ol>
+Animals reproduce by allocating memory at the end of their memory, then
+copying their code into the new memory, and then dividing the new
+memory. This creates a new process. The copying process has a non-0
+random chance of failing to accurately copy the data requested. This
+results in the child not always being the same as the parent, and the
+chance for evolution is created. Successful species (when a species has
+had enough animals with the same code, occurs at powers of 10) are sent
+to the server. When the application starts it requests the 10 best
+animals from the server. Things you can do:
+<ul>
+    <li>Click on an individual to see information about it on the
+    "Process Details" tab</li>
+    <li>View code of species on server to see what has evolved from
+    the "Progenitors"</li>
+</ul>
+Future features:
+<ul>
+    <li>Ability to examine the code of any individual.</li>
+    <li>Allow the user to insert new processes (with new code) into
+    the environment.</li>
+</ul>
+
 {% endblock %}

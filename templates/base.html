@@ -4,36 +4,78 @@
     xml:lang="{% firstof LANGUAGE_CODE 'en' %}"
     lang="{% firstof LANGUAGE_CODE 'en' %}">
   <head>
-    <title>evolution {% block title %}{% endblock %}</title>
+    <title>Evolve the Future {% block title %}{% endblock %}</title>
+    <meta http-equiv="keywords" content="evolution,javascript" />
+    <meta http-equiv="description" content="Evolution of animals in javascript" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     {% block css %}
       {# <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}combined-{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}.css" /> #}
     {% endblock %}
-
-    {% block js %}
-      {# <script type="text/javascript" src="{{ MEDIA_URL }}combined-{{ LANGUAGE_CODE }}.js"></script> #}
-    {% endblock %}
-
-    {% block extra-head %}{% endblock %}
   </head>
-
-  <body>
-    {% block header %}
-      <div id="header">
-        <div class="menu">
+   <body class="tundra"> 
+        <div id="loadingMessage">Loading...</div>
+        <div id="viewport" dojoType="dijit.layout.BorderContainer" design="headline">
+            <div dojoType="dijit.layout.ContentPane" region="top" id="header" >
+                  <span class="headerText"><a href="/">evolution</a></span>
+                  <div id="topLinks">
+                      <a href="/about.html">about</a> | 
+                      <a href="/faq.html">faqs</a>
+                  </div>
+            </div>
+            <div dojoType="dijit.layout.BorderContainer" gutters="false" region="center" id="contentDisplay">
+                {% block content %}{% endblock content %}
+            </div>
+            <div id="ads" dojoType="dijit.layout.ContentPane" region="right">
+                   {% if on_production_server %}
+                  <script type="text/javascript"><!--
+                     google_ad_client = "pub-7238105427277163";
+                     /* 160x600, created 25/02/08 */
+                     google_ad_slot = "8673627403";
+                     google_ad_width = 160;
+                     google_ad_height = 600;
+                     //-->
+                  </script>
+                  <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+                   {% else %}
+                   {% endif %}
+            </div>
         </div>
-      </div>
-    {% endblock %}
-    <div id="content" class="column">
-      {% block content-header %}
-        {% if error %}<div class="error">{{ error }}</div>{% endif %}
-        {% if info %}<div class="info">{{ info }}</div>{% endif %}
-        {% if messages %}
-          {% for message in messages %}
-            <div class="info">{{ message }}</div>
-          {% endfor %}
-        {% endif %}
-      {% endblock %}
-      {% block content %}{% endblock %}
-    </div>
-  </body>
+        <script type="text/javascript">
+            var djConfig = {
+               {% if on_production_server %}
+               {% else %}
+                isDebug:true, 
+               {% endif %}
+                parseOnLoad:true
+            };
+            {% if on_production_server %}
+            {% else %}
+            function getDependencies(layerName) {
+                for (var i=0;i<dependencies.layers.length;i++) {
+                   var layer=dependencies.layers[i];
+                   if (layerName==layer.name) {
+                      return layer.dependencies;
+                   }
+                }
+                return [];
+             }
+             function loadDependencies(layerName) {
+                 var deps=getDependencies(layerName);
+                 for (var i=0;i<deps.length;i++) {
+                     dojo.require(deps[i], true);
+                 }
+             }
+             {% endif %}
+                         
+        </script>
+        <script type="text/javascript" src="/static/dojo/dojo.js"></script>
+        {% block js %}{% endblock js %}
+        <script>
+             $(document).ready(function() {CORE.on_production_server = "{{on_production_server}}";});
+             $.dependsOnScripts(["http://www.google-analytics.com/ga.js"], function() {
+                 CORE.pageTracker = _gat._getTracker("UA-5647908-3");
+                 CORE.pageTracker._trackPageview();
+             });
+        </script>
+    </body>
 </html>

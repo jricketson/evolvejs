@@ -6,16 +6,20 @@ api_version: 1
 default_expiration: '3650d'
 
 handlers:
-- url: /media
-  static_dir: _generated_media
+- url: /static
+  static_dir: compiled/evolve/
+
+- url: /fragments/(.*\.html)
+  static_files: compiled/evolve/fragments/\1
+  upload: compiled/evolve/fragments/(.*\.html)
 
 - url: /robots.txt
-  static_files: compiled/moolah/robots.txt
-  upload: compiled/moolah/robots.txt
+  static_files: compiled/evolve/robots.txt
+  upload: compiled/evolve/robots.txt
 
 - url: /favicon.ico
-  static_files: compiled/moolah/image/favicon.gif
-  upload: compiled/moolah/images/favicon.ico
+  static_files: compiled/evolve/image/favicon.gif
+  upload: compiled/evolve/images/favicon.ico
 
 - url: /.*
   script: common/appenginepatch/main.py
