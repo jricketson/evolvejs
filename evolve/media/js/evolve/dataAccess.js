@@ -1,27 +1,24 @@
 
-EVO.extend("dataAccess", function () {
-   
+CORE.dataAccess = function () {
    var EIGHT_BIT_MASK=511;
   
-   
    return {
-      SPECIES_SAVE_URL: "species/create",
-      SPECIES_LIST_URL: "species/list",
+      SPECIES_URL: "/data/species/",
       saveSpecies: function(species) {
-         var postData={"species[code]":EVO.dataAccess.convertCodeToString(species.memory),
-                       "species[name]":species.id,
-                       "species[generations]":species.count};
-         jQuery.post(EVO.dataAccess.SPECIES_SAVE_URL, postData);
+         var postData={"code":CORE.dataAccess.convertCodeToString(species.memory),
+                       "name":species.id,
+                       "generations":species.count};
+         $.post(this.SPECIES_URL, postData);
       },
       getPopulationAsData: function(count, callback) {
-         jQuery.getJSON(EVO.dataAccess.SPECIES_LIST_URL,{count:count}, callback);
+         $.getJSON(CORE.dataAccess.SPECIES_URL+"list/0/"+count, callback);
       },
       getPopulation: function(count, callback) {
-         jQuery.getJSON(EVO.dataAccess.SPECIES_LIST_URL,{count:count}, function(json) {
+         this.getPopulationAsData(count, function(json) {
             //construct a process from each species
             var population=[];
-            for (var ii=0;ii<json.population.length;ii+=1) {
-               population.push(new EVO.Process(EVO.dataAccess.convertStringToCode(json.population[ii].attributes.code)));
+            for (var ii=0;ii<json.length;ii+=1) {
+               population.push(new CORE.Process(CORE.dataAccess.convertStringToCode(json[ii].attributes.code)));
             }
             callback(population);
          });
@@ -55,4 +52,4 @@ EVO.extend("dataAccess", function () {
       }
       
    };
-}());
+}();

@@ -1,103 +1,102 @@
 @import url("reset-min.css");
 @import url("core.css");
-
+@import url("../fragments/sidebar/sidebar.css");
 
 div#gridDisplay {
-   position: relative;
+    position: relative;
 }
 
 div#gridDisplay div.process {
-   position: absolute;
-   width: 15px;
-   height: 10px;
+    position: absolute;
+    width: 15px;
+    height: 10px;
 }
 
 div.divLink {
-   text-decoration: underline;
+    text-decoration: underline;
 }
 
 a {
-   color: black;
+    color: black;
 }
 
 /*
 This is for the header
 */
 div.overlay {
-   position: absolute;
-   z-index: 10;
-   border: black thin solid;
-   background: blue;
-   width: 550px;
-   text-align: center;
-   left: 310px;
+    position: absolute;
+    z-index: 10;
+    border: black thin solid;
+    background: blue;
+    width: 550px;
+    text-align: center;
+    left: 310px;
 }
 
 div#hd {
-   top: 0;
-   font-size: 15px;
-   height: 50px;
+    top: 0;
+    font-size: 15px;
+    height: 50px;
 }
 
 div#hd h1 {
-   font-size: 20px;
-}
-
-div#hd div#controlButtons {
-   float: left;
-   padding: 10px;
+    font-size: 20px;
 }
 
 div#ft {
-   bottom: 0;
-   font-size: 10px;
-   height: 30px;
+    bottom: 0;
+    font-size: 10px;
+    height: 30px;
 }
 
-div#gridContainer {
-   height: 100%;
-   border: 1px solid black;
-}
-
-div#panelLayout {
-   height: 100%;
+div#gridDisplay {
+    height: 100%;
+    border: 1px solid black;
 }
 
 #yui-main .yui-b {
-   margin-left: 2em !important;
+    margin-left: 2em !important;
+}
+
+div#controlButtons {
+    font-size: 125%;
+    left: 300px;
+    position: absolute;
+    bottom: 0px;
+    cursor: pointer;
 }
 
 div#pause {
-   display: none;
+    display: none;
 }
 
 div#about ul {
-   padding-left: 10px;
+    padding-left: 10px;
 }
 
 div#about ol {
-   padding-left: 12px;
+    padding-left: 12px;
 }
 
 div#about ul li {
-   list-style-type: circle;
-   list-style-position: outside;
+    list-style-type: circle;
+    list-style-position: outside;
 }
 
 div#about ol li {
-   list-style-type: decimal;
-   list-style-position: outside;
+    list-style-type: decimal;
+    list-style-position: outside;
 }
 
 div#processTab td {
-   vertical-align: top;
+    vertical-align: top;
 }
 
 #createProcessTab textarea {
-   width: 220px;
-   height: 400px;
+    width: 220px;
+    height: 400px;
 }
 
 #createProcessTab input {
-   width: 220px;
+    width: 220px;
 }

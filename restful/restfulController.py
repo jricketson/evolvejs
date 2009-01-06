@@ -1,4 +1,6 @@
 import os
+from google.appengine.api import users
+
 
 class RestfulController(object):
     def __init__(self, request):

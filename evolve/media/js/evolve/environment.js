@@ -1,4 +1,4 @@
-EVO.extend("environment", function () {
+CORE.environment = function () {
    //*****************************************
    //these are PRIVATE functions and variables
    //*****************************************
@@ -21,17 +21,14 @@ EVO.extend("environment", function () {
    function initialiseEnvironment() {
       resizeGrid();
       //inject the first Process(s)
-      EVO.dataAccess.getPopulation(INITIAL_POPULATION_SIZE_FROM_SERVER, initialisePopulation);
+      CORE.dataAccess.getPopulation(INITIAL_POPULATION_SIZE_FROM_SERVER, function(population) {
+         if (population.length==0) {
+            population= [new CORE.Process(CORE.ancestor.blindAnimal), new CORE.Process(CORE.ancestor.tree)];
+         }
+         initialisePopulation(population);
+      });
    }
    
-   /**
-     returns a list of processes 
-   */
-   function getPopulation(callback) {
-      var population= [new EVO.Process(EVO.ancestor.blindAnimal), new EVO.Process(EVO.ancestor.tree)];
-      initialisePopulation(population);
-   }
-
    function initialisePopulation(population)
    {
       for (var ii=0;ii<population.length;ii+=1) {
@@ -75,14 +72,14 @@ EVO.extend("environment", function () {
       process.gridY=y;
       currentProcesses.push(process);
       process.initialise();
-      var species = EVO.speciesLibrary.placeProcess(process);
+      var species = CORE.speciesLibrary.placeProcess(process);
       
-      jQuery(document).trigger(EVO.environment.EVENT_PROCESS_CREATED, [process]);
+      jQuery(document).trigger(CORE.environment.EVENT_PROCESS_CREATED, [process]);
       return species;
    }
    
    function move(process, x, y) {
-      if (EVO.environment.getGrid()[x][y]!==0) {
+      if (CORE.environment.getGrid()[x][y]!==0) {
          attack(process, x, y);
       }
       if (grid[x][y]===0) {
@@ -90,7 +87,7 @@ EVO.extend("environment", function () {
          process.gridX = x;
          process.gridY = y;
          grid[x][y]=process;
-         jQuery(document).trigger(EVO.environment.EVENT_PROCESS_MOVED, [process]);
+         jQuery(document).trigger(CORE.environment.EVENT_PROCESS_MOVED, [process]);
       }
    }
    
@@ -101,9 +98,9 @@ EVO.extend("environment", function () {
             currentProcesses.splice(ii,1); //remove the killed process
          }
       }
-      EVO.speciesLibrary.removeProcess(process);
+      CORE.speciesLibrary.removeProcess(process);
       grid[process.gridX][process.gridY]=0;
-      jQuery(document).trigger(EVO.environment.EVENT_PROCESS_KILLED, [process]);
+      jQuery(document).trigger(CORE.environment.EVENT_PROCESS_KILLED, [process]);
    }
    
    /**
@@ -121,7 +118,7 @@ EVO.extend("environment", function () {
       defender.cputime-=lowCpu;
       if (defender.cputime===0) {
          attacker.cputime+=(defender.memory.length*embodiedEnergy); //give the attacker cputime and the embodied energy in the body size
-         EVO.environment.killProcess(defender);
+         CORE.environment.killProcess(defender);
       }
    }
       
@@ -198,9 +195,9 @@ EVO.extend("environment", function () {
       start: function(){
          running=true;
          runSimulationLoop(0);
-         EVO.display.updateDisplay(currentProcesses);
-         EVO.environment.resetStartTime();
-         EVO.vm.resetInstrCount();
+         CORE.display.updateDisplay(currentProcesses);
+         CORE.environment.resetStartTime();
+         CORE.vm.resetInstrCount();
       },
       stop: function(){
          running=false;
@@ -243,4 +240,4 @@ EVO.extend("environment", function () {
          return currentProcesses;
       }
    };
-}());
+}();

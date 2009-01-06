@@ -1,7 +1,7 @@
-EVO.extend("speciesList", function () {
+CORE.speciesList = function () {
 
     function formatCodeLink(el, oRecord, oColumn, oData) {
-           el.innerHTML = '<a href="#" onclick="EVO.speciesList.displayCode(\''+oRecord.getData('attributes.code')+'\');return false;" >'+oRecord.getData('attributes.name')+'</a>';
+           el.innerHTML = '<a href="#" onclick="CORE.speciesList.displayCode(\''+oRecord.getData('attributes.code')+'\');return false;" >'+oRecord.getData('attributes.name')+'</a>';
            //viewMetadata.html?anzlicId='+oRecord.getData('anzlicId')+'"><img src="'+appPath +'/images/info.gif"/></a>';
    }
 
@@ -20,10 +20,10 @@ EVO.extend("speciesList", function () {
                      containers: null, // Create container DIVs dynamically
                      currentPage: 1, // Show page 1
                      pageLinks: 5, 
-                     rowsPerPage: EVO.speciesList.rowsPerPage // Show up to 50 rows per page
+                     rowsPerPage: CORE.speciesList.rowsPerPage // Show up to 50 rows per page
                  }
          };   
-        var myDataSource = new YAHOO.util.DataSource(EVO.dataAccess.SPECIES_LIST_URL+"?");
+        var myDataSource = new YAHOO.util.DataSource(CORE.dataAccess.SPECIES_LIST_URL+"?");
         myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
         myDataSource.responseSchema = {resultsList: "population", 
                                        fields: ["attributes.name", "attributes.created_on", "attributes.generations", "attributes.code", "attributes.id"]};
@@ -39,12 +39,12 @@ EVO.extend("speciesList", function () {
          doShowSpeciesTableCallback();
       },
       displayCode: function(code){
-         var codeArray = EVO.dataAccess.convertStringToCode(code);
-         jQuery('#speciesCode').html(EVO.assembler.makeDisplayableHtml(codeArray));
+         var codeArray = CORE.dataAccess.convertStringToCode(code);
+         jQuery('#speciesCode').html(CORE.assembler.makeDisplayableHtml(codeArray));
       }
 
       
    };
-}());
+}();
 
-jQuery(document).ready(function(){EVO.speciesList.showSpeciesTable();});
+jQuery(document).ready(function(){CORE.speciesList.showSpeciesTable();});

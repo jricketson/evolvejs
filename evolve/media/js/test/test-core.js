@@ -1,5 +1,5 @@
-EVO.namespace("test");
-EVO.test.core = new YAHOO.tool.TestCase({
+CORE.namespace("test");
+CORE.test.core = new YAHOO.tool.TestCase({
  
    name: "test-core",
    
@@ -20,48 +20,48 @@ EVO.test.core = new YAHOO.tool.TestCase({
    //core plumbing functionality
    testNamespace: function () {
       var Assert = YAHOO.util.Assert;    
-      EVO.namespace("test1","test2","test3.child");
-      Assert.isObject(EVO.test1);
-      Assert.isObject(EVO.test2);
-      Assert.isObject(EVO.test3);
-      Assert.isObject(EVO.test3.child);
+      CORE.namespace("test1","test2","test3.child");
+      Assert.isObject(CORE.test1);
+      Assert.isObject(CORE.test2);
+      Assert.isObject(CORE.test3);
+      Assert.isObject(CORE.test3.child);
    },
    
    testExtendRootNameSpace: function () {
       var Assert = YAHOO.util.Assert;    
-      EVO.namespace("test4.child");
-      EVO.extend({newValue: 3, anotherValue: 5});
-      Assert.isNumber(EVO.newValue);
-      Assert.areSame(3, EVO.newValue);
-      Assert.isNumber(EVO.anotherValue);
-      Assert.areSame(5, EVO.anotherValue);
+      CORE.namespace("test4.child");
+      CORE.extend({newValue: 3, anotherValue: 5});
+      Assert.isNumber(CORE.newValue);
+      Assert.areSame(3, CORE.newValue);
+      Assert.isNumber(CORE.anotherValue);
+      Assert.areSame(5, CORE.anotherValue);
    
    },
    testExtendNameSpace: function () {
       var Assert = YAHOO.util.Assert;    
-      EVO.extend("test6",{newValue: 3, anotherValue: 5});
-      Assert.isNumber(EVO.test6.newValue);
-      Assert.areSame(3, EVO.test6.newValue);
-      Assert.isNumber(EVO.test6.anotherValue);
-      Assert.areSame(5, EVO.test6.anotherValue);
+      CORE.extend("test6",{newValue: 3, anotherValue: 5});
+      Assert.isNumber(CORE.test6.newValue);
+      Assert.areSame(3, CORE.test6.newValue);
+      Assert.isNumber(CORE.test6.anotherValue);
+      Assert.areSame(5, CORE.test6.anotherValue);
    
    },
    testExtendChildNameSpace: function () {
       var Assert = YAHOO.util.Assert;    
-      EVO.extend("test4.child", {newValue: 3, anotherValue: 5});
-      Assert.isNumber(EVO.test4.child.newValue);
-      Assert.areSame(3, EVO.test4.child.newValue);
-      Assert.isNumber(EVO.test4.child.anotherValue);
-      Assert.areSame(5, EVO.test4.child.anotherValue);
+      CORE.extend("test4.child", {newValue: 3, anotherValue: 5});
+      Assert.isNumber(CORE.test4.child.newValue);
+      Assert.areSame(3, CORE.test4.child.newValue);
+      Assert.isNumber(CORE.test4.child.anotherValue);
+      Assert.areSame(5, CORE.test4.child.anotherValue);
    
    },
    testExtendChildNameSpaceWithRedundantFirstName: function () {
       var Assert = YAHOO.util.Assert;    
-      EVO.extend("EVO.test5.child", {newValue: 3, anotherValue: 5});
-      Assert.isNumber(EVO.test5.child.newValue);
-      Assert.areSame(3, EVO.test5.child.newValue);
-      Assert.isNumber(EVO.test5.child.anotherValue);
-      Assert.areSame(5, EVO.test5.child.anotherValue);
+      CORE.extend("CORE.test5.child", {newValue: 3, anotherValue: 5});
+      Assert.isNumber(CORE.test5.child.newValue);
+      Assert.areSame(3, CORE.test5.child.newValue);
+      Assert.isNumber(CORE.test5.child.anotherValue);
+      Assert.areSame(5, CORE.test5.child.anotherValue);
    
    }
    
@@ -69,4 +69,4 @@ EVO.test.core = new YAHOO.tool.TestCase({
    
 });
 
-YAHOO.tool.TestRunner.add(EVO.test.core);
+YAHOO.tool.TestRunner.add(CORE.test.core);

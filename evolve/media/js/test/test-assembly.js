@@ -1,4 +1,4 @@
-EVO.test.assembly = new YAHOO.tool.TestCase({
+CORE.test.assembly = new YAHOO.tool.TestCase({
  
    name: "test-assembly",
    
@@ -8,7 +8,7 @@ EVO.test.assembly = new YAHOO.tool.TestCase({
    
    setUp : function () {
       this.data={};
-      this.data.code=EVO.ancestorCode;
+      this.data.code=CORE.ancestorCode;
    },
    
    tearDown : function () {
@@ -24,7 +24,7 @@ EVO.test.assembly = new YAHOO.tool.TestCase({
    // Tests
    //---------------------------------------------
    testCompile: function () {
-      var compiledCode = EVO.assembler.compile(this.data.code);
+      var compiledCode = CORE.assembler.compile(this.data.code);
       var Assert = YAHOO.util.Assert;
       Assert.areEqual(0,compiledCode[0][0]);
       Assert.areEqual(5,compiledCode[4][0]);
@@ -37,4 +37,4 @@ EVO.test.assembly = new YAHOO.tool.TestCase({
    
 });
 
-YAHOO.tool.TestRunner.add(EVO.test.assembly);
+YAHOO.tool.TestRunner.add(CORE.test.assembly);

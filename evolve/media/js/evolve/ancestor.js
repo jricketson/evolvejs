@@ -1,6 +1,6 @@
-EVO.extend("ancestor", function() {
+CORE.ancestor = function() {
    return {
-      blindAnimal: EVO.assembler.compile([
+      blindAnimal: CORE.assembler.compile([
 //START
 ["nop",0],["nop",0],["nop",0],["nop",0],
 
@@ -49,7 +49,7 @@ EVO.extend("ancestor", function() {
 
 ]),
 
-      tree: EVO.assembler.compile([
+      tree: CORE.assembler.compile([
 //START
 //repro cell
 ["nop",0],["nop",0],["nop",0],["nop",0],["nop",0], //10
@@ -97,4 +97,4 @@ EVO.extend("ancestor", function() {
 ])
 
 };
-}());
+}();

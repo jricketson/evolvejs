@@ -21,7 +21,7 @@ var TEST= function() {
    }
    
    return {
-      allowedProps : ["__scope__", "constructor", "EVO", "$", "jQuery", "onerror", "YAHOO"],
+      allowedProps : ["__scope__", "constructor", "CORE", "$", "jQuery", "onerror", "YAHOO"],
       props : [],
       getCurrentProps : function() {
          var result=[];

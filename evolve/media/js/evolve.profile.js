@@ -11,7 +11,9 @@ var local=[
             "evolve.speciesLibrary",
             "evolve.display",
             "evolve.assembly",
-            "evolve.index"
+            "evolve.index",
+            "evolve.ancestor",
+            "fragments.sidebar.sidebar"
          ];
 var foreign = [
             "dojo.parser",

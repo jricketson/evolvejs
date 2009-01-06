@@ -1,4 +1,4 @@
-EVO.extend("assembler",function(){
+CORE.assembler = function(){
    
    return {
       /**
@@ -8,12 +8,12 @@ EVO.extend("assembler",function(){
          var compiledCode=[];
          var operatorCode;
          for (var ii=0; ii< code.length;ii+=1) {
-            operatorCode = EVO.vm.codeInstructions[code[ii][0]];
+            operatorCode = CORE.vm.codeInstructions[code[ii][0]];
             if (operatorCode !== undefined) {
                compiledCode.push([operatorCode,code[ii][1]]);
             }
             else {
-               YAHOO.log("code not found: " +code[ii], "error");
+               $.debug("code not found: " +code[ii], "error");
             }
          }
          return compiledCode;
@@ -25,20 +25,20 @@ EVO.extend("assembler",function(){
          var compiledCode=[];
          var operatorName, operator;
          for (var ii=0; ii< code.length;ii+=1) {
-            operator = EVO.vm.instructionCodes[code[ii][0]];
-            operatorName = EVO.getFunctionName(operator);
+            operator = CORE.vm.instructionCodes[code[ii][0]];
+            operatorName = CORE.getFunctionName(operator);
             if (operatorName !== undefined) {
                compiledCode.push([operatorName,code[ii][1]]);
             }
             else {
-               YAHOO.log("code not found: " +code[ii], "error");
+               $.debug("code not found: " +code[ii], "error");
             }
          }
          return compiledCode;
       },
       
       makeDisplayableHtml: function(codeArray) {
-         var humanReadable = EVO.assembler.deCompile(codeArray);
+         var humanReadable = CORE.assembler.deCompile(codeArray);
          var codeHtml = "";
          for (var ii=0;ii<humanReadable.length;ii+=1) {
             codeHtml+='["' + humanReadable[ii][0]+'", '+ humanReadable[ii][1]+'],<br/>';
@@ -47,5 +47,5 @@ EVO.extend("assembler",function(){
       }
    };
 
-}());
+}();
 

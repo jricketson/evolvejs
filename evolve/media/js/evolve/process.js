@@ -1,4 +1,4 @@
-EVO.Process = function(memory) {
+CORE.Process = function(memory) {
    this.memory=memory;
    this.operands=[]; // this is kept as a copy of the operands in the main memory. It is purely used as a read optimisation
    var op;
@@ -21,7 +21,7 @@ EVO.Process = function(memory) {
 /**
  * steps the process through a single cycle, may be multiple instructions, each thread gets to execute
  */
-EVO.Process.prototype.step = function() {
+CORE.Process.prototype.step = function() {
    for (var ii = 0; ii< this.threads.length; ii+=1) {
       this.threads[ii].step();
       if (this.dead) {
@@ -31,7 +31,7 @@ EVO.Process.prototype.step = function() {
 };
 
 //keeps a copy of the operands in a separate list. This copy is used in vm.js - searchArray
-EVO.Process.prototype.spliceMemory=function(position,elementCount,element) {
+CORE.Process.prototype.spliceMemory=function(position,elementCount,element) {
    this.memory.splice(position,elementCount,element);
    var op=""+element[0];
    this.operands.splice(position,elementCount,(op.length==1 ? '0'+op : op));
@@ -39,44 +39,44 @@ EVO.Process.prototype.spliceMemory=function(position,elementCount,element) {
 /**
 * sets up the first thread
 */ 
-EVO.Process.prototype.initialise = function() {
-   this.threads.push(new EVO.Thread(this, "0"));
+CORE.Process.prototype.initialise = function() {
+   this.threads.push(new CORE.Thread(this, "0"));
    this.id=Number(new Date());
 };
 
 /**
    decrements the processes cputime, if the available cputime ever drops below 0, the process is killed
 */
-EVO.Process.prototype.decrCpuTime = function(decrement) {
+CORE.Process.prototype.decrCpuTime = function(decrement) {
    this.cputime-=decrement;
    if (this.cputime < 0) {
-      EVO.environment.killProcess(this);
+      CORE.environment.killProcess(this);
    }
 };
 
-EVO.Process.prototype.killMe = function() {
+CORE.Process.prototype.killMe = function() {
    this.threads=[];
    this.memory=[];
    this.dead=true;
 };
 
-EVO.Process.prototype.incrCpuTime = function(increment) {
+CORE.Process.prototype.incrCpuTime = function(increment) {
    this.cputime+=increment;
 };
 
-EVO.Process.MAXHASHCHECK=20;
+CORE.Process.MAXHASHCHECK=20;
 
-EVO.Process.prototype.getHashCode = function(){
+CORE.Process.prototype.getHashCode = function(){
    //returns a hashcode for the memory
    var hash=0;
-   var maxcheck=EVO.Process.MAXHASHCHECK;
+   var maxcheck=CORE.Process.MAXHASHCHECK;
    for (var ii = 0; ii<this.memory.length && ii < maxcheck;ii+=1) {
       hash+=(this.memory[ii][0]+1+this.memory[ii][1])*ii;
    }
    return hash;
 };
 
-EVO.Thread = function(process, name) {
+CORE.Thread = function(process, name) {
    this.process = process;
    this.stack=[];
    this.executionPtr=0;
@@ -87,20 +87,20 @@ EVO.Thread = function(process, name) {
    this.name=name;
 };
 
-EVO.Thread.prototype.step = function(){
+CORE.Thread.prototype.step = function(){
    if (this.sleepCycles>0) {
       this.sleepCycles-=1;
       return;
    }
    for (var ii=0; ii<this.speed; ii+=1) {
       try {
-         EVO.vm.execute(this);
+         CORE.vm.execute(this);
          this.process.decrCpuTime(this.speed);
       }
       catch (err) {
          console.log(this.process.memory);
          console.log(err);
-         EVO.environment.killProcess(this.process);
+         CORE.environment.killProcess(this.process);
       }
    }
 };

@@ -1,4 +1,4 @@
-EVO.extend("vm", function () {
+CORE.vm = function () {
    //*****************************************
    //these are PRIVATE functions and variables
    //*****************************************
@@ -50,7 +50,7 @@ EVO.extend("vm", function () {
 
 //      var ii;
 //      var nopCount=0;
-//      var nopCode=EVO.vm.codeInstructions.nop;
+//      var nopCode=CORE.vm.codeInstructions.nop;
 //      for (ii=startPt; ii!=endPt; ii=(dirForward ? ii+1 : ii-1)) {
 //         if (process.memory[ii][0]==nopCode) {
 //            nopCount+=1;
@@ -79,32 +79,32 @@ EVO.extend("vm", function () {
    function calculateXYForward(curX,curY,direction) {
       var newX, newY;
       switch (direction) {
-      case EVO.environment.NORTH:
+      case CORE.environment.NORTH:
          newX=curX;
          newY=curY-1;
          if (newY <0) {
-            newY=EVO.environment.getGridY()-1;
+            newY=CORE.environment.getGridY()-1;
          }
          break;
-      case EVO.environment.EAST:
+      case CORE.environment.EAST:
          newX=curX+1;
          newY=curY;
-         if (newX >(EVO.environment.getGridX()-1)) {
+         if (newX >(CORE.environment.getGridX()-1)) {
             newX=0;
          }
          break;
-      case EVO.environment.SOUTH:
+      case CORE.environment.SOUTH:
          newX=curX;
          newY=curY+1;
-         if (newY >(EVO.environment.getGridY()-1)) {
+         if (newY >(CORE.environment.getGridY()-1)) {
             newY=0;
          }
          break;
-      case EVO.environment.WEST:
+      case CORE.environment.WEST:
          newX=curX-1;
          newY=curY;
          if (newX <0) {
-            newX=EVO.environment.getGridX()-1;
+            newX=CORE.environment.getGridX()-1;
          }
          break;
       default:
@@ -122,25 +122,25 @@ EVO.extend("vm", function () {
     * 2 elements, the original plus a random instruction
    */
    function elementsToCopy (memory, ptr) {
-      var val=Math.random()*EVO.environment.mutationRate;
+      var val=Math.random()*CORE.environment.mutationRate;
       //console.log(val);
       if (val<1) {
          //mutate
-         YAHOO.log("Mutate!");
+         $.debug("Mutate!");
          var choice = Math.random()*30;
          if (choice<=10) {
             //remove element
-            YAHOO.log("Mutate: remove operation");
+            $.debug("Mutate: remove operation");
             return [];
          }
          else if (choice<=20) {
             //return random element
-            YAHOO.log("Mutate: change operation");
+            $.debug("Mutate: change operation");
             return [constructRandomOperation()];
          }
          else {
             //insert new random element
-            YAHOO.log("Mutate: new operation");
+            $.debug("Mutate: new operation");
             return [memory[ptr],constructRandomOperation()];
          }
       }
@@ -278,7 +278,7 @@ EVO.extend("vm", function () {
          }, 
          
          runThread: function runThread(thread){ //runs a separate thread in this process, the execution ptr is set to readPtr in this thread
-            var newThread = new EVO.Thread(thread.process, ""+thread.process.threads.length);
+            var newThread = new CORE.Thread(thread.process, ""+thread.process.threads.length);
             newThread.executionPtr=thread.readPtr;
             thread.process.threads.push(newThread);
             thread.executionPtr+=1;
@@ -294,11 +294,11 @@ EVO.extend("vm", function () {
          divideProcess: function divide(thread){
             var newProcessMemory=thread.process.memory.slice(thread.readPtr,thread.writePtr);
             var oldProcessMemory=thread.process.memory.slice(0,thread.readPtr);
-            var newProcess = new EVO.Process(newProcessMemory);
+            var newProcess = new CORE.Process(newProcessMemory);
             newProcess.facing = thread.process.facing;
             var coords = calculateXYForward(thread.process.gridX, thread.process.gridY,thread.process.facing);
             
-            var success = EVO.environment.addProcess(newProcess,coords[0],coords[1]);
+            var success = CORE.environment.addProcess(newProcess,coords[0],coords[1]);
             if (success) {
                thread.process.memory=oldProcessMemory;
                thread.process.cputime=Math.round(thread.process.cputime/2);
@@ -332,7 +332,7 @@ EVO.extend("vm", function () {
          },
          move: function move(thread) { //moves one space straight ahead, if the path is not blocked.
             var coords = calculateXYForward(thread.process.gridX, thread.process.gridY,thread.process.facing);
-            EVO.environment.moveProcess(thread.process, coords[0],coords[1]);
+            CORE.environment.moveProcess(thread.process, coords[0],coords[1]);
             thread.executionPtr+=1;
          },
          sleep: function sleep(thread, operand){
@@ -341,46 +341,46 @@ EVO.extend("vm", function () {
          }
       }
    };
-}());
+}();
 
 //This contains a code -> method mapping
-EVO.vm.instructionCodes = {
-      0:EVO.vm.instructionSet.nop,
-      1:EVO.vm.instructionSet.add,
-      2:EVO.vm.instructionSet.push,
-      3:EVO.vm.instructionSet.pushM,
-      4:EVO.vm.instructionSet.popM,
-      5:EVO.vm.instructionSet.pushMemSize,
-      6:EVO.vm.instructionSet.pushWritePtr,
-      7:EVO.vm.instructionSet.pushReadPtr,
-      8:EVO.vm.instructionSet.jmpReadPtrB,
-      9:EVO.vm.instructionSet.jmpReadPtrF,
-      10:EVO.vm.instructionSet.incReadPtr,
-      11:EVO.vm.instructionSet.jmpMemPtrB,
-      12:EVO.vm.instructionSet.jmpWritePtrF,
-      13:EVO.vm.instructionSet.incWritePtr,
-      14:EVO.vm.instructionSet.jmpB,
-      15:EVO.vm.instructionSet.copy,
-      16:EVO.vm.instructionSet.lt,
-      17:EVO.vm.instructionSet.gte,
-      18:EVO.vm.instructionSet.ifdo,
-      19:EVO.vm.instructionSet.runThread,
-      20:EVO.vm.instructionSet.alloc,
-      21:EVO.vm.instructionSet.divideProcess,
-      22:EVO.vm.instructionSet.look,
-      23:EVO.vm.instructionSet.turnR,
-      24:EVO.vm.instructionSet.move,
-      25:EVO.vm.instructionSet.sleep
+CORE.vm.instructionCodes = {
+      0:CORE.vm.instructionSet.nop,
+      1:CORE.vm.instructionSet.add,
+      2:CORE.vm.instructionSet.push,
+      3:CORE.vm.instructionSet.pushM,
+      4:CORE.vm.instructionSet.popM,
+      5:CORE.vm.instructionSet.pushMemSize,
+      6:CORE.vm.instructionSet.pushWritePtr,
+      7:CORE.vm.instructionSet.pushReadPtr,
+      8:CORE.vm.instructionSet.jmpReadPtrB,
+      9:CORE.vm.instructionSet.jmpReadPtrF,
+      10:CORE.vm.instructionSet.incReadPtr,
+      11:CORE.vm.instructionSet.jmpMemPtrB,
+      12:CORE.vm.instructionSet.jmpWritePtrF,
+      13:CORE.vm.instructionSet.incWritePtr,
+      14:CORE.vm.instructionSet.jmpB,
+      15:CORE.vm.instructionSet.copy,
+      16:CORE.vm.instructionSet.lt,
+      17:CORE.vm.instructionSet.gte,
+      18:CORE.vm.instructionSet.ifdo,
+      19:CORE.vm.instructionSet.runThread,
+      20:CORE.vm.instructionSet.alloc,
+      21:CORE.vm.instructionSet.divideProcess,
+      22:CORE.vm.instructionSet.look,
+      23:CORE.vm.instructionSet.turnR,
+      24:CORE.vm.instructionSet.move,
+      25:CORE.vm.instructionSet.sleep
 };
 
 //This contains a methodName -> code mapping
-EVO.vm.codeInstructions = function() {
-   var instructionCodes = EVO.vm.instructionCodes;
+CORE.vm.codeInstructions = function() {
+   var instructionCodes = CORE.vm.instructionCodes;
    var nameToCode={};
    var name;
    for (var code in instructionCodes) {
       if (instructionCodes.hasOwnProperty(code)) {
-         name = EVO.getFunctionName(instructionCodes[code]);
+         name = CORE.getFunctionName(instructionCodes[code]);
          nameToCode[name]=Number(code);
       }
    }

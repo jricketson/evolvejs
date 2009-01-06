@@ -1,5 +1,5 @@
-from restfulControllers import UserProfileRestfulController
+from restfulControllers import *
 
 REST_CONTROLLERS = {
-                    "userProfile":UserProfileRestfulController
+                    "species":SpeciesRestfulController
                     }

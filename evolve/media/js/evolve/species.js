@@ -1,4 +1,4 @@
-EVO.extend("species", function () {
+CORE.species = function () {
    return {
       Species: function(memory, hashCode) {
          this.memory=memory;
@@ -16,16 +16,16 @@ EVO.extend("species", function () {
          this.store={};
       }
    };
-}());
+}();
    
 
-EVO.species.SpeciesStore.prototype.addSpecies = function(species) {
+CORE.species.SpeciesStore.prototype.addSpecies = function(species) {
    if (! this.store.hasOwnProperty(species.hashCode)) {
       this.store[species.hashCode]=[];
    }
    this.store[species.hashCode].push(species);
 };
-EVO.species.SpeciesStore.prototype.findSpecies = function(memory, hashCode) {
+CORE.species.SpeciesStore.prototype.findSpecies = function(memory, hashCode) {
    if (! this.store.hasOwnProperty(hashCode)) {
       return null;
    }
@@ -47,7 +47,7 @@ EVO.species.SpeciesStore.prototype.findSpecies = function(memory, hashCode) {
    
 };   
 
-EVO.species.SpeciesStore.prototype.removeSpecies = function(species) {
+CORE.species.SpeciesStore.prototype.removeSpecies = function(species) {
    var hashArray = this.store[species.hashCode];
-   EVO.removeElementFromArray(hashArray, species);
+   CORE.removeElementFromArray(hashArray, species);
 };
