@@ -33,15 +33,15 @@ CORE.indexHtml = function() {
 			$("div#ft").click(hideTitle);
 
 			// links for the user to start the simulation. These swap themselves
-			$("div#play").click(function() {
+			$("#play").click(function() {
 						CORE.environment.start();
 						$(this).hide();
-						$("div#pause").show();
+						$("#pause").show();
 					});
-			$("div#pause").click(function() {
+			$("#pause").click(function() {
 						CORE.environment.stop();
 						$(this).hide();
-						$("div#play").show();
+						$("#play").show();
 					});
 			$("button#createProcess").click(function() {
 				var process = new CORE.Process(CORE.assembler

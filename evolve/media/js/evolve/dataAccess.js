@@ -18,7 +18,7 @@ CORE.dataAccess = function () {
             //construct a process from each species
             var population=[];
             for (var ii=0;ii<json.length;ii+=1) {
-               population.push(new CORE.Process(CORE.dataAccess.convertStringToCode(json[ii].attributes.code)));
+               population.push(new CORE.Process(CORE.dataAccess.convertStringToCode(json[ii].fields.code)));
             }
             callback(population);
          });
