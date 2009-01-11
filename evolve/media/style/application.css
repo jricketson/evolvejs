@@ -16,10 +16,6 @@ div.divLink {
     text-decoration: underline;
 }
 
-a {
-    color: black;
-}
-
 /*
 This is for the header
 */
@@ -70,33 +66,3 @@ div#controlButtons {
     display: none;
 }
 
-div#about ul {
-    padding-left: 10px;
-}
-
-div#about ol {
-    padding-left: 12px;
-}
-
-div#about ul li {
-    list-style-type: circle;
-    list-style-position: outside;
-}
-
-div#about ol li {
-    list-style-type: decimal;
-    list-style-position: outside;
-}
-
-div#processTab td {
-    vertical-align: top;
-}
-
-#createProcessTab textarea {
-    width: 220px;
-    height: 400px;
-}
-
-#createProcessTab input {
-    width: 220px;
-}

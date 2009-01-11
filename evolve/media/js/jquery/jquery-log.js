@@ -1,5 +1,5 @@
 jQuery.isDebug = true;
-jQuery.debug = function() {
+jQuery._debug = function() {
    if (jQuery.isDebug) {
       var caller = jQuery.debug.caller;
       var args = Array.prototype.slice.call(arguments);
@@ -16,13 +16,16 @@ jQuery.debug = function() {
    }
 };
 
+jQuery.debug= jQuery._debug;
+jQuery.debug2= jQuery._debug;
+
 jQuery.fn.log = function(msg) {
    console.log("%s: %o", msg, this);
    return this;
 };
 
 // if no firebug installed
-if (!window.console || !console.firebug) {
+/*if (!window.console || !console.firebug) {
    var names = ["log", "debug", "info", "warn", "error", "assert", "dir", "dirxml", "group",
          "groupEnd", "time", "timeEnd", "count", "trace", "profile", "profileEnd"];
 
@@ -31,4 +34,4 @@ if (!window.console || !console.firebug) {
       window.console[names[i]] = function() {
       };
    }
-}
+}*/

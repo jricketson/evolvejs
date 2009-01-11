@@ -2,8 +2,8 @@ CORE.environment = function () {
    //*****************************************
    //these are PRIVATE functions and variables
    //*****************************************
-   var gridX=50; //these are default values
-   var gridY=27;
+   var gridX=60; //these are default values
+   var gridY=30;
    var timeDelay=0; //time to delay between simulation cycles
    var instructionsPerCycle=30;
    var running=false; //if the simulation should keep running
@@ -22,8 +22,8 @@ CORE.environment = function () {
       resizeGrid();
       //inject the first Process(s)
       CORE.dataAccess.getPopulation(INITIAL_POPULATION_SIZE_FROM_SERVER, function(population) {
-         if (population.length==0) {
-            population= [new CORE.Process(CORE.ancestor.blindAnimal), new CORE.Process(CORE.ancestor.tree)];
+         if (population.length===0) {
+            population= [new CORE.Process(CORE.ancestor.tree)];
          }
          initialisePopulation(population);
       });
@@ -71,7 +71,6 @@ CORE.environment = function () {
       process.gridX=x;
       process.gridY=y;
       currentProcesses.push(process);
-      process.initialise();
       var species = CORE.speciesLibrary.placeProcess(process);
       
       jQuery(document).trigger(CORE.environment.EVENT_PROCESS_CREATED, [process]);
@@ -152,6 +151,7 @@ CORE.environment = function () {
             loopCount+=1;
             shineSun();
          }
+         //$.debug(currentProcesses[ii].id, currentProcesses[ii].getState());
          currentProcesses[ii].step();
          ii+=1;
       }
@@ -180,7 +180,7 @@ CORE.environment = function () {
       EVENT_SPECIES_CREATED: "speciesCreated",
       EVENT_SPECIES_EXTINCT: "speciesExtinct",
       
-      mutationRate: 1000, //approximate chance of mutation (1 in x copy operations)
+      mutationRate: 100000, //approximate chance of mutation (1 in x copy operations)
       startTime: 0,
    
       /**

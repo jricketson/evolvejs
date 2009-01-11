@@ -25,8 +25,6 @@ CORE.indexHtml = function() {
 						beforeSend : rpcStart,
 						complete : rpcEnd
 					});
-			// initialise the environment
-			CORE.environment.initialise();
 
 			// hide the title after 10 secs, or the user clicks
 			setTimeout(hideTitle, 10000);
@@ -43,16 +41,13 @@ CORE.indexHtml = function() {
 						$(this).hide();
 						$("#play").show();
 					});
-			$("button#createProcess").click(function() {
-				var process = new CORE.Process(CORE.assembler
-						.compile($("createProcessCode").value()));
-				process.species.colour = $("createProcessColour").value()
-				process.species.id = $("createProcessColour").value()
-				CORE.environment.addProcess(process);
-			});
 			$("#contentDisplay").createGadget("sidebar", function(gadget) {
-                        self.sidebar=gadget;
-					},{method:"append"});
+						self.sidebar = gadget;
+					}, {
+						method : "append"
+					});
+			// initialise the environment
+			CORE.environment.initialise();
 			$(document).trigger(this.EVENT_PAGE_READY);
 		}
 	};

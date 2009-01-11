@@ -3,6 +3,7 @@ var local=[
             "evolve.core",
             "jquery.jquery-depends",
             "jquery.jquery-gadget",
+            "jquery.jquery-log",
             "evolve.environment",
             "evolve.process",
             "evolve.vm",
@@ -11,16 +12,22 @@ var local=[
             "evolve.speciesLibrary",
             "evolve.display",
             "evolve.assembly",
-            "evolve.index",
+            "evolve.application",
             "evolve.ancestor",
             "fragments.sidebar.sidebar"
          ];
+var about=[
+            "jquery.jquery-1-2-6",
+            "jquery.jquery-log",
+            "evolve.core",
+            "jquery.jquery-depends"
+];
 var foreign = [
             "dojo.parser",
             "dijit.layout.ContentPane",
             "dijit.layout.BorderContainer",
+            "dijit.layout.AccordionContainer",
             "jquery.jquery-1-2-6",
-            "jquery.jquery-log",
             "external.json2"
          ];
 dependencies = {
@@ -28,6 +35,10 @@ dependencies = {
       {
          name: "local.js",
          dependencies: local
+      },
+      {
+         name: "about.js",
+         dependencies: about
       },
       {
          name: "foreign.js",

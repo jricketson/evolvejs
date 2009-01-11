@@ -52,19 +52,19 @@ CORE.ancestor = function() {
       tree: CORE.assembler.compile([
 //START
 //repro cell
-["nop",0],["nop",0],["nop",0],["nop",0],["nop",0], //10
-["jmpReadPtrB",5], //jmp to template 4
+["nop",0],["nop",0],["nop",0],["nop",0],["nop",0], //5
+["jmpReadPtrB",5], //jmp to template 5
 ["jmpWritePtrF",2], //jmp to template 2
 ["pushMemSize",0],
 ["alloc",0],
-["incWritePtr",0], //inc write pointer to start of new animal
+["incWritePtr",0], //inc write pointer to start of new animal, 10
 
-["nop",0], //start copy loop //15
+["nop",0], //start copy loop 
 ["copy",0],
 ["incReadPtr",0],
 ["incWritePtr",0],
 
-["pushWritePtr",0], //20
+["pushWritePtr",0], //15
 ["pushMemSize",0], //if writeptr < memSize
 ["lt",0],
 ["ifdo",1],
@@ -74,25 +74,25 @@ CORE.ancestor = function() {
 
 ["divide",0],
 ["ifdo",1], //if division successful
-["jmpB",5], //25
+["jmpB",5],
 
 ["jmpMemPtrB",6],// count the number of times that this has happened
-["pushM",0],
+["pushM",0], //30
 ["add",1],
 ["popM",0],
 ["pushM",0],
 ["push",4],
-["gte",0],
+["gte",0], //35
 ["ifdo",3],
 ["sleep",450],
 ["push",0],
 ["popM",0],
 
-["turnR",0], //turn around and try again
+["turnR",0], //turn around and try again //40
 ["jmpB",6], 
 
 //END
-["nop",0],["nop",0]
+["nop",0],["nop",0] //43
 
 ])
 

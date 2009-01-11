@@ -1,9 +1,7 @@
-﻿application: evolve
+﻿application: evolvethefuture
 version: 1
 runtime: python
 api_version: 1
-
-default_expiration: '3650d'
 
 handlers:
 - url: /static
@@ -23,3 +21,29 @@ handlers:
 
 - url: /.*
   script: common/appenginepatch/main.py
+
+skip_files: |
+  ^(.*/)?(
+  (app\.yaml)|
+  (app\.yml)|
+  (index\.yaml)|
+  (index\.yml)|
+  (#.*#)|
+  (.*~)|
+  (.*\.py[co])|
+  (.*/RCS/.*)|
+  (\..*)|
+  )$|
+  ^(
+  (common/zip-packages/django/.*)|
+  (compiled/.*LICENSE)|
+  (compiled/.*README)|
+  (compiled/evolve/dijit/(_base|_editor|_tree|form|layout|nls)/.*)|
+  (compiled/.*/soria/.*)|
+  (compiled/.*/nihilo/.*)|
+  (compiled/evolve/doh/.*)|
+  (compiled/evolve/dojo/(_base|cldr|data|date|dnd|fx|io|rpc)/.*)|
+  (compiled/evolve/dojox/.*)|
+  (compiled/evolve/test/.*)|
+  (compiled/evolve/util/.*)|
+  )$

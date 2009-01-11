@@ -1,0 +1,71 @@
+<html>
+   <head>
+        <!--CSS-->
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.6.0/build/logger/assets/logger.css">
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.6.0/build/yuitest/assets/testlogger.css">
+        
+        <!-- Dependencies --> 
+        <script type="text/javascript" src="http://yui.yahooapis.com/2.6.0/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+        <script type="text/javascript" src="http://yui.yahooapis.com/2.6.0/build/logger/logger-min.js"></script>
+        
+        <!-- Source File -->
+        <script type="text/javascript" src="http://yui.yahooapis.com/2.6.0/build/yuitest/yuitest-min.js"></script>
+      <script type="text/javascript" src="test-first.js"></script>
+      <script>
+      console.log("test-first.js", TEST.checkCurrentPropsAgainstList(TEST.props));
+      </script>
+      <title>Evolution javascript tests</title>
+      <script src="/static/jquery/jquery-1-2-6.js"></script>
+      <script>
+          console.log("../jquery/jquery-1.2.6.min.js", TEST.checkCurrentPropsAgainstList(TEST.props));
+      </script>
+        <script type="text/javascript" src="/static/dojo/dojo.js"></script>
+
+      <!-- all project modules -->
+      <script type="text/javascript" src="/static/jquery/jquery-gadget.js"></script>
+      <script type="text/javascript" src="/static/jquery/jquery-log.js"></script>
+      <script type="text/javascript" src="/static/evolve/core.js"></script>
+      <script type="text/javascript" src="/static/fragments/sidebar/sidebar.js"></script>
+      <script type="text/javascript" src="/static/evolve/application.js"></script>
+      <script type="text/javascript" src="/static/evolve/display.js"></script>
+      <script type="text/javascript" src="/static/evolve/environment.js"></script>
+      <script type="text/javascript" src="/static/evolve/process.js"></script>
+      <script type="text/javascript" src="/static/evolve/vm.js"></script>
+      <script type="text/javascript" src="/static/evolve/assembly.js"></script>
+      <script type="text/javascript" src="/static/evolve/dataAccess.js"></script>
+      <script type="text/javascript" src="/static/evolve/ancestor.js"></script>
+      <script type="text/javascript" src="/static/evolve/species.js"></script>
+      <script type="text/javascript" src="/static/evolve/speciesLibrary.js"></script>
+      <script>
+          console.log("project javascript", TEST.checkCurrentPropsAgainstList(TEST.props));
+      </script>
+
+      <!-- all test modules -->
+      <script type="text/javascript" src="test-core.js"></script>
+      <script type="text/javascript" src="test-assembly.js"></script>
+      <script type="text/javascript" src="test-vm.js"></script>
+      <script>
+          console.log("test javascript", TEST.checkCurrentPropsAgainstList(TEST.props));
+      </script>
+
+      <!-- test runner -->
+      <script type="text/javascript">
+         jQuery(document).ready(function(){
+            CORE.environment.initialiseGrid();
+
+            //each testCase or testSuite should add itself to the testrunner ie:
+            //YAHOO.tool.TestRunner.add(test_tds_core);
+            
+            //run all tests
+            CORE.test.testLogger = new YAHOO.tool.TestLogger(); 
+            CORE.test.testLogger.newestOnTop=true;
+            CORE.test.testLogger.hideCategory("pass");
+            YAHOO.tool.TestRunner.run();
+         });
+      
+      </script>
+   </head>
+   <body class="yui-skin-sam">
+      <div id="testLogger"></div>
+   </body>
+</html>

@@ -47,25 +47,6 @@ CORE.vm = function () {
          searchResult = nopSearch.exec(strOps);
       }
       return -1;
-
-//      var ii;
-//      var nopCount=0;
-//      var nopCode=CORE.vm.codeInstructions.nop;
-//      for (ii=startPt; ii!=endPt; ii=(dirForward ? ii+1 : ii-1)) {
-//         if (process.memory[ii][0]==nopCode) {
-//            nopCount+=1;
-//         }
-//         else if (nopCount==size){
-//            return (dirForward ? ii-1 : ii+1); //step back a little
-//         }      
-//         else {
-//            nopCount=0;
-//         }
-//      }
-//      if (nopCount==size){
-//         return (dirForward ? ii-1 : ii+1); //step back a little
-//      }      
-//      return -1;
    }
    
    function jmpPtr(thread, start, dirForward, size, ptrName) {
@@ -165,10 +146,14 @@ CORE.vm = function () {
       resetInstrCount: function() {
          instrCount=0;
       },
-      execute: function(thread) { //executes a function on a thread
+      execute: function execute(thread) { //executes a function on a thread
+         if (thread.executionPtr > thread.process.memory.length-1) {
+            throw "Attempted to execute beyond memory limits";
+         }
          var instrCode = thread.process.memory[thread.executionPtr];
          var operator = this.instructionCodes[instrCode[0]];
          //console.log(thread.process.id, thread.name, thread.executionPtr, operator.name, instrCode);
+         //$.debug(thread.process.id, operator.name, instrCode[1]);
          if (operator)
          {
             operator(thread, instrCode[1]);
@@ -300,7 +285,7 @@ CORE.vm = function () {
             
             var success = CORE.environment.addProcess(newProcess,coords[0],coords[1]);
             if (success) {
-               thread.process.memory=oldProcessMemory;
+               thread.process.setMemory(oldProcessMemory);
                thread.process.cputime=Math.round(thread.process.cputime/2);
                newProcess.cputime=thread.process.cputime;
             }

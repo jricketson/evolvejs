@@ -30,7 +30,7 @@ CORE.display = function () {
    
    function processCreateHandler(e,process) {
       e.stopPropagation();
-      console.log(e, process.id, process.gridX, process.gridY);
+      $.debug(e, process.id, process.gridX, process.gridY);
       jQuery("div#gridDisplay").append('<div class="process" id="'+process.id+'">&nbsp;</div>');
       var divMarker=jQuery("div#gridDisplay div.process:last");
       divMarker.bind("click", process, divClickedHandler);
@@ -59,7 +59,7 @@ CORE.display = function () {
    }
 
    function speciesCreateHandler(e,species) {
-      console.log(e, species);
+      $.debug(e, species);
       e.stopPropagation();
       jQuery("div#speciesList").append('<div class="species" id="'+species.id+'">'+species.id+'</div>');
       var divMarker=jQuery("div#speciesList div.species:last");
@@ -68,7 +68,7 @@ CORE.display = function () {
    }
 
    function speciesExtinctHandler(e,species) {
-      console.log(e, species);
+      $.debug(e, species);
       e.stopPropagation();
       speciesDivStore[species.id].fadeOut("normal",function(){jQuery(this).remove();});
       delete speciesDivStore[species.id];
@@ -83,10 +83,10 @@ CORE.display = function () {
 
    function updateProcessDisplay() {
       if (currentlyDisplayedProcess) {
-         jQuery("div#processTab div.id").html(currentlyDisplayedProcess.id);
-         jQuery("div#processTab div.cputime").html(currentlyDisplayedProcess.cputime);
-         jQuery("div#processTab div.activeThreadCount").html(currentlyDisplayedProcess.threads.length);
-         jQuery("div#processTab div.code").html(CORE.assembler.makeDisplayableHtml(currentlyDisplayedProcess.memory));
+         jQuery("div.processTab div.id").html(currentlyDisplayedProcess.id);
+         jQuery("div.processTab div.cputime").html(currentlyDisplayedProcess.cputime);
+         jQuery("div.processTab div.activeThreadCount").html(currentlyDisplayedProcess.threads.length);
+         jQuery("div.processTab div.code").html(CORE.assembler.makeDisplayableHtml(currentlyDisplayedProcess.memory));
       }
    
    }

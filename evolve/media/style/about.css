@@ -1,0 +1,19 @@
+@import url("reset-min.css");
+@import url("core.css");
+ ul {
+    padding-left: 10px;
+}
+
+ ol {
+    padding-left: 12px;
+}
+
+ ul li {
+    list-style-type: circle;
+    list-style-position: outside;
+}
+
+ ol li {
+    list-style-type: decimal;
+    list-style-position: outside;
+}

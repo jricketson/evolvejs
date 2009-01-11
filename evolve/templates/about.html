@@ -1,8 +1,26 @@
 {% extends 'base.html' %} 
-    {% block css %}
-    {% endblock %}
-    {% block js %}
-    {% endblock %}
+{% block title %}about{% endblock %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="/static/dijit/themes/tundra/tundra.css" />
+    <link rel="stylesheet" type="text/css" href="/static/dojo/resources/dojo.css" />
+    {% if on_production_server %}
+        <link rel="stylesheet" type="text/css" href="/static/style/about.css" />
+    {% else %}
+        <link rel="stylesheet" type="text/css" href="/static/devStyle/about.css" />
+    {% endif %}
+      
+{% endblock %}
+{% block js %}
+    {% if on_production_server %}
+        <script type="text/javascript" src="/static/dojo/about.min.js"></script>
+    {% else %}
+        <script type="text/javascript" src="/static/dojo/foreign.js"></script>
+        <script>
+            dojo.require("evolve-profile", true);
+            loadDependencies("about.js");
+        </script>
+    {% endif %}
+{% endblock %}
 {% block content %}
 <p>If you want to comment on this application, please go to the <a
     href="http://blog.ricketson.org/2008/evolution-in-javascript/">blog

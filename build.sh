@@ -43,3 +43,5 @@ rm $RD/$PROJECT/fragments -r
 ln -s $WD/$PROJECT/media/fragments $RD/$PROJECT/fragments
 ln -s $WD/$PROJECT/media/js/$PROJECT $RD/$PROJECT/$PROJECT
 ln -s $WD/$PROJECT/media/style $RD/$PROJECT/devStyle
+rm $RD/$PROJECT/test -r
+ln -s $WD/$PROJECT/media/test $RD/$PROJECT/test

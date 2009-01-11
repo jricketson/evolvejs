@@ -16,6 +16,12 @@ def application(request):
     })
     return __renderTemplateToResponse("application.html", c)
     
+def about(request):    
+    c = Context({
+        'on_production_server': on_production_server
+    })
+    return __renderTemplateToResponse("about.html", c)
+    
 def __renderTemplateToResponse(templateName, context):
     t = loader.get_template(templateName)
     return HttpResponse(t.render(context))

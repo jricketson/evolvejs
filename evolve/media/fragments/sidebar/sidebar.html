@@ -1,6 +1,10 @@
   <div id="sidebar">
+    <div class="buttonContainer">
+        <button class="opener">+</button>
+        <button class="closer">-</button>
+    </div>
     <div dojoType="dijit.layout.AccordionContainer" duration="200" class="options">
-        <div dojoType="dijit.layout.AccordionPane" title="Information">
+        <div dojoType="dijit.layout.AccordionPane" title="Information" class="infoTab">
            <table>
               <tr><td>Loops</td><td><div id="loopCount"></div></td></tr>
               <tr><td>Processes</td><td><div id="processCount"></div></td></tr>
@@ -10,7 +14,7 @@
               <div id="speciesList"></div>
            </div>
         </div>
-        <div dojoType="dijit.layout.AccordionPane" title="Process Details">
+        <div dojoType="dijit.layout.AccordionPane" title="Process Details" class="processTab">
            <table>
               <tr><td>id</td><td><div class="id"></div></td></tr>
               <tr><td>cpuTime</td><td><div class="cputime"></div></td></tr>
@@ -18,14 +22,14 @@
               <tr><td>code</td><td><div class="code"></div></td></tr>
            </table>
         </div>
-        <div dojoType="dijit.layout.AccordionPane" title="Create Process">
+        <div dojoType="dijit.layout.AccordionPane" title="Create Process" class="createTab">
            <table>
-              <tr><td colspan="2"><button id="createProcess">Create Process</button></td></tr>
-              <tr><td>id</td><td><input id="createProcessId" /></td></tr>
-              <tr><td>colour</td><td><input id="createProcessColour"/></td></tr>
-              <tr><td>code</td><td><textarea id="createProcessCode" ></textarea></td></tr>
+              <tr><td colspan="2"><button class="createProcess">Create Process</button></td></tr>
+              <tr><td>id</td><td><input class="createProcessId" /></td></tr>
+              <tr><td>colour</td><td><input class="createProcessColour"/></td></tr>
+              <tr><td>code</td><td><textarea class="createProcessCode" ></textarea></td></tr>
            </table>
         </div>
-        <div dojoType="dijit.layout.AccordionPane" title="Logging"></div>
+        <div dojoType="dijit.layout.AccordionPane" title="Logging" class="logTab"></div>
     </div>
   </div>

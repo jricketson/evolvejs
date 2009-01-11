@@ -84,7 +84,7 @@
       $.readyList = $.readyList || [];
 
       if (type == 'js') {
-         var onload = function() {
+         var onload = function onload() {
             $.debug("loaded: " + url);
             $.includedResources[url] = true;
          };

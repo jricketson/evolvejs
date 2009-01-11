@@ -1,5 +1,5 @@
 var CORE = {
-	asyncWhen : function(whenFn, execFn, timeout, timesLeft) {
+	asyncWhen : function asyncWhen(whenFn, execFn, timeout, timesLeft) {
 		timeout = timeout || 500;
 		timesLeft = timesLeft || 20;
 		if (timesLeft === 0) {
@@ -13,7 +13,7 @@ var CORE = {
 					}, timeout);
 		}
 	},
-	getFunctionName : function(fn) {
+	getFunctionName : function getFunctionName(fn) {
 		var m = fn.toString().match(/^\s*function\s+([^\s\(]+)/);
 		return m ? m[1] : "";
 	},
@@ -34,8 +34,7 @@ var CORE = {
 		this.asyncWhen(function() {
 					return CORE.pageTracker !== undefined;
 				}, function() {
-					CORE.pageTracker
-							._trackEvent(category, action, label, value);
+					CORE.pageTracker._trackEvent(category, action, label, value);
 				}, 1000);
 	}
 };
