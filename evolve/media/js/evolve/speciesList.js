@@ -29,7 +29,6 @@ CORE.speciesList = function () {
                                        fields: ["attributes.name", "attributes.created_on", "attributes.generations", "attributes.code", "attributes.id"]};
       
         var table = new YAHOO.widget.DataTable("speciesList", columnDefs, myDataSource, myConfigs);
-      
    }
                         
    return {
@@ -42,7 +41,6 @@ CORE.speciesList = function () {
          var codeArray = CORE.dataAccess.convertStringToCode(code);
          jQuery('#speciesCode').html(CORE.assembler.makeDisplayableHtml(codeArray));
       }
-
       
    };
 }();

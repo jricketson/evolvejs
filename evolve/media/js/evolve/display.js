@@ -30,10 +30,10 @@ CORE.display = function () {
    
    function processCreateHandler(e,process) {
       e.stopPropagation();
-      $.debug(e, process.id, process.gridX, process.gridY);
+      //$.debug(e, process.id, process.gridX, process.gridY);
       jQuery("div#gridDisplay").append('<div class="process" id="'+process.id+'">&nbsp;</div>');
       var divMarker=jQuery("div#gridDisplay div.process:last");
-      divMarker.bind("click", process, divClickedHandler);
+      divMarker.bind("click", process, processClickedHandler);
       divMarker.css({top:markerHeight*process.gridY,
                      left:(markerWidth*process.gridX),
                      height: markerHeight-1,
@@ -54,27 +54,36 @@ CORE.display = function () {
    function processKillHandler(e,process) {
       e.stopPropagation();
       //console.log(e);
-      processDivStore[process.id].fadeOut("normal",function(){jQuery(this).remove();});
+      var processDiv = processDivStore[process.id];
+      if (processDiv) {
+         processDiv.fadeOut("normal",function(){jQuery(this).remove();});
+      }
       delete processDivStore[process.id];
    }
 
    function speciesCreateHandler(e,species) {
       $.debug(e, species);
       e.stopPropagation();
-      jQuery("div#speciesList").append('<div class="species" id="'+species.id+'">'+species.id+'</div>');
+      jQuery("div#speciesList").append('<div class="species" id="'+species.id+'"></div>');
       var divMarker=jQuery("div#speciesList div.species:last");
       divMarker.css({background:species.colour});
-      speciesDivStore[species.id]=divMarker;
+      updateSpeciesDiv(divMarker, species);
+      speciesDivStore[species.id]={div:divMarker,species:species};
    }
 
+   function updateSpeciesDiv(div,species) {
+      var name = species.name == undefined ? species.id : species.name;
+      div.html('<span class="id">'+name+'</span><span class="totalCount">'+species.count+'</span><span class="currentCount">'+species.processes.length+'</span><div style="clear:both;"></div>');
+   }
+   
    function speciesExtinctHandler(e,species) {
       $.debug(e, species);
       e.stopPropagation();
-      speciesDivStore[species.id].fadeOut("normal",function(){jQuery(this).remove();});
+      speciesDivStore[species.id].div.fadeOut("normal",function(){jQuery(this).remove();});
       delete speciesDivStore[species.id];
    }
 
-   function divClickedHandler(e) {
+   function processClickedHandler(e) {
       e.stopPropagation();
       //console.log(e, e.data);
       currentlyDisplayedProcess = e.data;
@@ -82,13 +91,17 @@ CORE.display = function () {
    }
 
    function updateProcessDisplay() {
-      if (currentlyDisplayedProcess) {
+      if (currentlyDisplayedProcess !== null) {
          jQuery("div.processTab div.id").html(currentlyDisplayedProcess.id);
          jQuery("div.processTab div.cputime").html(currentlyDisplayedProcess.cputime);
          jQuery("div.processTab div.activeThreadCount").html(currentlyDisplayedProcess.threads.length);
          jQuery("div.processTab div.code").html(CORE.assembler.makeDisplayableHtml(currentlyDisplayedProcess.memory));
       }
-   
+   }
+   function updateSpeciesDisplay() {
+      for (var speciesId in speciesDivStore) {
+         updateSpeciesDiv(speciesDivStore[speciesId].div, speciesDivStore[speciesId].species);
+      }
    }
 
    //*****************************************
@@ -120,6 +133,7 @@ CORE.display = function () {
          jQuery("div#instrRate").html(""+Math.round(instrsPerSec*100)/100);
 
          updateProcessDisplay();
+         updateSpeciesDisplay();
 
          if (CORE.environment.isRunning()) {
             setTimeout(function(){CORE.display.updateDisplay();},timeDelay);

@@ -19,9 +19,15 @@
                   <span class="headerText"><a href="/evolve/">Evolve the Future</a></span>
                   Evolution the way God intended
                   <div id="topLinks">
+                      <span id="username">{% if user %}{{user}}{% endif %}</span> | 
                       <a href="/evolve/speciesList.html">all species</a> |
                       <a href="/">about</a> | 
-                      <a href="/faq.html">faqs</a>
+                      <a href="/faq.html">faqs</a> |
+                       {% if user %}
+                          <a id="logoutLink">logout</a>
+                      {% else %}
+                          <a href="/login?q=/evolve/">login</a>
+                      {% endif %}
                   </div>
                   {% block extraHeader%}{%endblock%}
             </div>

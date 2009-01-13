@@ -26,6 +26,13 @@ var CORE = {
 		}
 		array.splice(ii, 1);
 	},
+	convertJsonListToObject : function(list, ObjectConstructor) {
+		var retList = [];
+		for (var i = 0; i < list.length; i++) {
+			retList.push(new ObjectConstructor(list[i]));
+		}
+		return retList;
+	},
 	logToBase : function(x, base) {
 		// Created 1997 by Brian Risk. http://members.aol.com/brianrisk
 		return (Math.log(x)) / (Math.log(base));
@@ -34,7 +41,8 @@ var CORE = {
 		this.asyncWhen(function() {
 					return CORE.pageTracker !== undefined;
 				}, function() {
-					CORE.pageTracker._trackEvent(category, action, label, value);
+					CORE.pageTracker
+							._trackEvent(category, action, label, value);
 				}, 1000);
 	}
 };

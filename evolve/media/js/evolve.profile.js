@@ -14,6 +14,7 @@ var local=[
             "evolve.assembly",
             "evolve.application",
             "evolve.ancestor",
+            "evolve.util",
             "fragments.sidebar.sidebar"
          ];
 var about=[

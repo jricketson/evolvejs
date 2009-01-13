@@ -1,0 +1,15 @@
+tag newly evolved creatures as evolved from an original ancestor (traceable to a user)
+wrap a try catch around a user creating a new species 
+
+information that a user enters when creating a species should be used (doesn't look like it is)
+
+add corpses
+ - corpses are the remains of animals that have run out of cpu, or died of natural causes
+ - they contain the embodied value of the animal
+ - animals can be birthed on top of a corpse, in which case the baby immediately gets the value of the corpse
+ - corpses stay around forever (or until eaten)
+
+add a random (low) chance that an animal will die in any one round
+
+add a assembly command to LOOK
+create an animal that looks

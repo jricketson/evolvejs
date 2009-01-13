@@ -66,3 +66,11 @@ div#controlButtons {
     display: none;
 }
 
+.species .totalCount, .species .currentCount {
+    float: right;
+    padding: 0 4px 0 4px;
+}
+.species .id {
+    float: left;
+    padding: 0 4px 0 4px;
+}

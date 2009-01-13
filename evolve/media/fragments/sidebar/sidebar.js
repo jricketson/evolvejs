@@ -47,7 +47,7 @@ dojo.require("dijit.layout.AccordionContainer");
 						var process = new CORE.Process(CORE.assembler.compile(array));
 						process.species.colour = self.element.find(".createProcessColour").val();
 						process.species.id = self.element.find(".createProcessColour").val();
-						CORE.environment.addProcess(process);
+						CORE.environment.addProcess(process, null);
 					});
 
 					self.expanded = true;

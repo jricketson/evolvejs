@@ -283,7 +283,7 @@ CORE.vm = function () {
             newProcess.facing = thread.process.facing;
             var coords = calculateXYForward(thread.process.gridX, thread.process.gridY,thread.process.facing);
             
-            var success = CORE.environment.addProcess(newProcess,coords[0],coords[1]);
+            var success = CORE.environment.addProcess(newProcess,thread.process, coords[0],coords[1]);
             if (success) {
                thread.process.setMemory(oldProcessMemory);
                thread.process.cputime=Math.round(thread.process.cputime/2);

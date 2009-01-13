@@ -28,6 +28,12 @@ CORE.indexHtml = function() {
 
 			// hide the title after 10 secs, or the user clicks
 			setTimeout(hideTitle, 10000);
+			CORE.dataAccess.getUserProfile(function(userProfile) {
+						CORE.userProfile = userProfile;
+						$.get("/rpc/logoutLink", function(data) {
+									$("#logoutLink").attr("href", data);
+								});
+					});
 			$("div#ft").click(hideTitle);
 
 			// links for the user to start the simulation. These swap themselves
