@@ -76,7 +76,6 @@ CORE.speciesLibrary = function() {
          CORE.removeElementFromArray(process.species.processes, process.id);
          if (process.species.processes.length === 0) {
             speciesStore.removeSpecies(process.species);
-            jQuery(document).trigger(CORE.environment.EVENT_SPECIES_EXTINCT, [process.species]);
          }
          process.species = null;
 
@@ -85,13 +84,20 @@ CORE.speciesLibrary = function() {
          species.hashCode = CORE.util.getHashCode(species.code);
          species.processes = [];
          species.colour = colours[previousColour];
-         species.count=0;
+         species.count = 0;
          previousColour += 1;
          speciesStore.addSpecies(species);
          jQuery(document).trigger(CORE.environment.EVENT_SPECIES_CREATED, [species]);
       },
       getStore : function() {
          return speciesStore;
+      },
+      checkForExtinctSpeciesRegularly : function() {
+         speciesStore.checkForExtinctSpecies();
+         var self=this;
+         setTimeout(function() {
+                  self.checkForExtinctSpeciesRegularly();
+               }, 5000);
       }
    };
 }();

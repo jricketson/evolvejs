@@ -21,6 +21,10 @@
     float: right;
 }
 
+#sidebar .speciesList {
+    color: white;
+}
+
 #sidebar .processTab td {
     padding: 2px;
     vertical-align: top;

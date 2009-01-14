@@ -13,13 +13,14 @@ CORE.dataAccess = function() {
    return {
       SPECIES_URL : "/data/species/",
       saveSpecies : function(species) {
-         var parentPk = species.getParent()!=null ? species.getParent().pk : null;
          var postData = {
             "code" : CORE.dataAccess.convertCodeToString(species.code),
             "name" : species.name,
-            "count" : species.count,
-            "parent" : parentPk
+            "count" : species.count
          };
+         if (species.getParent()!=null) {
+            postData.parentRef= species.getParent().pk;
+         }
          $.post(this.SPECIES_URL, postData, function(data){
             var speciesFromServer = JSON.parse(data, stringToDate)[0];
             species.pk=speciesFromServer.pk;

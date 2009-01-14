@@ -4,15 +4,16 @@ dojo.declare("CORE.species.Species", null, {
             this.code = fromObject.code.slice(); // shallow copy
             if (this.fields) {
                this.name = this.fields.name;
+               this.id = this.pk;
             }
          },
          /**
           * gets the id of the next parent in the chain that has been saved
           */
          getParent : function() {
-            var parent = this.parent
+            var parent = this.parent;
             while (parent != null && parent.pk === undefined) {
-               parent = parent.parent
+               parent = parent.parent;
             }
             return parent;
          }
@@ -57,7 +58,22 @@ dojo.declare("CORE.species.SpeciesStore", null, {
             return null;
          },
          removeSpecies : function(species) {
+            jQuery(document).trigger(CORE.environment.EVENT_SPECIES_EXTINCT, [species]);
             var hashArray = this.store[species.hashCode];
             CORE.removeElementFromArray(hashArray, species);
+         },
+         checkForExtinctSpecies : function() {
+            for (hashcode in this.store) {
+               if (this.store.hasOwnProperty(hashcode)) {
+	               var speciesArray = this.store[hashcode];
+	               for (var i = 0; i < speciesArray.length; i++) {
+	                  var species=speciesArray[i];
+	                  if (species.processes.length === 0) {
+	                     this.removeSpecies(species);
+	                  }
+	               }
+               }
+            }
          }
+
       });

@@ -28,11 +28,11 @@ CORE.environment = function() {
                if (species.length !== 0) {
                   // construct a process from each species
                   for (var ii = 0; ii < species.length; ii += 1) {
-                     var code = CORE.dataAccess.convertStringToCode(species[ii].fields.code)
-                     species[ii].code=code;
+                     var code = CORE.dataAccess.convertStringToCode(species[ii].fields.code);
+                     species[ii].code = code;
                      var specie = new CORE.species.Species(species[ii]);
                      CORE.speciesLibrary.addSpeciesFromServer(specie);
-                     population.push(new CORE.Process(code, specie.fields.name));
+                     population.push(new CORE.Process(code, specie.name));
                   }
                } else {
                   population = [new CORE.Process(CORE.ancestor.tree, "tree"),
@@ -175,7 +175,9 @@ CORE.environment = function() {
    // *****************************************
    // these are Lifecycle Events
    // *****************************************
-
+   jQuery(document).ready(function() {
+            CORE.speciesLibrary.checkForExtinctSpeciesRegularly();
+         });
    // *****************************************
    // these are PUBLIC functions and variables
    // *****************************************
@@ -206,7 +208,6 @@ CORE.environment = function() {
       start : function() {
          running = true;
          runSimulationLoop(0);
-         CORE.display.updateDisplay(currentProcesses);
          CORE.environment.resetStartTime();
          CORE.vm.resetInstrCount();
       },

@@ -279,7 +279,7 @@ CORE.vm = function () {
          divideProcess: function divide(thread){
             var newProcessMemory=thread.process.memory.slice(thread.readPtr,thread.writePtr);
             var oldProcessMemory=thread.process.memory.slice(0,thread.readPtr);
-            var newProcess = new CORE.Process(newProcessMemory);
+            var newProcess = new CORE.Process(newProcessMemory, thread.process.name);
             newProcess.facing = thread.process.facing;
             var coords = calculateXYForward(thread.process.gridX, thread.process.gridY,thread.process.facing);
             
