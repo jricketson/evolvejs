@@ -2,10 +2,10 @@ CORE.environment = function() {
    // *****************************************
    // these are PRIVATE functions and variables
    // *****************************************
-   var gridX = 60; // these are default values
-   var gridY = 30;
+   var gridX = 80; // these are default values
+   var gridY = 40;
    var timeDelay = 0; // time to delay between simulation cycles
-   var instructionsPerCycle = 30;
+   var instructionsPerCycle = 50;
    var running = false; // if the simulation should keep running
    var INITIAL_POPULATION_SIZE_FROM_SERVER = 10;
 
@@ -35,8 +35,8 @@ CORE.environment = function() {
                      population.push(new CORE.Process(code, specie.name));
                   }
                } else {
-                  population = [new CORE.Process(CORE.ancestor.tree, "tree"),
-                        new CORE.Process(CORE.ancestor.blindAnimal, "blindAnimal")];
+                  population = [new CORE.Process(CORE.ancestor.tree(), "tree"),
+                        new CORE.Process(CORE.ancestor.blindAnimal(), "blindAnimal")];
                }
                initialisePopulation(population);
             });
@@ -254,6 +254,9 @@ CORE.environment = function() {
       getSerialCode : function() {
          serialProcessIdSeries++;
          return serialProcessIdSeries;
+      },
+      setInstructionsPerCycle : function(value) {
+         instructionsPerCycle=Math.round(value);
       }
    };
 }();

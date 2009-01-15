@@ -1,6 +1,6 @@
 CORE.ancestor = function() {
    return {
-      blindAnimal: CORE.assembler.compile([
+      blindAnimal: function() {return CORE.assembler.compile([
 //START
 ["nop",0],["nop",0],["nop",0],["nop",0],
 
@@ -47,9 +47,9 @@ CORE.ancestor = function() {
 //END
 ["nop",0],["nop",0]
 
-]),
+])},
 
-      tree: CORE.assembler.compile([
+      tree: function() {CORE.assembler.compile([
 //START
 //repro cell
 ["nop",0],["nop",0],["nop",0],["nop",0],["nop",0], //5
@@ -94,7 +94,7 @@ CORE.ancestor = function() {
 //END
 ["nop",0],["nop",0] //43
 
-])
+])}
 
 };
 }();

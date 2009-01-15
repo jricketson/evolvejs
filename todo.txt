@@ -13,3 +13,5 @@ add a random (low) chance that an animal will die in any one round
 
 add a assembly command to LOOK
 create an animal that looks
+
+make the grid resize itself. A rule like: at least 50% of the space should be empty.

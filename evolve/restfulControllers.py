@@ -31,6 +31,8 @@ class SpeciesRestfulController(RestfulController):
                 species.put()
                 return [species]
         return super(SpeciesRestfulController, self).create()  
+    def list (self, offset, limit):
+        return self.modelClass.all().order("-count").fetch(int(limit), int(offset))
     
 class UserProfileForm(ModelForm):
     class Meta:

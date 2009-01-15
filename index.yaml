@@ -10,7 +10,13 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
-# Used 20 times in query history.
+# Used 41 times in query history.
+- kind: Species
+  properties:
+  - name: count
+    direction: desc
+
+# Used 21 times in query history.
 - kind: Species
   properties:
   - name: owner

@@ -32,6 +32,8 @@ mv $RD/$PROJECT/dojo/application.js.uncompressed.js $RD/$PROJECT/dojo/applicatio
 java -jar ../util/yuicompressor-2.4.1.jar $RD/$PROJECT/dojo/application.js > $RD/$PROJECT/dojo/application.min.js
 mv $RD/$PROJECT/dojo/foreign.js.uncompressed.js $RD/$PROJECT/dojo/foreign.js
 java -jar ../util/yuicompressor-2.4.1.jar $RD/$PROJECT/dojo/foreign.js > $RD/$PROJECT/dojo/foreign.min.js
+java -jar ../util/yuicompressor-2.4.1.jar --nomunge $RD/$PROJECT/evolve/vm.js > $RD/$PROJECT/evolve/vm.min.js
+cat $RD/$PROJECT/evolve/vm.min.js >> $RD/$PROJECT/dojo/application.min.js
 ln -s $WD/common/.dojo-js/util/ $RD/$PROJECT/util
 ln -s $WD/common/.dojo-js/dojox $RD/$PROJECT/dojox
 ln -s $WD/test/ $RD/$PROJECT/test

@@ -31,6 +31,26 @@
               <tr><td>code</td><td><textarea class="createProcessCode" ></textarea></td></tr>
            </table>
         </div>
+        <div dojoType="dijit.layout.AccordionPane" title="Advanced Options" class="advancedTab">
+            <span>instructions per cycle</span>
+            <div id="instructionsPerCycleSlider" 
+                 dojoType="dijit.form.HorizontalSlider" 
+                 value="50" 
+                 minimum="1" maximum="300"
+                 intermediateChanges="true"
+                 showButtons="false" 
+                 style="width:200px">
+              <ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration"
+                  style="height:1.5em;font-size:75%;color:gray;">
+                <li></li>
+                <li>20%</li>
+                <li>40%</li>
+                <li>60%</li>
+                <li>80%</li>
+                <li></li>
+              </ol>
+            </div>
+        </div>
         <div dojoType="dijit.layout.AccordionPane" title="Logging" class="logTab"></div>
     </div>
   </div>

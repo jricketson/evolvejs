@@ -27,6 +27,12 @@ div#loadingMessage {
 	margin:5px;
 }
 
+#logoutLink {
+    
+}
+#loginLink {
+    display: none;
+}
 #topLinks a:link, #topLinks a:visited, #topLinks a:active, #topLinks a:hover {
     text-decoration: underline;
 	color: black;

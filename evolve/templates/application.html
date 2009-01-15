@@ -12,9 +12,9 @@
 
 {% block js %}
 {% if on_production_server %}
-    <script type="text/javascript" src="/static/dojo/application.js"></script>
+    <script type="text/javascript" src="/static/dojo/application.min.js"></script>
 {% else %}
-    <script type="text/javascript" src="/static/dojo/foreign.js"></script>
+      <script type="text/javascript" src="/static/dojo/foreign.js"></script>
       <script type="text/javascript" src="/static/evolve/core.js"></script>
       <script type="text/javascript" src="/static/jquery/jquery-depends.js"></script>
       <script type="text/javascript" src="/static/jquery/jquery-gadget.js"></script>

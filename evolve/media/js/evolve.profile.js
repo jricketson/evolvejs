@@ -6,7 +6,6 @@ var local=[
             "jquery.jquery-log",
             "evolve.environment",
             "evolve.process",
-            "evolve.vm",
             "evolve.dataAccess",
             "evolve.species",
             "evolve.speciesLibrary",
@@ -18,7 +17,7 @@ var local=[
             "fragments.sidebar.sidebar"
          ];
 var about=[
-            "jquery.jquery-1-2-6",
+            "jquery.jquery-1-3",
             "jquery.jquery-log",
             "evolve.core",
             "jquery.jquery-depends"
@@ -28,7 +27,7 @@ var foreign = [
             "dijit.layout.ContentPane",
             "dijit.layout.BorderContainer",
             "dijit.layout.AccordionContainer",
-            "jquery.jquery-1-2-6",
+            "jquery.jquery-1-3",
             "external.json2"
          ];
 dependencies = {
