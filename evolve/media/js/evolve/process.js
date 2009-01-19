@@ -11,6 +11,7 @@ dojo.declare("CORE.Process", null, {
             this.id = 0; // give this a serial number
             this.name = name;
             this.species = "";
+            this.age=0;
 
             this.threads.push(new CORE.Thread(this, "0"));
             this.id = CORE.environment.getSerialCode();
@@ -33,6 +34,7 @@ dojo.declare("CORE.Process", null, {
           * to execute
           */
          step : function() {
+            this.age+=1;
             for (var ii = 0; ii < this.threads.length; ii += 1) {
                this.threads[ii].step();
                if (this.dead) {
@@ -46,8 +48,12 @@ dojo.declare("CORE.Process", null, {
           */
          spliceMemory : function(position, elementCount, element) {
             this.memory.splice(position, elementCount, element);
-            var op = "" + element[0];
-            this.operands.splice(position, elementCount, (op.length == 1 ? '0' + op : op));
+            if(element!== undefined){
+               var op= "" + element[0];
+               this.operands.splice(position, elementCount, (op.length == 1 ? '0' + op : op));
+            } else {
+               this.operands.splice(position, elementCount);
+            }
          },
          /**
           * decrements the processes cputime, if the available cputime ever drops below 0, the
@@ -85,6 +91,8 @@ dojo.declare("CORE.Thread", null, {
          constructor : function(process, name) {
             this.process = process;
             this.stack = [];
+            this.counter = [];
+            this.shortTermMemory = [];
             this.executionPtr = 0;
             this.readPtr = 0;
             this.writePtr = 0;
@@ -104,7 +112,7 @@ dojo.declare("CORE.Thread", null, {
                   CORE.vm.execute(this);
                   this.process.decrCpuTime(this.speed);
                } catch (err) {
-                  $.debug(this.process);
+                  $.debug("("+this.process.name+") process threw an error: ", this.process);
                   $.debug(err);
                   CORE.environment.killProcess(this.process);
                }

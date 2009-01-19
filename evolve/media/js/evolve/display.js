@@ -5,6 +5,7 @@ CORE.display = function() {
    var timeDelay = 1000; // time to delay between simulation cycles
 
    var processDivStore = {}; // stored by process id
+   var processStore={};
    var speciesDivStore = {}; // stored by process id
    var currentlyDisplayedProcess = null;
    var markerWidth = 0;
@@ -35,7 +36,7 @@ CORE.display = function() {
       // $.debug(e, process.id, process.gridX, process.gridY);
       $("div#gridDisplay").append('<div class="process" id="' + process.id + '">&nbsp;</div>');
       var divMarker = $("div#gridDisplay div.process:last");
-      divMarker.bind("click", process, processClickedHandler);
+      processStore[process.id]=process;
       divMarker.css({
                top : markerHeight * process.gridY,
                left : (markerWidth * process.gridX),
@@ -71,7 +72,7 @@ CORE.display = function() {
    }
 
    function speciesCreateHandler(e, species) {
-      $.debug(e, species);
+      //$.debug(e, species);
       e.stopPropagation();
       var sidebar = $("#sidebar div.speciesList");
       sidebar.append('<div class="species" id="' + species.id + '"></div>');
@@ -85,6 +86,18 @@ CORE.display = function() {
          species : species
       };
    }
+   function speciesClickedHandler(e) {
+      e.stopPropagation();
+      var divClicked=e.originalTarget;
+      
+      var species = speciesDivStore[divClicked.id];
+      if (species !==undefined) {
+         species=species.species;
+         for (var i =0;i<species.processes.length;i++) {
+            processDivStore[species.processes[i]].fadeOut().fadeIn();
+         }
+      }
+   }
 
    function updateSpeciesDiv(div, species) {
       var name = species.name === undefined ? species.id : species.name;
@@ -94,7 +107,7 @@ CORE.display = function() {
    }
 
    function speciesExtinctHandler(e, species) {
-      $.debug(e, species);
+      //$.debug(e, species);
       e.stopPropagation();
       speciesDivStore[species.id].div.fadeOut("normal", function() {
                $(this).remove();
@@ -104,20 +117,42 @@ CORE.display = function() {
 
    function processClickedHandler(e) {
       e.stopPropagation();
-      // console.log(e, e.data);
-      currentlyDisplayedProcess = e.data;
+      //console.log(e, e.originalTarget);
+      if (currentlyDisplayedProcess !== null) {
+         currentlyDisplayedProcess.debug=false;
+      }
+      var divClicked=e.originalTarget;
+      
+      currentlyDisplayedProcess = processStore[divClicked.id];
+      if (currentlyDisplayedProcess ===undefined) {
+         currentlyDisplayedProcess =null;
+      } else {
+         currentlyDisplayedProcess.debug=true;
+      }
       updateProcessDisplay();
+   }
+   function logMessageHandler(e, message) {
+      e.stopPropagation();
+      $("#sidebar .log").append("<div>"+message+"</div>");
    }
 
    function updateProcessDisplay() {
+      var tab=$("div.processTab");
       if (currentlyDisplayedProcess !== null) {
-         var tab=$("div.processTab");
          tab.find("div.id").html(currentlyDisplayedProcess.id);
          tab.find("div.cputime").html(currentlyDisplayedProcess.cputime);
          tab.find("div.activeThreadCount").html(currentlyDisplayedProcess.threads.length);
          tab.find("div.name").html(currentlyDisplayedProcess.name);
+         tab.find("div.age").html(currentlyDisplayedProcess.age);
          var displayableCode=CORE.assembler.makeDisplayableHtml(currentlyDisplayedProcess.memory);
          tab.find("div.code").html(displayableCode);
+      } else {
+         tab.find("div.id").html("");
+         tab.find("div.cputime").html("");
+         tab.find("div.activeThreadCount").html("");
+         tab.find("div.name").html("");
+         tab.find("div.age").html("");
+         tab.find("div.code").html("");
       }
    }
    function updateSpeciesDisplay() {
@@ -137,12 +172,18 @@ CORE.display = function() {
             $(document).bind(CORE.environment.EVENT_PROCESS_KILLED, processKillHandler);
             $(document).bind(CORE.environment.EVENT_SPECIES_CREATED, speciesCreateHandler);
             $(document).bind(CORE.environment.EVENT_SPECIES_EXTINCT, speciesExtinctHandler);
-
+            $(document).bind(CORE.EVENT_LOG_MESSAGE, logMessageHandler);
+            $("#gridDisplay").bind("click", processClickedHandler);
+            
             $(document).ready(calculateMarkerSize);
             $(window).resize(calculateMarkerSize);
             setTimeout(function() {
                      CORE.display.updateDisplay();
                   }, timeDelay);
+            //TODO: fix this terrible hack. The specieslist hasn't been created yet
+            setTimeout(function() {
+            $(".speciesList").bind("click", speciesClickedHandler); 
+            }, 1000);
          });
 
    // *****************************************

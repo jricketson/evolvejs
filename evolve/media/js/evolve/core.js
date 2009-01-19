@@ -1,4 +1,5 @@
 var CORE = {
+   EVENT_LOG_MESSAGE: "log_message",
    asyncWhen : function asyncWhen(whenFn, execFn, timeout, timesLeft) {
       timeout = timeout || 500;
       timesLeft = timesLeft || 20;

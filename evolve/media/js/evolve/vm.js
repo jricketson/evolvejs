@@ -1,7 +1,7 @@
 CORE.vm = function () {
-   //*****************************************
-   //these are PRIVATE functions and variables
-   //*****************************************
+   // *****************************************
+   // these are PRIVATE functions and variables
+   // *****************************************
    
    var maxOpCode=27;
    var maxOperand=10000;
@@ -9,16 +9,15 @@ CORE.vm = function () {
    var instrCount=0;
    
    /**
-      if going forward to return the index of the last element of the template
-      if going backward return the index of the first instruction of the template
-      the search wraps around the end of memory back to the start
-   */
+    * if going forward to return the index of the last element of the template if going backward
+    * return the index of the first instruction of the template the search wraps around the end of
+    * memory back to the start
+    */
    /*
-      options for making this more efficient:
-      1. Cache the results: this has the problem that the cache should be invalidated if the processes memory changes... Might not be that useful
-      2. Try using a string version of the operators to do a regex over.
-      3. ...
-   */
+    * options for making this more efficient: 1. Cache the results: this has the problem that the
+    * cache should be invalidated if the processes memory changes... Might not be that useful 2. Try
+    * using a string version of the operators to do a regex over. 3. ...
+    */
    function findTemplate(process, start, dirForward, size)
    {
       var ii;
@@ -32,7 +31,7 @@ CORE.vm = function () {
    }
     
    function searchArray(process, startPt, endPt, dirForward, size) {
-      //get the operands starting from 'start'
+      // get the operands starting from 'start'
       var ops = dirForward ? process.operands.slice(startPt) : process.operands.slice(0,startPt).reverse();
       var strOps = ops.join("");
       var nopSearch = new RegExp("(00){"+size+",}","g");
@@ -89,39 +88,38 @@ CORE.vm = function () {
          }
          break;
       default:
-         //TODO this shouldn't happen
+         throw "Direction shouldn't be this value: " + direction;
       }
       return [newX,newY];
    
    }
    
    /**
-    * standard behaviour of this function is to return a single element from the memory ptr, 
-    * occasionally this function will misbehave (intentionally) and return either:
-    * 0 elements (remove an element from the copy)
-    * 1 element that is a random replacement of the original instruction
-    * 2 elements, the original plus a random instruction
-   */
+    * standard behaviour of this function is to return a single element from the memory ptr,
+    * occasionally this function will misbehave (intentionally) and return either: 0 elements
+    * (remove an element from the copy) 1 element that is a random replacement of the original
+    * instruction 2 elements, the original plus a random instruction
+    */
    function elementsToCopy (memory, ptr) {
       var val=Math.random()*CORE.environment.mutationRate;
-      //console.log(val);
+      // console.log(val);
       if (val<1) {
-         //mutate
-         $.debug("Mutate!");
+         // mutate
+         //$.debug("Mutate!");
          var choice = Math.random()*30;
          if (choice<=10) {
-            //remove element
-            $.debug("Mutate: remove operation");
+            // remove element
+            //$.debug("Mutate: remove operation");
             return [];
          }
          else if (choice<=20) {
-            //return random element
-            $.debug("Mutate: change operation");
+            // return random element
+            //$.debug("Mutate: change operation");
             return [constructRandomOperation()];
          }
          else {
-            //insert new random element
-            $.debug("Mutate: new operation");
+            // insert new random element
+            //$.debug("Mutate: new operation");
             return [memory[ptr],constructRandomOperation()];
          }
       }
@@ -135,28 +133,32 @@ CORE.vm = function () {
    }
    
   
-   //*****************************************
-   //these are Lifecycle Events
-   //*****************************************
+   // *****************************************
+   // these are Lifecycle Events
+   // *****************************************
 
-   //*****************************************
-   //these are PUBLIC functions and variables
-   //*****************************************
+   // *****************************************
+   // these are PUBLIC functions and variables
+   // *****************************************
    return {
       resetInstrCount: function() {
          instrCount=0;
       },
-      execute: function execute(thread) { //executes a function on a thread
+      execute: function execute(thread) { // executes a function on a thread
          if (thread.executionPtr > thread.process.memory.length-1) {
-            throw "Attempted to execute beyond memory limits";
+            throw new Error("Attempted to execute beyond memory limits (executed : " + thread.executionPtr + ", thread.process.memory.length: " + thread.process.memory.length +")");
          }
          var instrCode = thread.process.memory[thread.executionPtr];
          var operator = this.instructionCodes[instrCode[0]];
-         //console.log(thread.process.id, thread.name, thread.executionPtr, operator.name, instrCode);
-         //$.debug(thread.process.id, operator.name, instrCode[1]);
+         // instrCode);
          if (operator)
          {
-            operator(thread, instrCode[1]);
+             operator(thread, instrCode[1]);
+	         if (thread.process.debug) {
+	            $(document).trigger(CORE.EVENT_LOG_MESSAGE, operator.name + " " + instrCode[1] + " stack[" + thread.stack.toString()+"],  counters[" + thread.counter.toString()+"], shortMem[" + thread.shortTermMemory.toString()+"], ePtr: "+thread.executionPtr+", rPtr: "+thread.readPtr+", wPtr: "+thread.writePtr);
+	         }
+         } else if (thread.process.debug) {
+            $(document).trigger(CORE.EVENT_LOG_MESSAGE, "invalid instruction: ["+instrCode.toString()+ "] stack[" + thread.stack.toString()+"]");
          }
          instrCount+=1;
       },
@@ -172,20 +174,53 @@ CORE.vm = function () {
             thread.stack.push(a+operand);
             thread.executionPtr+=1;
          },
+         mult: function mult(thread, operand){
+            var a = thread.stack.pop();
+            thread.stack.push(a*operand);
+            thread.executionPtr+=1;
+         },
+         dupTop: function dupTop(thread, operand){
+            var a = thread.stack.pop();
+            thread.stack.push(a);
+            thread.stack.push(a);
+            thread.executionPtr+=1;
+         }, 
          push: function push(thread, operand){
             thread.stack.push(operand);
             thread.executionPtr+=1;
          }, 
-         pushM: function pushM(thread, operand) { //pushes operand from memPtr(+operand) to stack
-            thread.stack.push(thread.process.memory[thread.memPtr+operand][1]);
+         pop: function pop(thread, operand){
+            for (var i=0;i<operand;i++) {
+               thread.stack.pop();
+            }
+            thread.executionPtr+=1;
+         }, 
+         pushM: function pushM(thread, operand) { // pushes operand from memPtr(+operand) to stack
+            thread.stack.push(thread.shortTermMemory[operand]);
             thread.executionPtr+=1;
          },
-         popM: function popM(thread, operand) { //pops stack to operand at memPtr(+operand)
-            thread.process.memory[thread.memPtr+operand][1] = thread.stack.pop();
+         popM: function popM(thread, operand) { // pops stack to operand at memPtr(+operand)
+            thread.shortTermMemory[operand] = thread.stack.pop();
+            thread.executionPtr+=1;
+         },
+         incCounter: function incCounter(thread, operand) {
+            thread.counter[operand]+=1;
+            thread.executionPtr+=1;
+         },
+         resetCounter: function resetCounter(thread, operand) {
+            thread.counter[operand]=0;
+            thread.executionPtr+=1;
+         },
+         pushCounter: function pushCounter(thread, operand) {
+            thread.stack.push(thread.counter[operand]);
             thread.executionPtr+=1;
          },
          pushMemSize: function pushMemSize(thread, operand){
             thread.stack.push(thread.process.memory.length);
+            thread.executionPtr+=1;
+         },
+         pushCpuTime: function pushCpuTime(thread, operand){
+            thread.stack.push(thread.process.cputime);
             thread.executionPtr+=1;
          },
          pushReadPtr: function pushReadPtr(thread, operand){
@@ -196,24 +231,23 @@ CORE.vm = function () {
             thread.stack.push(thread.writePtr);
             thread.executionPtr+=1;
          },
-         jmpReadPtrB: function jmpReadPtrB(thread, operand){ //moves to a template
+         jmpReadPtrB: function jmpReadPtrB(thread, operand){ // moves to a template
             jmpPtr(thread,thread.executionPtr,false, operand, "readPtr");
             thread.executionPtr+=1;
          }, 
-         jmpReadPtrF: function jmpReadPtrF(thread, operand){ //moves to a template
+         jmpReadPtrF: function jmpReadPtrF(thread, operand){ // moves to a template
             jmpPtr(thread,thread.executionPtr,true, operand, "readPtr");
             thread.executionPtr+=1;
          }, 
-         jmpWritePtrF: function jmpWritePtrF(thread, operand){ //moves to a template
+         jmpWritePtrF: function jmpWritePtrF(thread, operand){ // moves to a template
             jmpPtr(thread,thread.executionPtr,true, operand, "writePtr");
             thread.executionPtr+=1;
          }, 
-         jmpMemPtrB: function jmpMemPtrB(thread, operand){ //moves to a template
-            jmpPtr(thread,thread.executionPtr,false, operand, "memPtr");
-            thread.executionPtr+=1;
-         }, 
-         jmpB: function jmpB(thread,operand){ //jmps to a template
+         jmpB: function jmpB(thread,operand){ // jmps to a template
             jmpPtr(thread,thread.executionPtr,false, operand, "executionPtr");
+         },
+         jmpF: function jmpF(thread,operand){ // jmps to a template
+            jmpPtr(thread,thread.executionPtr,true, operand, "executionPtr");
          },
          incReadPtr: function incReadPtr(thread){
             thread.readPtr+=1;
@@ -231,7 +265,7 @@ CORE.vm = function () {
             else if (eleToCopy.length===0) {
                thread.process.spliceMemory(thread.writePtr,1);
             }
-            else { //multiple elements
+            else { // multiple elements
                thread.process.spliceMemory(thread.writePtr,1,eleToCopy[0]);
                for (var ii=1;ii<eleToCopy.length;ii+=1) {
                   thread.process.spliceMemory(thread.writePtr,0,eleToCopy[ii]);
@@ -252,7 +286,7 @@ CORE.vm = function () {
             thread.stack.push((a>=b)/1);
             thread.executionPtr+=1;
          },
-         ifdo: function ifdo(thread, operand){
+         ifDo: function ifDo(thread, operand){
             var a = thread.stack.pop();
             if (a) {
                thread.executionPtr+=1;
@@ -261,22 +295,33 @@ CORE.vm = function () {
                thread.executionPtr+=(1+operand);
             }
          }, 
+         ifNotDo: function ifNotDo(thread, operand){
+            var a = thread.stack.pop();
+            if (a) {
+               thread.executionPtr+=(1+operand);
+            }
+            else {
+               thread.executionPtr+=1;
+            }
+         }, 
          
-         runThread: function runThread(thread){ //runs a separate thread in this process, the execution ptr is set to readPtr in this thread
+         runThread: function runThread(thread){ // runs a separate thread in this process, the
+                                                // execution ptr is set to readPtr in this thread
             var newThread = new CORE.Thread(thread.process, ""+thread.process.threads.length);
             newThread.executionPtr=thread.readPtr;
             thread.process.threads.push(newThread);
             thread.executionPtr+=1;
          }, 
          /*
-          *The original organism keeps the state of its memory up until the read-head. 
-          *The offspring's memory is initialized to everything between the read-head and the write-head. 
-          *All memory past the write-head is removed entirely.         
-          *
-          * the offspring is attempted to be placed in front of the current process (in the direction that it is facing)
-          * pushes result (successful division) to stack
-         */
+          * The original organism keeps the state of its memory up until the read-head. The
+          * offspring's memory is initialized to everything between the read-head and the
+          * write-head. All memory past the write-head is removed entirely.
+          * 
+          * the offspring is attempted to be placed in front of the current process (in the
+          * direction that it is facing) pushes result (successful division) to stack
+          */
          divideProcess: function divide(thread){
+            //$.debug(thread.readPtr, thread.writePtr);
             var newProcessMemory=thread.process.memory.slice(thread.readPtr,thread.writePtr);
             var oldProcessMemory=thread.process.memory.slice(0,thread.readPtr);
             var newProcess = new CORE.Process(newProcessMemory, thread.process.name);
@@ -302,8 +347,33 @@ CORE.vm = function () {
             }
             thread.executionPtr+=1;
          },
-         look: function look(thread){ //looks in a set direction as a % of a full circle 0 = 0deg, 50 = 180deg
-            //TODO
+         /**
+          * looks forward and puts a structure on the stack
+          * 
+          * the structure on the stack is distance to next target, or -1 if none seen
+          * 
+          * cputime budget of target, (only if target seen)
+          * 
+          * memory size of budget (only if target seen)
+          */
+         look: function look(thread){ 
+            var horizon = CORE.environment.horizon;
+            var coords = [thread.process.gridX, thread.process.gridY];
+            var found=false;
+            for (var i=0;i<horizon;i++) {
+               coords = calculateXYForward(coords[0], coords[1],thread.process.facing);
+               var otherProcess = CORE.environment.getProcessAtPosition(coords[0],coords[1]);
+               if (otherProcess !== null) {
+                  thread.stack.push(otherProcess.memory.length);
+                  thread.stack.push(otherProcess.cputime);
+                  thread.stack.push(i+1);
+                  found=true;
+                  break;
+               }
+            }
+            if (! found) {
+               thread.stack.push(-1);
+            }
             thread.executionPtr+=1;
          }, 
          turnR: function turnR(thread){
@@ -315,7 +385,10 @@ CORE.vm = function () {
             thread.process.facing=facing;
             thread.executionPtr+=1;
          },
-         move: function move(thread) { //moves one space straight ahead, if the path is not blocked.
+         /**
+          * moves one space straight ahead, if the path is not blocked.
+          */
+         move: function move(thread) { 
             var coords = calculateXYForward(thread.process.gridX, thread.process.gridY,thread.process.facing);
             CORE.environment.moveProcess(thread.process, coords[0],coords[1]);
             thread.executionPtr+=1;
@@ -328,27 +401,36 @@ CORE.vm = function () {
    };
 }();
 
-//This contains a code -> method mapping
+// This contains a code -> method mapping
 CORE.vm.instructionCodes = {
       0:CORE.vm.instructionSet.nop,
       1:CORE.vm.instructionSet.add,
+      29:CORE.vm.instructionSet.mult,
       2:CORE.vm.instructionSet.push,
+      30:CORE.vm.instructionSet.pop,
+      34:CORE.vm.instructionSet.dupTop,
       3:CORE.vm.instructionSet.pushM,
       4:CORE.vm.instructionSet.popM,
+      31:CORE.vm.instructionSet.incCounter,
+      32:CORE.vm.instructionSet.resetCounter,
+      33:CORE.vm.instructionSet.pushCounter,
       5:CORE.vm.instructionSet.pushMemSize,
+      27:CORE.vm.instructionSet.pushCpuTime,
       6:CORE.vm.instructionSet.pushWritePtr,
       7:CORE.vm.instructionSet.pushReadPtr,
       8:CORE.vm.instructionSet.jmpReadPtrB,
       9:CORE.vm.instructionSet.jmpReadPtrF,
       10:CORE.vm.instructionSet.incReadPtr,
-      11:CORE.vm.instructionSet.jmpMemPtrB,
+//      11:CORE.vm.instructionSet.jmpMemPtrB,
       12:CORE.vm.instructionSet.jmpWritePtrF,
       13:CORE.vm.instructionSet.incWritePtr,
       14:CORE.vm.instructionSet.jmpB,
+      28:CORE.vm.instructionSet.jmpF,
       15:CORE.vm.instructionSet.copy,
       16:CORE.vm.instructionSet.lt,
       17:CORE.vm.instructionSet.gte,
-      18:CORE.vm.instructionSet.ifdo,
+      18:CORE.vm.instructionSet.ifDo,
+      26:CORE.vm.instructionSet.ifNotDo,
       19:CORE.vm.instructionSet.runThread,
       20:CORE.vm.instructionSet.alloc,
       21:CORE.vm.instructionSet.divideProcess,
@@ -358,7 +440,7 @@ CORE.vm.instructionCodes = {
       25:CORE.vm.instructionSet.sleep
 };
 
-//This contains a methodName -> code mapping
+// This contains a methodName -> code mapping
 CORE.vm.codeInstructions = function() {
    var instructionCodes = CORE.vm.instructionCodes;
    var nameToCode={};

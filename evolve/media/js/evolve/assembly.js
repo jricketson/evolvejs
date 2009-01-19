@@ -13,7 +13,8 @@ CORE.assembler = function() {
             if (operatorCode !== undefined) {
                compiledCode.push([operatorCode, code[ii][1]]);
             } else {
-               $.debug("code not found: " + code[ii][0], "error");
+               $.debug(new Error("code not found: " + code[ii][0] + ", instr: " + ii));
+               $.debug(code);
             }
          }
          return compiledCode;

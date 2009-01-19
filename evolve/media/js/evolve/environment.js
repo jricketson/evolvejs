@@ -36,7 +36,8 @@ CORE.environment = function() {
                   }
                } else {
                   population = [new CORE.Process(CORE.ancestor.tree(), "tree"),
-                        new CORE.Process(CORE.ancestor.blindAnimal(), "blindAnimal")];
+                        new CORE.Process(CORE.ancestor.blindAnimal(), "blindAnimal"),
+                        new CORE.Process(CORE.ancestor.seeingAnimal(), "seeingAnimal")];
                }
                initialisePopulation(population);
             });
@@ -86,7 +87,7 @@ CORE.environment = function() {
    }
 
    function move(process, x, y) {
-      if (CORE.environment.getGrid()[x][y] !== 0) {
+      if (grid[x][y] !== 0) {
          attack(process, x, y);
       }
       if (grid[x][y] === 0) {
@@ -195,6 +196,7 @@ CORE.environment = function() {
 
       mutationRate : 1000, // approximate chance of mutation (1 in x copy operations)
       startTime : 0,
+      horizon : 10,
 
       /**
        * starts the environment and runs the simulation
@@ -257,6 +259,13 @@ CORE.environment = function() {
       },
       setInstructionsPerCycle : function(value) {
          instructionsPerCycle=Math.round(value);
+      },
+      getProcessAtPosition : function(x,y) {
+         if (grid[x][y] !== 0) {
+            return grid[x][y];
+         } else {
+            return null;
+         }
       }
    };
 }();

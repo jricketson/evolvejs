@@ -15,3 +15,6 @@ add a assembly command to LOOK
 create an animal that looks
 
 make the grid resize itself. A rule like: at least 50% of the space should be empty.
+should alloc have a cost?? perhaps related to the embodiedEnergy constant
+
+debug mode: turn off mutations, turn off sending to server
