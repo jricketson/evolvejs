@@ -34,29 +34,20 @@ class SpeciesRestfulController(RestfulController):
     def list (self, offset, limit):
         return self.modelClass.all().order("-count").fetch(int(limit), int(offset))
     
-class UserProfileForm(ModelForm):
+class UserForm(ModelForm):
     class Meta:
-        model = UserProfile
+        model = User
 
-class UserProfileRestfulController(RestfulController):
-    modelClass = UserProfile
-    formClass = UserProfileForm
+class UserRestfulController(RestfulController):
+    modelClass = User
+    formClass = UserForm
     
     def id(self, key):
-        userProfile = self.modelClass.all().filter("owner =", users.get_current_user()).fetch(1)
-        if len(userProfile)>0:
-            return [userProfile[0]]
-        else:
-            userProfile = self.modelClass(owner=users.get_current_user())
-            userProfile.put()
-            return [userProfile]
+        user = self.request.user
+        if not user.is_authenticated():
+            return []
+        return [user]
 
     def update(self, key):
-        modelObj = self.modelClass.all().filter("owner =", users.get_current_user()).fetch(1)
-        form = self.formClass(self.request.POST, instance=modelObj)
-        if form.is_valid():
-            form.save()
-            return [modelObj]
-        else:
-            return form
+        pass
 

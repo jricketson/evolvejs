@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from google.appengine.ext import db
+from ragendja.auth.models import EmailUser
 
 class Species(db.Model):
     name = db.StringProperty()
@@ -12,9 +13,10 @@ class Species(db.Model):
     created = db.DateTimeProperty(auto_now_add=True)
     owner = db.UserProperty()
 
-class UserProfile(db.Model):
+class User(EmailUser):
+    username = db.StringProperty()
+    first_name = db.StringProperty()
+    last_name = db.StringProperty()
 
     version = db.StringProperty()
-    created = db.DateTimeProperty(auto_now_add=True)
-    owner = db.UserProperty()
 

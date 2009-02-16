@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
 from ragendja.settings_pre import *
 
+# Increase this when you update your media on the production site, so users
+# don't have to refresh their cache. By setting this your MEDIA_URL
+# automatically becomes /media/MEDIA_VERSION/
+MEDIA_VERSION = 1
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = 'asfasfdwwrew4324234safdsdf43w5etdgresty45'
+
 #ENABLE_PROFILER = True
 #ONLY_FORCED_PROFILE = True
 #PROFILE_PERCENTAGE = 25
@@ -11,6 +19,12 @@ from ragendja.settings_pre import *
 USE_I18N = True
 LANGUAGE_CODE = 'en'
 
+#Restrict supported languages (and JS media generation)
+#LANGUAGES = (
+#    ('de', 'German'),
+#    ('en', 'English'),
+#)
+
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.auth',
     'django.core.context_processors.media',
@@ -20,27 +34,29 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # Django authentication
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # Google authentication
+    #'ragendja.auth.middleware.GoogleAuthenticationMiddleware',
+    # Hybrid Django/Google authentication
+    #'ragendja.auth.middleware.HybridAuthenticationMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'ragendja.sites.dynamicsite.DynamicSiteIDMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
 )
+
+# Google authentication
+#AUTH_USER_MODULE = 'ragendja.auth.google_models'
+#AUTH_ADMIN_MODULE = 'ragendja.auth.google_admin'
+# Hybrid Django/Google authentication
+#AUTH_USER_MODULE = 'ragendja.auth.hybrid_models'
 
 GLOBALTAGS = (
     'ragendja.templatetags.ragendjatags',
     'django.templatetags.i18n',
 )
-
-# Restrict JS media generation to only the given LOCALE_SITES
-LOCALE_SITES = (
-    'en',)
-
-# Increase this when you update your media on the production site, so users
-# don't have to refresh their cache. By setting this your MEDIA_URL
-# automatically becomes /media/MEDIA_VERSION/
-MEDIA_VERSION = 1
-
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'asdfasdfasfasdf343w424wesdfsdf32desa43'
 
 LOGIN_URL = '/account/login/'
 LOGOUT_URL = '/account/logout/'
@@ -53,6 +69,7 @@ INSTALLED_APPS = (
     'appenginepatcher',
     'evolve',
     'restful',
+    'registration',
     'mediautils',
 )
 

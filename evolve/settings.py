@@ -2,7 +2,7 @@ from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 
 REST_CONTROLLERS = {
                     "species":"evolve.restfulControllers.SpeciesRestfulController",
-                    "userProfile":"evolve.restfulControllers.UserProfileRestfulController",
+                    "user":"evolve.restfulControllers.UserRestfulController",
                     }
 
 
@@ -11,6 +11,7 @@ TEMPLATE_CONTEXT_PROCESSORS += (
      'evolve.context_processors.core'
 ) 
 
-AUTH_USER_MODULE="moolah.models"
+AUTH_USER_MODULE="evolve.models"
+APPLICATION_NAME="evolve"
 
 DEFAULT_FROM_EMAIL="jricketson@redredred.com.au"

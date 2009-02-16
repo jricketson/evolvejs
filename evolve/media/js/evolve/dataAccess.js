@@ -31,7 +31,7 @@ CORE.dataAccess = function() {
 
       },
       getUserProfile : function(callback) {
-         $.get("/data/userProfile/id/0", function(data) {
+         $.get("/data/user/id/0", function(data) {
                   callback(JSON.parse(data, stringToDate)[0]);
                });
       },
