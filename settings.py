@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from settings_pre import *
+from ragendja.settings_pre import *
 
 #ENABLE_PROFILER = True
 #ONLY_FORCED_PROFILE = True
@@ -56,4 +56,4 @@ INSTALLED_APPS = (
     'mediautils',
 )
 
-from settings_post import *
+from ragendja.settings_post import *

@@ -87,6 +87,7 @@
          var onload = function onload() {
             $.debug("loaded: " + url);
             $.includedResources[url] = true;
+            callback();
          };
          createScriptElement(url, onload);
          $.includedResources[url] = false;

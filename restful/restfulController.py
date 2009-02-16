@@ -1,6 +1,4 @@
 import os
-from google.appengine.api import users
-
 
 class RestfulController(object):
     def __init__(self, request):
@@ -9,7 +7,7 @@ class RestfulController(object):
         form = self.formClass(self.request.POST)
         if form.is_valid():
             modelObj=form.save(commit=False)
-            modelObj.owner=users.get_current_user()
+            modelObj.owner=self.request.user
             modelObj.version=os.environ['CURRENT_VERSION_ID']
             modelObj.put()
             return [modelObj]
@@ -26,7 +24,7 @@ class RestfulController(object):
             return form
         
     def list (self, offset, limit):
-        return self.modelClass.all().filter("owner =", users.get_current_user()).order("created").fetch(int(limit), int(offset))
+        return self.modelClass.all().filter("owner =", self.request.user).order("created").fetch(int(limit), int(offset))
 
     def id(self, key):
         return [self.modelClass.get(key)]

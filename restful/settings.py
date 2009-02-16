@@ -1,1 +1,1 @@
-from settings_post import *
+from ragendja.settings_post import *

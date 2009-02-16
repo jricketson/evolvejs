@@ -51,7 +51,9 @@ def __parseURI(remainder):
             
 def __dispatch(request, modelName, methodName, args):
     #create controller object
-    c = settings.REST_CONTROLLERS[modelName](request)
+    className= settings.REST_CONTROLLERS[modelName].rpartition(".")
+    code=__import__(className[0], globals(), locals(), [className[2]])
+    c = getattr(code,className[2])(request)
     #call the method on the controller
     result = getattr(c,methodName)(*args)
     #TODO: this should check the requested return type from the request that was received 
