@@ -23,8 +23,8 @@
                       <a href="/evolve/speciesList.html">all species</a> |
                       <a href="/">about</a> | 
                       <a href="/faq.html">faqs</a> |
-                      <a id="logoutLink">logout</a>
-                      <a id="loginLink" href="/login?q=/evolve/">login</a>
+                      <a id="logoutLink" href="/account/logout/?next=/" >logout</a>
+                      <a id="loginLink" href="/account/login/" >login or register</a>
                   </div>
                   {% block extraHeader%}{%endblock%}
             </div>
@@ -46,6 +46,7 @@
                    {% endif %}
             </div>
         </div>
+        <div id="jslog"></div>
         <script type="text/javascript">
             var djConfig = {
                 parseOnLoad:true
@@ -68,11 +69,15 @@
                  }
              }
              {% endif %}
-                         
         </script>
         <script type="text/javascript" src="/static/dojo/dojo.js"></script>
         {% block js %}{% endblock js %}
         <script>
+            {% if on_production_server %}
+            window.onerror = CORE.handleErrorAsWarning;
+            {% else %}
+            window.onerror = CORE.handleErrorAsError;
+            {% endif %}
              $(document).ready(function() {CORE.on_production_server = "{{on_production_server}}";});
              $.dependsOnScripts(["http://www.google-analytics.com/ga.js"], function() {
                  CORE.pageTracker = _gat._getTracker("UA-5647908-3");

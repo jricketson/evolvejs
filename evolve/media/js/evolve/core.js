@@ -1,3 +1,5 @@
+dojo.require("dojox.dtl");
+dojo.require("dojox.dtl.Context");
 var CORE = {
    EVENT_LOG_MESSAGE: "log_message",
    asyncWhen : function asyncWhen(whenFn, execFn, timeout, timesLeft) {
@@ -44,8 +46,50 @@ var CORE = {
             }, function() {
                CORE.pageTracker._trackEvent(category, action, label, value);
             }, 1000);
+   },
+   throttle : function(fn, delay) {
+      var t = new CORE.Throttle(fn, delay);
+      return function() {
+         t.execute.apply(t, arguments);
+      };
+   },
+   handleErrorAsError : function handleError(msg, url, l) {
+      console.error("ERROR", msg, url, l);
+      CORE.data.logError({msg: msg, url: url, lineNumber: l});
+      return false;
+   },
+   handleErrorAsWarning : function handleError(msg, url, l) {
+      console.warn("ERROR", msg, url, l);
+      CORE.data.logError({msg: msg, url: url, lineNumber: l});
+      return true;
    }
 };
+
+dojo.declare("CORE.Throttle", null, {
+   constructor : function(fn, delay) {
+      this.fn = fn;
+      this.delay = delay || 50; /* milliseconds - vary as desired */
+      this.executionTimer = null;
+   },
+   execute : function() {
+      if (this.executionTimer) {
+         clearTimeout(this.executionTimer);
+      }
+      var args = arguments;
+      var fn = this.fn;
+      this.executionTimer = setTimeout(function() {
+               fn.apply(null, args);
+            }, this.delay);
+   }
+});
+
+//if no firebug installed
+if (!window.console) {
+   var console = {
+      log : function() {
+      }
+   };
+}
 
 if (typeof Object.create !== 'function') {
    Object.create = function(o) {
@@ -55,3 +99,13 @@ if (typeof Object.create !== 'function') {
       return new F();
    };
 }
+
+Function.prototype.curry = function() {
+   var args = Array.prototype.slice.call(arguments);
+   var fn = this;
+   return function() {
+      var innerArgs = Array.prototype.slice.call(arguments);
+      var finalArgs = args.concat(innerArgs);
+      return fn.apply(null, finalArgs);
+   };
+};

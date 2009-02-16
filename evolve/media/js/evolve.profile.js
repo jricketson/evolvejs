@@ -17,7 +17,7 @@ var local=[
             "fragments.sidebar.sidebar"
          ];
 var about=[
-            "jquery.jquery-1-3",
+            "jquery.jquery-1-3-1",
             "jquery.jquery-log",
             "evolve.core",
             "jquery.jquery-depends"
