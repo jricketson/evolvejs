@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div dojoType="dijit.layout.ContentPane" gutters="false" region="center" id="contentDisplay">
+{% block staticContent %}{% endblock %}
+</div>
+{% endblock content %}
+
+{% block js %}
+{% if on_production_server %}
+    <script type="text/javascript" src="/static/dojo/static.min.js"></script>
+{% else %}
+    <script type="text/javascript" src="/static/dojo/foreign.js"></script>
+    <script>
+        dojo.require("moolah-profile", true);
+        loadDependencies("static.js");
+    </script>
+{% endif %}
+{% endblock js %}

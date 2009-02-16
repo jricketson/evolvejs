@@ -1,0 +1,17 @@
+{% extends "registration.html" %}
+{% block title %}login {% endblock title %}
+
+{% block staticContent %}
+    <div class="loginForm">
+        <h1>Login</h1>
+        <form action="{{ request.get_full_path }}" method="post">
+          <table>{{ form }}</table>
+          <input type="submit" value="Login" />
+        </form>
+        <ul class="otherOptions">
+            <li>I don't have a user account yet. <a href="/account/register/">Register</a></li>
+            <li>I can't remember my password. <a href="/account/password/reset/">Reset password</a></li>
+        </ul>
+    </div>
+{% endblock %}
+

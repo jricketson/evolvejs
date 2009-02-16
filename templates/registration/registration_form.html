@@ -1,0 +1,19 @@
+{% extends "registration.html" %}
+{% block title %}register new user {% endblock title %}
+
+{% block staticContent %}
+    <div class="registrationForm">
+        <h1>Register</h1>
+        <p>moolah is currently invitation only.</p>
+        <p>If you don't have an invitation, sign up and we will notify you shortly (really really soon), when there are more invitations available.</p>
+        <p>A link to activate your account will be sent to your email.</p>
+        <form action="/account/register/" method="post">
+            <table>
+            {{ form }}
+            </table>
+            <input value="Register" type="submit">
+        </form>
+        <p>all fields are required</p>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,15 @@
+{% extends 'static.html' %}
+{% block title %}{{ flatpage.title }} - {% endblock %}
+{% block css %}
+   {% if on_production_server %}
+        <link rel="stylesheet" type="text/css" href="/static/style/about.css" />
+   {% else %}
+        <link rel="stylesheet" type="text/css" href="/static/devStyle/about.css" />
+   {% endif %}
+{% endblock css %}
+
+{% block staticContent %}
+<div dojoType="dijit.layout.ContentPane" gutters="false" region="center" id="contentDisplay">
+{{ flatpage.content|safe }}
+</div>
+{% endblock %}
