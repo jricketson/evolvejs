@@ -29,7 +29,10 @@ def restful(request, modelName, remainder):
         return __delete(request, modelName, args)
      
 def __post(request, modelName, args):
-    if len(args) >0:
+    if len(args) > 1:
+        methodName=args[0]
+        args=args[1:]
+    elif len(args) == 1:
         methodName="update"
     else:
         methodName="create"
@@ -58,10 +61,16 @@ def __dispatch(request, modelName, methodName, args):
     result = getattr(c,methodName)(*args)
     #TODO: this should check the requested return type from the request that was received 
     if hasattr(result, 'errors'):
+        # this is for form save responses
         return HttpResponse(simplejson.dumps({"errors":result.errors,"data":result.data}, cls=LazyEncoder), mimetype='application/json')
     else:
-        return HttpResponse(serializers.serialize("json", result), mimetype='application/json') 
-        
+        try:
+            # this is a standard list of results
+            return HttpResponse(serializers.serialize("json", result), mimetype='application/json') 
+        except:
+            # this is a list of dictionaries or anything else
+            return HttpResponse(simplejson.dumps(result, cls=LazyEncoder), mimetype='application/json')
+            
 class LazyEncoder(simplejson.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Promise):

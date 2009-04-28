@@ -9,7 +9,6 @@ from ragendja.urlsauto import urlpatterns
 
 from evolve.forms import UserRegistrationForm
 
-
 admin.autodiscover()
 #patch AuthenticationForm to be an email
 AuthenticationForm.base_fields['username'].widget.attrs['maxlength'] = 75 
