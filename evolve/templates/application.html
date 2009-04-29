@@ -1,36 +1,24 @@
 {% extends "base.html" %}
 {% block css %}
-   <link rel="stylesheet" type="text/css" href="/static/dijit/themes/tundra/tundra.css" />
-   <link rel="stylesheet" type="text/css" href="/static/dojo/resources/dojo.css" />
    {% if on_production_server %}
-        <link rel="stylesheet" type="text/css" href="/static/style/application.css" />
+        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}combined/evolve.css" />
    {% else %}
-        <link rel="stylesheet" type="text/css" href="/static/devStyle/application.css" />
+       <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}dijit/themes/tundra/tundra.css" />
+       <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}dojo/resources/dojo.css" />
+       <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}devStyle/application.css" media="screen, print"/>
    {% endif %}
-      
 {% endblock %}
 
 {% block js %}
 {% if on_production_server %}
-    <script type="text/javascript" src="/static/dojo/application.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}combined/complete.js"></script>
 {% else %}
-      <script type="text/javascript" src="/static/dojo/foreign.js"></script>
-      <script type="text/javascript" src="/static/evolve/core.js"></script>
-      <script type="text/javascript" src="/static/jquery/jquery-depends.js"></script>
-      <script type="text/javascript" src="/static/jquery/jquery-gadget.js"></script>
-      <script type="text/javascript" src="/static/jquery/jquery-log.js"></script>
-      <script type="text/javascript" src="/static/evolve/environment.js"></script>
-      <script type="text/javascript" src="/static/evolve/process.js"></script>
-      <script type="text/javascript" src="/static/evolve/vm.js"></script>
-      <script type="text/javascript" src="/static/evolve/dataAccess.js"></script>
-      <script type="text/javascript" src="/static/evolve/species.js"></script>
-      <script type="text/javascript" src="/static/evolve/speciesLibrary.js"></script>
-      <script type="text/javascript" src="/static/evolve/display.js"></script>
-      <script type="text/javascript" src="/static/evolve/assembly.js"></script>
-      <script type="text/javascript" src="/static/evolve/application.js"></script>
-      <script type="text/javascript" src="/static/evolve/ancestor.js"></script>
-      <script type="text/javascript" src="/static/evolve/util.js"></script>
-      <script type="text/javascript" src="/static/fragments/sidebar/sidebar.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}dojo/dojo.js.uncompressed.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}dojo/foreign.js"></script>
+    <script>
+        dojo.require("evolve-profile", true);
+        loadDependencies("application.js");
+    </script>
 {% endif %}
 {% endblock %}
 {% block extraHeader %}

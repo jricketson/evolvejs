@@ -23,7 +23,7 @@ CORE.speciesList = function () {
                      rowsPerPage: CORE.speciesList.rowsPerPage // Show up to 50 rows per page
                  }
          };   
-        var myDataSource = new YAHOO.util.DataSource(CORE.dataAccess.SPECIES_LIST_URL+"?");
+        var myDataSource = new YAHOO.util.DataSource(CORE.data.SPECIES_LIST_URL+"?");
         myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
         myDataSource.responseSchema = {resultsList: "population", 
                                        fields: ["attributes.name", "attributes.created_on", "attributes.generations", "attributes.code", "attributes.id"]};
@@ -38,7 +38,7 @@ CORE.speciesList = function () {
          doShowSpeciesTableCallback();
       },
       displayCode: function(code){
-         var codeArray = CORE.dataAccess.convertStringToCode(code);
+         var codeArray = CORE.data.convertStringToCode(code);
          jQuery('#speciesCode').html(CORE.assembler.makeDisplayableHtml(codeArray));
       }
       

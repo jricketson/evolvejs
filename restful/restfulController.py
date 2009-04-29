@@ -1,5 +1,8 @@
 import os
+
 from google.appengine.api import memcache
+
+from ragendja.auth.models import AnonymousUser
 
 class RestfulController(object):
     def __init__(self, request):
@@ -9,7 +12,8 @@ class RestfulController(object):
         form = self.formClass(self.request.POST)
         if form.is_valid():
             modelObj=form.save(commit=False)
-            modelObj.owner=self.request.user
+            if self.request.user.is_authenticated():
+                modelObj.owner=self.request.user
             modelObj.version=os.environ['CURRENT_VERSION_ID']
             modelObj.put()
             self.invalidateCache()

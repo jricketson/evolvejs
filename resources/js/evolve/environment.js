@@ -23,12 +23,12 @@ CORE.environment = function() {
    function initialiseEnvironment() {
       resizeGrid();
       // inject the first Process(s)
-      CORE.dataAccess.getSpecies(INITIAL_POPULATION_SIZE_FROM_SERVER, function(species) {
+      CORE.data.getSpecies(INITIAL_POPULATION_SIZE_FROM_SERVER, function(species) {
                var population = [];
                if (species.length !== 0) {
                   // construct a process from each species
                   for (var ii = 0; ii < species.length; ii += 1) {
-                     var code = CORE.dataAccess.convertStringToCode(species[ii].fields.code);
+                     var code = CORE.data.convertStringToCode(species[ii].fields.code);
                      species[ii].code = code;
                      var specie = new CORE.species.Species(species[ii]);
                      CORE.speciesLibrary.addSpeciesFromServer(specie);

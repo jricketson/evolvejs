@@ -4,8 +4,8 @@ runtime: python
 api_version: 1
 
 handlers:
-- url: /static
-  static_dir: compiled/evolve/
+- url: /media
+  static_dir: media/
 
 - url: /fragments/(.*\.html)
   static_files: compiled/evolve/fragments/\1
@@ -24,6 +24,10 @@ handlers:
 
 skip_files: |
   ^(.*/)?(
+  (build\.sh)|
+  (readme\.txt)|
+  (manage\.py)|
+  (start\.sh)|
   (app\.yaml)|
   (app\.yml)|
   (index\.yaml)|
@@ -35,15 +39,11 @@ skip_files: |
   (\..*)|
   )$|
   ^(
+  (resources/.*)|
+  (notUsed/.*)|
+  (_generated_media/.*)|
   (common/zip-packages/django/.*)|
-  (compiled/.*LICENSE)|
-  (compiled/.*README)|
-  (compiled/evolve/dijit/(_base|_editor|_tree|form|layout|nls)/.*)|
-  (compiled/.*/soria/.*)|
-  (compiled/.*/nihilo/.*)|
-  (compiled/evolve/doh/.*)|
-  (compiled/evolve/dojo/(_base|cldr|data|date|dnd|fx|io|rpc)/.*)|
-  (compiled/evolve/dojox/.*)|
-  (compiled/evolve/test/.*)|
-  (compiled/evolve/util/.*)|
+  (media/[0-9]*/(devStyle|dijit|dojox|jquery|mooleer|style|test|util).*)|
+  (media/[0-9]*/dojo/.*(LICENSE|README|css|html).*)|
+  (test/.*)|
   )$

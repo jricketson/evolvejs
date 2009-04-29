@@ -14,10 +14,11 @@ var local=[
             "evolve.application",
             "evolve.ancestor",
             "evolve.util",
+            "evolve.vm",
             "fragments.sidebar.sidebar"
          ];
 var about=[
-            "jquery.jquery-1-3-1",
+            "jquery.jquery-1-3-2",
             "jquery.jquery-log",
             "evolve.core",
             "jquery.jquery-depends"
@@ -27,7 +28,7 @@ var foreign = [
             "dijit.layout.ContentPane",
             "dijit.layout.BorderContainer",
             "dijit.layout.AccordionContainer",
-            "jquery.jquery-1-3",
+            "jquery.jquery-1-3-2",
             "external.json2"
          ];
 dependencies = {
@@ -51,13 +52,14 @@ dependencies = {
    ],
 
    prefixes: [
-      [ "evolve", myroot+"/evolve/media/js/evolve",  myroot+"/evolve/media/copyright.txt"],
-      [ "fragments", myroot+"/evolve/media/fragments",  myroot+"/evolve/media/copyright.txt" ],
-      [ "jquery", myroot+"/evolve/media/js/jquery",  myroot+"/evolve/media/copyright.txt" ],
-      [ "external", myroot+"/evolve/media/js/external",  myroot+"/evolve/media/copyright.txt" ],
-      [ "image", myroot+"/evolve/media/image",  myroot+"/evolve/media/copyright.txt" ],
-      [ "style", myroot+"/evolve/media/style",  myroot+"/evolve/media/copyright.txt" ],
-      [ "dijit", "../dijit"]
+      [ "evolve", myroot+"/resources/js/evolve",  myroot+"/resources/copyright.txt"],
+      [ "fragments", myroot+"/resources/fragments",  myroot+"/resources/copyright.txt" ],
+      [ "jquery", myroot+"/resources/js/jquery",  myroot+"/resources/copyright.txt" ],
+      [ "external", myroot+"/resources/js/external",  myroot+"/resources/copyright.txt" ],
+      [ "image", myroot+"/resources/image",  myroot+"/resources/copyright.txt" ],
+      [ "style", myroot+"/resources/style",  myroot+"/resources/copyright.txt" ],
+      [ "dijit", "../dijit"],
+      [ "dojox", "../dojox"]
       
    ]
 };

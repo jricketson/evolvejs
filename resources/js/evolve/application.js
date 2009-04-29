@@ -28,7 +28,7 @@ CORE.indexHtml = function() {
 
          // hide the title after 10 secs, or the user clicks
          setTimeout(hideTitle, 10000);
-         CORE.dataAccess.getUserProfile(function(userProfile) {
+         CORE.data.getUserProfile(function(userProfile) {
                   CORE.userProfile = userProfile;
                   if (CORE.userProfile.fields.owner === null) {
                      $('#logoutLink').hide();

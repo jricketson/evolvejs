@@ -1,4 +1,4 @@
-CORE.dataAccess = function() {
+CORE.data = function() {
    var EIGHT_BIT_MASK = 511;
    function stringToDate(key, value) {
       var a;
@@ -14,7 +14,7 @@ CORE.dataAccess = function() {
       SPECIES_URL : "/data/species/",
       saveSpecies : function(species) {
          var postData = {
-            "code" : CORE.dataAccess.convertCodeToString(species.code),
+            "code" : this.convertCodeToString(species.code),
             "name" : species.name,
             "count" : species.count
          };
@@ -27,7 +27,7 @@ CORE.dataAccess = function() {
          });
       },
       getSpecies : function(count, callback) {
-         $.getJSON(CORE.dataAccess.SPECIES_URL + "list/0/" + count, callback);
+         $.getJSON(this.SPECIES_URL + "list/0/" + count, callback);
 
       },
       getUserProfile : function(callback) {

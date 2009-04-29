@@ -63,7 +63,7 @@ CORE.speciesLibrary = function() {
          var powersOfTen = CORE.logToBase(species.count, 10);
          if (species.count > 1) {
             if (powersOfTen == Math.round(powersOfTen)) {
-               CORE.dataAccess.saveSpecies(species);
+               CORE.data.saveSpecies(species);
                species.saved = true;
             }
          }

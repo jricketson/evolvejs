@@ -1,49 +1,52 @@
 #!/bin/bash
 
 PROJECT=evolve
-RD=compiled
 WD=`pwd`
+RD=$WD/media
+VERSION=3
+YUICOMPRESSJS="java -jar ../util/yuicompressor-2.4.1.jar --type js"
 
-rm $RD/$PROJECT/util
-rm $RD/$PROJECT/dojox
-rm $RD/$PROJECT/test
-rm $RD/$PROJECT/$PROJECT
-rm $RD/$PROJECT/fragments
-rm $RD/$PROJECT/devStyle
+rm $RD/$VERSION/util
+rm $RD/$VERSION/test
+rm $RD/$VERSION/$PROJECT
+rm $RD/$VERSION/fragments
+rm $RD/$VERSION/devStyle
+rm $RD/$VERSION/jquery
+rm $RD/sitemap.xml
 cd common/.dojo-js/util/buildscripts
-./build.sh profileFile=$WD/$PROJECT/media/js/$PROJECT.profile.js action=release \
-releaseDir=$WD/$RD/ releaseName=$PROJECT mini=true internStrings=true \
-cssOptimize=comments.keepLines cssImportIgnore=../dijit.css localeList="en-us" \
+./build.sh profileFile=$WD/resources/js/$PROJECT.profile.js action=release \
+releaseDir=$RD/ releaseName=$VERSION mini=true internStrings=true \
+cssOptimize=comments.keepLines localeList="en-us" \
 optimize= layerOptimize=shrinksafe stripConsole=normal
 
-# we can also [in theory] remove all but the themeName.css file in themes/*.css
-#for t in 'tundra' 'soria' 'nihilo'
-#do
-#  cd $WD/$RD/$PROJECT/dijit/themes/$t/
-#  mv $t.css $t.tmp
-#  find . -name *.cs\? -exec rm '{}' ';'
-#  mv $t.tmp $t.css
-#done
+mkdir $RD/$VERSION/combined
+cp -R $RD/$VERSION/dijit/themes/tundra/images $RD/$VERSION/combined
 
 cd $WD
-cp $WD/$PROJECT/media/robots.txt $RD/$PROJECT
-java -jar ../util/yuicompressor-2.4.1.jar $RD/$PROJECT/dojo/dojo.js.uncompressed.js > $RD/$PROJECT/dojo/dojo.min.js
-mv $RD/$PROJECT/dojo/application.js.uncompressed.js $RD/$PROJECT/dojo/application.js
-java -jar ../util/yuicompressor-2.4.1.jar $RD/$PROJECT/dojo/application.js > $RD/$PROJECT/dojo/application.min.js
-mv $RD/$PROJECT/dojo/foreign.js.uncompressed.js $RD/$PROJECT/dojo/foreign.js
-java -jar ../util/yuicompressor-2.4.1.jar $RD/$PROJECT/dojo/foreign.js > $RD/$PROJECT/dojo/foreign.min.js
-java -jar ../util/yuicompressor-2.4.1.jar --nomunge $RD/$PROJECT/evolve/vm.js > $RD/$PROJECT/evolve/vm.min.js
-cat $RD/$PROJECT/evolve/vm.min.js >> $RD/$PROJECT/dojo/application.min.js
-ln -s $WD/common/.dojo-js/util/ $RD/$PROJECT/util
-ln -s $WD/common/.dojo-js/dojox $RD/$PROJECT/dojox
-ln -s $WD/test/ $RD/$PROJECT/test
+cp resources/robots.txt $RD/
+cp resources/image/favicon.gif $RD/
+
+cp -r $WD/_generated_media/$VERSION/admin_media $RD/$VERSION/
+
+mv $RD/$VERSION/dojo/application.js.uncompressed.js $RD/$VERSION/dojo/application.js
+mv $RD/$VERSION/dojo/foreign.js.uncompressed.js $RD/$VERSION/dojo/foreign.js
+cat $RD/$VERSION/dojo/dojo.js $RD/$VERSION/dojo/application.js | $YUICOMPRESSJS > $RD/$VERSION/combined/complete.js
+cat $WD/resources/js/$PROJECT/vm.js | $YUICOMPRESSJS --nomunge > $RD/$VERSION/vm.min.js
+cat $RD/$VERSION/vm.min.js >> $RD/$VERSION/combined/complete.js
+
+cat $RD/$VERSION/dijit/themes/tundra/tundra.css $RD/$VERSION/dojo/resources/dojo.css $RD/$VERSION/style/static.css > $RD/$VERSION/combined/static.css
+cat $RD/$VERSION/dijit/themes/tundra/tundra.css $RD/$VERSION/dojo/resources/dojo.css $RD/$VERSION/style/registration.css > $RD/$VERSION/combined/registration.css
+cat $RD/$VERSION/dijit/themes/tundra/tundra.css $RD/$VERSION/dojo/resources/dojo.css $RD/$VERSION/style/application.css > $RD/$VERSION/combined/evolve.css
+
+ln -s $WD/common/.dojo-js/util/ $RD/$VERSION/util
 
 #if dev mode
-cp $WD/$PROJECT/media/js/$PROJECT.profile.js $RD/$PROJECT/$PROJECT-profile.js
-rm $RD/$PROJECT/$PROJECT -r
-rm $RD/$PROJECT/fragments -r
-ln -s $WD/$PROJECT/media/fragments $RD/$PROJECT/fragments
-ln -s $WD/$PROJECT/media/js/$PROJECT $RD/$PROJECT/$PROJECT
-ln -s $WD/$PROJECT/media/style $RD/$PROJECT/devStyle
-rm $RD/$PROJECT/test -r
-ln -s $WD/$PROJECT/media/test $RD/$PROJECT/test
+ln -s $WD/resources/js/$PROJECT.profile.js $RD/$VERSION/$PROJECT-profile.js
+ln -s $WD/resources/sitemap.xml $RD/sitemap.xml
+rm $RD/$VERSION/$PROJECT -r
+rm $RD/$VERSION/fragments -r
+rm $RD/$VERSION/jquery -r
+ln -s $WD/resources/fragments $RD/$VERSION/fragments
+ln -s $WD/resources/js/$PROJECT $RD/$VERSION/$PROJECT
+ln -s $WD/resources/js/jquery $RD/$VERSION/jquery
+ln -s $WD/resources/style $RD/$VERSION/devStyle

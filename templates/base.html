@@ -9,7 +9,7 @@
     <meta http-equiv="description" content="Evolution of animals in javascript" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     {% block css %}
-      {# <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}combined-{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}.css" /> #}
+       <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}combined-{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}.css" />
     {% endblock %}
   </head>
    <body class="tundra"> 
@@ -70,7 +70,6 @@
              }
              {% endif %}
         </script>
-        <script type="text/javascript" src="/static/dojo/dojo.js"></script>
         {% block js %}{% endblock js %}
         <script>
             {% if on_production_server %}
