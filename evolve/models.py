@@ -27,12 +27,3 @@ class Species(AbstractOwnedModel):
     hashCode=db.StringProperty()
     parentRef=db.SelfReferenceProperty(collection_name="children_set")
     
-class Error(AbstractModel):
-    msg = db.StringProperty()
-    url= db.StringProperty()
-    lineNumber=db.StringProperty()
-    lastOccurred = db.DateTimeProperty(auto_now=True)
-
-    def __unicode__(self):
-        return unicode("%s (from %s to %s)" % (self.msg, self.created.strftime("%d/%m/%Y"), self.lastOccurred.strftime("%d/%m/%Y")))
-    

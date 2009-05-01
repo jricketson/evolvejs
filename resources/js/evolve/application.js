@@ -30,7 +30,7 @@ CORE.indexHtml = function() {
          setTimeout(hideTitle, 10000);
          CORE.data.getUserProfile(function(userProfile) {
                   CORE.userProfile = userProfile;
-                  if (CORE.userProfile.fields.owner === null) {
+                  if (CORE.userProfile === undefined) {
                      $('#logoutLink').hide();
                      $('#loginLink').show();
                   } else {

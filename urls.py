@@ -17,6 +17,7 @@ AuthenticationForm.base_fields['username'].label = "Email"
 handler500 = 'ragendja.views.server_error'
 
 urlpatterns = patterns('',
+                       ('^admin-app/(.*)', admin.site.root),
                       (r'^$', "evolve.views.about"),
                       (r'^index.html$', "evolve.views.about"),
                        url(r'^account/register/$', 'registration.views.register',

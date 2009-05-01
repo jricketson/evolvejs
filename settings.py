@@ -61,6 +61,7 @@ INSTALLED_APPS = (
     'appenginepatcher',
     'restful',
     'evolve',
+    'errorLog',
     'registration',
 )
 
