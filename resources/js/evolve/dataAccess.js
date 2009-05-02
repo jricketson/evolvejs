@@ -32,7 +32,7 @@ CORE.data = function() {
       },
       getUserProfile : function(callback) {
          $.get("/data/user/id/0", function(data) {
-                  callback(JSON.parse(data, stringToDate)[0]);
+                  callback(JSON.parse(data, stringToDate));
                });
       },
       convertStringToCode : function(codeString) {

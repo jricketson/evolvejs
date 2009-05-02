@@ -1,0 +1,7 @@
+@import url("core.css");
+
+#contentDisplay {
+    background-color: #9DFF2F;
+    padding: 2em;
+    font-size: 150%;
+}

@@ -1,27 +1,10 @@
-{% extends "base.html" %}
-
+{% extends "static.html" %}
 {% block css %}
    {% if on_production_server %}
-        <link rel="stylesheet" type="text/css" href="/static/style/registration.css" />
+        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}combined/registration.css" />
    {% else %}
-        <link rel="stylesheet" type="text/css" href="/static/devStyle/registration.css" />
+       <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}dijit/themes/tundra/tundra.css" />
+       <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}devStyle/registration.css" />
    {% endif %}
 {% endblock css %}
-
-{% block content %}
-<div dojoType="dijit.layout.ContentPane" gutters="false" region="center" id="contentDisplay">
-{% block staticContent %}{% endblock %}
-</div>
-{% endblock content %}
-
-{% block js %}
-{% if on_production_server %}
-    <script type="text/javascript" src="/static/dojo/registration.min.js"></script>
-{% else %}
-    <script type="text/javascript" src="/static/dojo/foreign.js"></script>
-    <script>
-        dojo.require("evolve-profile", true);
-        loadDependencies("registration.js");
-    </script>
-{% endif %}
-{% endblock js %}

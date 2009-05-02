@@ -18,3 +18,8 @@ make the grid resize itself. A rule like: at least 50% of the space should be em
 should alloc have a cost?? perhaps related to the embodiedEnergy constant
 
 debug mode: turn off mutations, turn off sending to server
+
+
+
+bugs:
+logged in user isn't noticed in user interface

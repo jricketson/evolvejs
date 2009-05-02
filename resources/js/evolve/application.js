@@ -30,14 +30,11 @@ CORE.indexHtml = function() {
          setTimeout(hideTitle, 10000);
          CORE.data.getUserProfile(function(userProfile) {
                   CORE.userProfile = userProfile;
-                  if (CORE.userProfile === undefined) {
+                  if (CORE.userProfile === null) {
                      $('#logoutLink').hide();
                      $('#loginLink').show();
                   } else {
-                     $("#username").html(CORE.userProfile.fields.owner);
-                     $.get("/rpc/logoutLink", function(data) {
-                              $("#logoutLink").attr("href", data);
-                           });
+                     $("#username").html(CORE.userProfile.username);
                      $('#logoutLink').show();
                      $('#loginLink').hide();
                   }

@@ -29,4 +29,6 @@ thesePatterns += patterns('',
                        url(r'^account/logout/$',
                            auth_views.logout,
                            {"next_page": "/"}, name='auth_logout'),
-) + auth_patterns + thesePatterns
+)
+
+urlpatterns = thesePatterns + auth_patterns + urlpatterns

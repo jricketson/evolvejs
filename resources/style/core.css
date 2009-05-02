@@ -19,23 +19,11 @@ div#loadingMessage {
    padding: 4px;
    z-index: 100;   
 }
-#topLinks {
-    position:absolute;
-    top:0;
-    right:0;
-    font-size: 125%;
-	margin:5px;
+.topLinks {
+    float: right;
 }
-
-#logoutLink {
-    
-}
-#loginLink {
-    display: none;
-}
-#topLinks a:link, #topLinks a:visited, #topLinks a:active, #topLinks a:hover {
-    text-decoration: underline;
-	color: black;
+.topLinks a{
+    margin: 0 0.3em;
 }
 
 div#ads {
@@ -49,7 +37,24 @@ div#ads {
 	top:58px;
 }
 
-a {
-    color: black;
+a, a:link, a:visited, a:active, a:hover {
+    color: #FF8C00;
 }
 
+.headerText {
+    font-size: 200%;
+}
+
+.headerText a {
+    text-decoration: none;
+}
+
+#header {
+    padding: 0.5em 1em 0 1em;
+    background-color: #ADFF2F;
+    font-size: 150%;
+} 
+
+#jslog {
+    display: none;
+}

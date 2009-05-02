@@ -1,15 +1,62 @@
 {% extends "registration.html" %}
 {% block title %}register new user {% endblock title %}
 
-{% block staticContent %}
+{% block content %}
     <div class="registrationForm">
         <h1>Register</h1>
         <p>A link to activate your account will be sent to your email.</p>
         <form action="/account/register/" method="post">
             <table>
-            {{ form }}
+                <tr>
+                    <th><label for="id_email">{{form.email.label}}:</label></th>
+                    <td>
+                        {{form.email}}
+                        {{form.email.errors}}
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="id_password1">{{form.password1.label}}:</label></th>
+                    <td>
+                        {{form.password1}}
+                        {{form.password1.errors}}
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="id_password2">{{form.password2.label}}:</label></th>
+                    <td>
+                        {{form.password2}}
+                        {{form.password2.errors}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="id_receiveNotifications">{{form.receiveNotifications.label}}</label>
+                    </th>
+                    <td>
+                        {{form.receiveNotifications}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="id_receiveAdminEmail">{{form.receiveAdminEmail.label}}</label>
+                    </th>
+                    <td>
+                        {{form.receiveAdminEmail}}
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="id_referralSource">{{form.referralSource.label}}:</label></th>
+                    <td>
+                        {{form.referralSource}}
+                        {{form.referralSource.errors}}
+                    </td>
+                </tr>
+                <tr><td></td>
+                <td>
+                    <input value="Register" type="submit">
+                </td>
+                </tr>
             </table>
-            <input value="Register" type="submit">
         </form>
         <p>all fields are required</p>
     </div>

@@ -16,9 +16,7 @@
         <div id="loadingMessage">Loading...</div>
         <div id="viewport" dojoType="dijit.layout.BorderContainer" design="headline">
             <div dojoType="dijit.layout.ContentPane" region="top" id="header" >
-                  <span class="headerText"><a href="/evolve/">Evolve the Future</a></span>
-                  Evolution the way God intended
-                  <div id="topLinks">
+                  <div class="topLinks">
                       <span id="username"></span> | 
                       <a href="/evolve/speciesList.html">all species</a> |
                       <a href="/">about</a> | 
@@ -26,6 +24,8 @@
                       <a id="logoutLink" href="/account/logout/?next=/" >logout</a>
                       <a id="loginLink" href="/account/login/" >login or register</a>
                   </div>
+                  <span class="headerText"><a href="/evolve/">evolve the future</a></span>
+                  <br />Evolution the way God intended
                   {% block extraHeader%}{%endblock%}
             </div>
             <div dojoType="dijit.layout.BorderContainer" gutters="false" region="center" id="contentDisplay">

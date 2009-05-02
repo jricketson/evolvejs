@@ -48,7 +48,7 @@ class UserRestfulController(RestfulController):
     def id(self, key):
         user = self.request.user
         if not user.is_authenticated():
-            return []
+            return None
         return self._getUsefulFields(user)
 
     def update(self, key):
