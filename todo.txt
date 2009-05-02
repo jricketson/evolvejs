@@ -22,4 +22,3 @@ debug mode: turn off mutations, turn off sending to server
 
 
 bugs:
-logged in user isn't noticed in user interface
