@@ -16,14 +16,17 @@ AuthenticationForm.base_fields['username'].label = "Email"
 
 handler500 = 'ragendja.views.server_error'
 
-urlpatterns = patterns('',
+thesePatterns = patterns('django.views.generic.simple',
+                       (r'^$', 'direct_to_template', {'template': 'about.html'}),
+                       (r'^index.html$', 'direct_to_template', {'template': 'about.html'}),
+                       )
+
+thesePatterns += patterns('',
                        ('^admin-app/(.*)', admin.site.root),
-                      (r'^$', "evolve.views.about"),
-                      (r'^index.html$', "evolve.views.about"),
                        url(r'^account/register/$', 'registration.views.register',
                             kwargs={'form_class': UserRegistrationForm},
                             name='registration_register'),
                        url(r'^account/logout/$',
                            auth_views.logout,
                            {"next_page": "/"}, name='auth_logout'),
-) + auth_patterns + urlpatterns
+) + auth_patterns + thesePatterns

@@ -60,9 +60,9 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'appenginepatcher',
     'restful',
-    'evolve',
     'errorLog',
     'registration',
+    'evolve',
 )
 
 from ragendja.settings_post import *

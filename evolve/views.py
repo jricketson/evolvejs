@@ -12,18 +12,6 @@ if on_production_server:
 else:
     LONG_TERM = 1
 
-@cache_page(LONG_TERM)
-def application(request):
-    c = RequestContext(request,{})
-    return __renderTemplateToResponse("application.html", c)
-    
-def about(request):    
-    c = RequestContext(request,{})
-    return __renderTemplateToResponse("about.html", c)
-
 def clearCache(request):
     return HttpResponse(memcache.flush_all())
 
-def __renderTemplateToResponse(templateName, context):
-    t = loader.get_template(templateName)
-    return HttpResponse(t.render(context))

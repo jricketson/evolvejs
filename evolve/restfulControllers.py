@@ -34,9 +34,7 @@ class SpeciesRestfulController(RestfulController):
         return super(SpeciesRestfulController, self).create()  
 
     def list (self, offset, limit):
-        def getDataFn(filter, page):
-            return self.modelClass.all().order("-count").fetch(int(limit), int(offset))
-        return self.getFromCache(getDataFn)
+        return self.modelClass.all().order("-count").fetch(int(limit), int(offset))
     
 class UserOptionsForm(ModelForm):
     class Meta:
