@@ -59,3 +59,15 @@ a, a:link, a:visited, a:active, a:hover {
 #jslog {
     display: none;
 }
+div.coreMessage {
+    background-color: orange;
+    color: black;
+    right: 32em;
+    position: absolute;
+    top: 2em;
+    z-index: 1000;
+    padding: 0.3em;
+    font-size: 1.2em;
+    -moz-border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+}

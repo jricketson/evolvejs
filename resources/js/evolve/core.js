@@ -82,6 +82,15 @@ CORE.handleErrorAsWarning = function handleError(msg, url, l) {
 CORE.logError = function(error) {
    $.post("/data/errorLog/", error);
 };
+CORE.displayMessage = function(msg, timeout) {
+   timeout = timeout || 10000;
+   $("div.coreMessage").remove();
+   var msgDiv = $('<div class="coreMessage">'+msg+'</div>');
+   $("body").append(msgDiv);
+   setTimeout(function() {
+      msgDiv.remove();
+   },timeout);
+};
 
 $.ajaxSetup( {
    cache : false

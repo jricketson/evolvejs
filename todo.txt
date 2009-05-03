@@ -3,12 +3,9 @@ if the simulation is paused: some number of animals die once it restarts. Why??
 
 
 high priority: (before first public alpha release)
-adding a species should be easy and obvious
-tag newly evolved creatures as evolved from an original ancestor (traceable to a user)
-wrap a try catch around a user creating a new species 
-information that a user enters when creating a species should be used (doesn't look like it is)
 tutorial (in the same style as mooleer)
-user administration
+tag newly evolved creatures as evolved from an original ancestor (traceable to a user)
+the format for adding a species should be documented, and document the process
 
 
 medium priority: (before first public beta release)

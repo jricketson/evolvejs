@@ -10,7 +10,7 @@ TEMPLATE_CONTEXT_PROCESSORS += (
 ) 
 
 AUTH_USER_MODULE="evolve.models"
-AUTH_ADMIN_MODULE = 'admin.userAdmin'
+AUTH_ADMIN_MODULE = 'evolve.userAdmin'
 APPLICATION_NAME="evolve"
 
 DEFAULT_FROM_EMAIL="jricketson@redredred.com.au"

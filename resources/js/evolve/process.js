@@ -8,7 +8,6 @@ dojo.declare("CORE.Process", null, {
             this.gridY = 0;
             this.facing = 0; // (0=N,1=E,2=S,3=W)
             this.dead = false;
-            this.id = 0; // give this a serial number
             this.name = name;
             this.species = "";
             this.age=0;

@@ -39,12 +39,13 @@ CORE.speciesLibrary = function() {
          var species = speciesStore.findSpecies(process.memory, hashcode);
          if (!species) {
             var parentSpecies = parent == null ? null : parent.species;
+            var colour = process.colour || colours[previousColour];
             species = new CORE.species.Species({
                      code : process.memory,
                      hashCode : hashcode,
                      count : 1,
                      parent : parentSpecies,
-                     colour : colours[previousColour],
+                     colour : colour,
                      id : process.id,
                      processes : [process.id],
                      name : process.name
