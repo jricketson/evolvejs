@@ -6,6 +6,7 @@ class User(EmailUser):
     receiveAdminEmail = db.BooleanProperty(default=True)
     receiveNotifications = db.BooleanProperty(default=True)
     referralSource = db.StringProperty()
+    nickname = db.StringProperty()
 
     username = db.StringProperty()
     first_name = db.StringProperty()

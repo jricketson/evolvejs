@@ -1,24 +1,39 @@
+bugs:
+if the simulation is paused: some number of animals die once it restarts. Why??
+
+
+high priority: (before first public alpha release)
+adding a species should be easy and obvious
 tag newly evolved creatures as evolved from an original ancestor (traceable to a user)
 wrap a try catch around a user creating a new species 
-
 information that a user enters when creating a species should be used (doesn't look like it is)
+tutorial (in the same style as mooleer)
+user administration
 
+
+medium priority: (before first public beta release)
+calculate a users score:
+  total animals reproduced from my species
+  total animals reproduced in my environment
+show users their score
+allow users to change their notification options
+allow users to change their password
+show all species on server
+show all users with their scores
+highlight currently selected animal
+select a species needs to be more obvious
+species colour system needs to be overhauled
+
+
+low priority:
 add corpses
  - corpses are the remains of animals that have run out of cpu, or died of natural causes
  - they contain the embodied value of the animal
  - animals can be birthed on top of a corpse, in which case the baby immediately gets the value of the corpse
  - corpses stay around forever (or until eaten)
-
-add a random (low) chance that an animal will die in any one round
-
-add a assembly command to LOOK
-create an animal that looks
-
 make the grid resize itself. A rule like: at least 50% of the space should be empty.
 should alloc have a cost?? perhaps related to the embodiedEnergy constant
 
+backlog of ideas:
+add a random (low) chance that an animal will die in any one round
 debug mode: turn off mutations, turn off sending to server
-
-
-
-bugs:

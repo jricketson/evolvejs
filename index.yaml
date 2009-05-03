@@ -21,3 +21,10 @@ indexes:
   properties:
   - name: owner
   - name: created
+
+# Used 6 times in query history.
+- kind: django_admin_log
+  properties:
+  - name: user
+  - name: action_time
+    direction: desc
