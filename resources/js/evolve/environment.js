@@ -81,7 +81,6 @@ CORE.environment = function() {
       process.gridY = y;
       currentProcesses.push(process);
       var species = CORE.speciesLibrary.placeProcess(process, parent);
-
       jQuery(document).trigger(CORE.environment.EVENT_PROCESS_CREATED, [process]);
       return species;
    }

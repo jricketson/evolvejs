@@ -30,21 +30,21 @@ CORE.ancestor = function() {
       blindAnimal : function() {
          return CORE.assembler.compile([
                // START
-               ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], //T4
+               ["nop", 4], //T4
 
                // initialise threads
                ["jmpReadPtrF", 3], 
                ["runThread", 0], // 5
 
                // repro cell
-               ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], //T5 // 10
+               ["nop", 5], //T5 // 10
                ["jmpReadPtrB", 4], // jmp to template 4
                ["jmpWritePtrF", 2], // jmp to template 2
                ["pushMemSize", 0], 
                ["alloc", 0], 
                ["incWritePtr", 0], // inc write pointer to start of new animal
 
-               ["nop", 0], //T1 // start copy loop //15
+               ["nop", 1], //T1 // start copy loop //15
                ["copy", 0], 
                ["incReadPtr", 0], 
                ["incWritePtr", 0],
@@ -55,7 +55,7 @@ CORE.ancestor = function() {
                ["ifDo", 1], 
                ["jmpB", 1], // jmp to template 1
 
-               ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], //T6
+               ["nop", 6], //T6
 
                ["divide", 0], 
                ["ifDo", 3], // if division successful
@@ -67,13 +67,13 @@ CORE.ancestor = function() {
                ["jmpB", 6],
 
                // move cell
-               ["nop", 0], ["nop", 0], ["nop", 0], //T3
+               ["nop", 3], //T3
                ["move", 0], 
                ["sleep", 20], 
                ["jmpB", 3],
 
                // END
-               ["nop", 0], ["nop", 0] //T2
+               ["nop", 2] //T2
 
          ]);
       },
@@ -116,7 +116,7 @@ CORE.ancestor = function() {
       seeingAnimal : function() {
          return CORE.assembler.compile([
                // START
-               ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0],["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0],["nop", 0], ["nop", 0],  //T10
+               ["nop", 10],  //T10
                ["turnR",0],
                ["move",0],
                ["move",0],
@@ -134,7 +134,7 @@ CORE.ancestor = function() {
                ["runThread", 0], // 5
 
                // repro cell
-               ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], //T5 
+               ["nop", 5], //T5 
                ["pushCpuTime",0],
                ["push", 3000],
                ["lt",0],
@@ -147,7 +147,7 @@ CORE.ancestor = function() {
                ["alloc", 0], 
                ["incWritePtr", 0], // inc write pointer to start of new animal
 
-               ["nop", 0],["nop", 0],["nop", 0],["nop", 0], //T4 // start copy loop
+               ["nop", 4], //T4 // start copy loop
                ["copy", 0], 
                ["incReadPtr", 0], 
                ["incWritePtr", 0],
@@ -158,7 +158,7 @@ CORE.ancestor = function() {
                ["ifDo", 1], 
                ["jmpB", 4], // jmp to template 4
 
-               ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], //T6
+               ["nop", 6], //T6
 
                ["divide", 0], 
                ["ifDo", 3], // if division successful
@@ -186,10 +186,10 @@ CORE.ancestor = function() {
        *    }
        * }
        */
-               ["nop", 0], ["nop", 0], ["nop", 0], //T3
+               ["nop", 3], //T3
                ["resetCounter", 3], //var turn counter
                ["jmpF", 7],
-               ["nop", 0], ["nop", 0], ["nop", 0],["nop", 0], ["nop", 0], ["nop", 0],["nop", 0], //T7
+               ["nop", 7], //T7
                ["look", 0], 
                ["popM",0],//var targetSpaces
                ["popM",1],//var cpuTime
@@ -215,7 +215,7 @@ CORE.ancestor = function() {
                
                //["jmpF",8],
                //else
-               ["nop", 0], ["nop", 0],["nop", 0], ["nop", 0],["nop", 0], ["nop", 0],["nop", 0], ["nop", 0], //T8
+               ["nop", 8], //T8
                ["turnR", 0], 
                ["incCounter",3],
                ["pushCounter",3],
@@ -228,10 +228,10 @@ CORE.ancestor = function() {
                ["jmpB", 7],
                
                //moveToTarget function
-               ["nop", 0], ["nop", 0],["nop", 0], ["nop", 0],["nop", 0], ["nop", 0],["nop", 0], ["nop", 0],["nop", 0], //T9
+               ["nop", 9], //T9
                ["resetCounter",2],//var loop counter
                ["jmpF", 1],
-               ["nop", 0], //T1
+               ["nop", 1], //T1
                ["pushM",0],
                ["pushCounter",2],
                ["lt",0],
@@ -242,55 +242,54 @@ CORE.ancestor = function() {
                ["jmpB",1],
 
                // END
-               ["nop", 0], ["nop", 0] //T2
+               ["nop", 2]//T2
          ]);
       },
       tree : function() {
          return CORE.assembler.compile([
                // START
                // repro cell
-               ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], // 5
+               ["nop", 5], // 0
                ["jmpReadPtrB", 5], // jmp to template 5
                ["jmpWritePtrF", 2], // jmp to template 2
                ["pushMemSize", 0], 
                ["alloc", 0], 
-               ["incWritePtr", 0], // inc write pointer to start of new animal, 10
+               ["incWritePtr", 0], // inc write pointer to start of new animal, 5
 
-               ["nop", 0], // start copy loop
+               ["nop", 1], // start copy loop
                ["copy", 0], 
                ["incReadPtr", 0], 
                ["incWritePtr", 0],
 
-               ["pushWritePtr", 0], // 15
+               ["pushWritePtr", 0], // 10
                ["pushMemSize", 0], // if writeptr < memSize
                ["lt", 0], 
                ["ifDo", 1], 
-               ["jmpB", 1], // jmp to template 3
+               ["jmpB", 1], // jmp to template 1
 
-               ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], ["nop", 0], // template
-                                                                                       // 6, 25
+               ["nop", 6], // 15
 
                ["divide", 0], 
                ["ifDo", 1], // if division successful
                ["jmpB", 5],
 
                // count the number of times that this has happened
-               ["pushM", 0], // 30
-               ["add", 1], 
+               ["pushM", 0], 
+               ["add", 1], //20
                ["popM", 0], 
                ["pushM", 0], 
                ["push", 4], 
-               ["gte", 0], // 35
-               ["ifDo", 3], 
+               ["gte", 0],
+               ["ifDo", 3], //25
                ["sleep", 450], 
                ["push", 0], 
                ["popM", 0],
 
-               ["turnR", 0], // turn around and try again //40
-               ["jmpB", 6],
+               ["turnR", 0], // turn around and try again 
+               ["jmpB", 6], //30
 
                // END
-               ["nop", 0], ["nop", 0] // 43
+               ["nop", 2] // 31
 
                ]);
       }

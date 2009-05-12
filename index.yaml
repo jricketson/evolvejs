@@ -22,7 +22,7 @@ indexes:
   - name: owner
   - name: created
 
-# Used 6 times in query history.
+# Used 12 times in query history.
 - kind: django_admin_log
   properties:
   - name: user

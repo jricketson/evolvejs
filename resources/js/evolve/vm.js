@@ -8,16 +8,22 @@ CORE.vm = function () {
    
    var instrCount=0;
    
+   function searchArray(process, startPt, endPt, dirForward, size) {
+      // get the operands starting from 'start'
+      var ops = dirForward ? process.memory.slice(startPt) : process.memory.slice(0,startPt).reverse();
+      for (var ii=0;ii<ops.length;ii++) {
+         if (ops[ii][0]===0 && ops[ii][1]==size) {
+            return (dirForward ? startPt + ii : (startPt - ii -1));
+         }
+      }
+      return -1;
+   }
    /**
     * if going forward to return the index of the last element of the template if going backward
     * return the index of the first instruction of the template the search wraps around the end of
     * memory back to the start
     */
-   /*
-    * options for making this more efficient: 1. Cache the results: this has the problem that the
-    * cache should be invalidated if the processes memory changes... Might not be that useful 2. Try
-    * using a string version of the operators to do a regex over. 3. ...
-    */
+
    function findTemplate(process, start, dirForward, size)
    {
       var ii;
@@ -30,23 +36,6 @@ CORE.vm = function () {
       }
    }
     
-   function searchArray(process, startPt, endPt, dirForward, size) {
-      // get the operands starting from 'start'
-      var ops = dirForward ? process.operands.slice(startPt) : process.operands.slice(0,startPt).reverse();
-      var strOps = ops.join("");
-      var nopSearch = new RegExp("(00){"+size+",}","g");
-      
-      var ii=-1;
-      var searchResult = nopSearch.exec(strOps);
-      while (searchResult) {
-         if (searchResult[0].length == size*2) {
-            ii = searchResult.index / 2;
-            return dirForward ? startPt + (ii + size -1) : startPt - (ii+size);
-         }
-         searchResult = nopSearch.exec(strOps);
-      }
-      return -1;
-   }
    
    function jmpPtr(thread, start, dirForward, size, ptrName) {
       var pos =findTemplate(thread.process, start, dirForward, size);

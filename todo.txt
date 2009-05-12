@@ -1,14 +1,21 @@
 bugs:
 if the simulation is paused: some number of animals die once it restarts. Why??
-
+when number of animals is sent to server: should be 10 + 90 + 900 + 9000
+registration should not require referral source
+seeing animal goes one too far when calculating distance to prey
+posting births at 1000 isn't happening????
 
 high priority: (before first public alpha release)
-tutorial (in the same style as mooleer)
-tag newly evolved creatures as evolved from an original ancestor (traceable to a user)
-the format for adding a species should be documented, and document the process
+better documentation
+	the format for adding a species should be documented, and document the process
+for scoring, two pieces of information need to be stored:
+	which user created an species
+	which user uploaded a set of births
+do we really need the series of nops as the jmp labels? or would a special target be enough, even a nop,tNo?
 
 
 medium priority: (before first public beta release)
+tutorial (in the same style as mooleer)
 calculate a users score:
   total animals reproduced from my species
   total animals reproduced in my environment
@@ -20,7 +27,11 @@ show all users with their scores
 highlight currently selected animal
 select a species needs to be more obvious
 species colour system needs to be overhauled
-
+allow users to change the colour of a species
+when number of animals is sent to server: should this be encrypted somehow?
+instead of sending births every power of ten: 
+	maybe should just have a timer thread uploading what has happened over the last x minutes for successful species 
+	
 
 low priority:
 add corpses

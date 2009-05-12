@@ -17,7 +17,7 @@ CORE.test.vm = new YAHOO.tool.TestCase(function() {
    
    setUp : function () {
       this.data={};
-      this.data.process = new CORE.Process(CORE.ancestor.tree);
+      this.data.process = new CORE.Process(CORE.ancestor.tree(), "tree");
       this.data.firstThread=this.data.process.threads[0];
       this.data.executionPtr = this.data.firstThread.executionPtr;
    },
@@ -73,7 +73,7 @@ CORE.test.vm = new YAHOO.tool.TestCase(function() {
       this.data.firstThread.executionPtr=12;
       this.data.firstThread.readPtr=12;
       CORE.vm.instructionSet.jmpReadPtrB(this.data.firstThread,5);
-      Assert.areEqual(0,this.data.firstThread.readPtr);
+      Assert.areEqual(1,this.data.firstThread.readPtr);
       standardAsserts(this.data);
    },
 
@@ -83,7 +83,7 @@ CORE.test.vm = new YAHOO.tool.TestCase(function() {
       this.data.firstThread.executionPtr=12;
       this.data.firstThread.readPtr=12;
       CORE.vm.instructionSet.jmpReadPtrF(this.data.firstThread,6);
-      Assert.areEqual(24,this.data.firstThread.readPtr);
+      Assert.areEqual(16,this.data.firstThread.readPtr);
       standardAsserts(this.data);
    },
 
@@ -96,14 +96,14 @@ CORE.test.vm = new YAHOO.tool.TestCase(function() {
 //      Assert.areEqual(0,this.data.firstThread.writePtr);
 //      standardAsserts(this.data);
 //   },
-//
+
    testJmpWritePtrF: function () {
       var Assert = YAHOO.util.Assert;
       this.data.executionPtr=12;
       this.data.firstThread.executionPtr=12;
       this.data.firstThread.writePtr=12;
       CORE.vm.instructionSet.jmpWritePtrF(this.data.firstThread,6);
-      Assert.areEqual(24,this.data.firstThread.writePtr);
+      Assert.areEqual(16,this.data.firstThread.writePtr);
       standardAsserts(this.data);
    },
 
@@ -163,42 +163,42 @@ CORE.test.vm = new YAHOO.tool.TestCase(function() {
    
    testIfdo: function () {
       this.data.firstThread.stack.push(1);
-      CORE.vm.instructionSet.ifdo(this.data.firstThread,0);
+      CORE.vm.instructionSet.ifDo(this.data.firstThread,0);
       standardAsserts(this.data);
    },
    testIfdont: function () {
       var Assert = YAHOO.util.Assert;
       this.data.firstThread.stack.push(0);
-      CORE.vm.instructionSet.ifdo(this.data.firstThread,1);
+      CORE.vm.instructionSet.ifDo(this.data.firstThread,1);
       Assert.areEqual(this.data.executionPtr+2,this.data.firstThread.executionPtr, "executionPtr should increment by 2");
       Assert.areEqual(0,this.data.firstThread.stack.length, "stack should be empty");
    },
-//   testJmpF: function () {
-//      var Assert = YAHOO.util.Assert;
-//      this.data.firstThread.executionPtr=12;
-//      CORE.vm.instructionSet.jmpF(this.data.firstThread,3);
-//      Assert.areEqual(28,this.data.firstThread.executionPtr);
-//      Assert.areEqual(0,this.data.firstThread.stack.length, "stack should be empty");
-//   },
+   testJmpF: function () {
+      var Assert = YAHOO.util.Assert;
+      this.data.firstThread.executionPtr=12;
+      CORE.vm.instructionSet.jmpF(this.data.firstThread,2);
+      Assert.areEqual(32,this.data.firstThread.executionPtr);
+      Assert.areEqual(0,this.data.firstThread.stack.length, "stack should be empty");
+   },
    testJmpB: function () {
       var Assert = YAHOO.util.Assert;
       this.data.firstThread.executionPtr=12;
       CORE.vm.instructionSet.jmpB(this.data.firstThread,5);
-      Assert.areEqual(0,this.data.firstThread.executionPtr);
+      Assert.areEqual(1,this.data.firstThread.executionPtr);
       Assert.areEqual(0,this.data.firstThread.stack.length, "stack should be empty");
    },
-//   testJmpFWrap: function () {
-//      var Assert = YAHOO.util.Assert;
-//      this.data.firstThread.executionPtr=12;
-//      CORE.vm.instructionSet.jmpF(this.data.firstThread,5);
-//      Assert.areEqual(10,this.data.firstThread.executionPtr);
-//      Assert.areEqual(0,this.data.firstThread.stack.length, "stack should be empty");
-//   },
+   testJmpFWrap: function () {
+      var Assert = YAHOO.util.Assert;
+      this.data.firstThread.executionPtr=12;
+      CORE.vm.instructionSet.jmpF(this.data.firstThread,5);
+      Assert.areEqual(1,this.data.firstThread.executionPtr);
+      Assert.areEqual(0,this.data.firstThread.stack.length, "stack should be empty");
+   },
    testJmpBWrap: function () {
       var Assert = YAHOO.util.Assert;
       this.data.firstThread.executionPtr=12;
       CORE.vm.instructionSet.jmpB(this.data.firstThread,6);
-      Assert.areEqual(19,this.data.firstThread.executionPtr);
+      Assert.areEqual(16,this.data.firstThread.executionPtr);
       Assert.areEqual(0,this.data.firstThread.stack.length, "stack should be empty");
    },
    

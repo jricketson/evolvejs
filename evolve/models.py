@@ -27,4 +27,16 @@ class Species(AbstractOwnedModel):
     code = db.TextProperty()
     hashCode=db.StringProperty()
     parentRef=db.SelfReferenceProperty(collection_name="children_set")
+    ancestor = db.SelfReferenceProperty(collection_name="descendants-set")
     
+    def put(self):
+        super(Species, self).put()
+        if self.parentRef:
+            self.ancestor = self.parentRef.ancestor
+        else:
+            self.ancestor = self
+        super(Species, self).put()
+
+    def __unicode__(self):
+        return unicode("%s %s" % (self.name, self.hashCode))
+        

@@ -1,6 +1,5 @@
 dojo.declare("CORE.Process", null, {
          constructor : function(memory, name) {
-            var op;
             this.setMemory(memory);
             this.threads = [];
             this.cputime = 3000;
@@ -17,15 +16,8 @@ dojo.declare("CORE.Process", null, {
          },
          setMemory : function(memory) {
             this.memory = memory.slice();
-            this.operands = []; // this is kept as a copy of the operands in
-            // the main
-            // memory. It is purely used as a read optimisation for
-            // searching for operator patterns
-
-            // assumption: this only works for operands that are two digit
             for (var ii = 0; ii < this.memory.length; ii += 1) {
-               op = "" + this.memory[ii][0];
-               this.operands[ii] = op.length == 1 ? '0' + op : op;
+               "" + this.memory[ii][0]; //without this somewhere else throws an error, and I don't understand why...
             }
          },
          /**
@@ -47,12 +39,6 @@ dojo.declare("CORE.Process", null, {
           */
          spliceMemory : function(position, elementCount, element) {
             this.memory.splice(position, elementCount, element);
-            if(element!== undefined){
-               var op= "" + element[0];
-               this.operands.splice(position, elementCount, (op.length == 1 ? '0' + op : op));
-            } else {
-               this.operands.splice(position, elementCount);
-            }
          },
          /**
           * decrements the processes cputime, if the available cputime ever drops below 0, the

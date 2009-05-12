@@ -85,11 +85,11 @@ CORE.logError = function(error) {
 CORE.displayMessage = function(msg, timeout) {
    timeout = timeout || 10000;
    $("div.coreMessage").remove();
-   var msgDiv = $('<div class="coreMessage">'+msg+'</div>');
+   var msgDiv = $('<div class="coreMessage">' + msg + '</div>');
    $("body").append(msgDiv);
-   setTimeout(function() {
+   setTimeout( function() {
       msgDiv.remove();
-   },timeout);
+   }, timeout);
 };
 
 $.ajaxSetup( {
