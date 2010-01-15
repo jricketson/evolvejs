@@ -16,9 +16,6 @@ AuthenticationForm.base_fields['username'].label = "Email"
 
 handler500 = 'ragendja.views.server_error'
 
-testPatterns = patterns('django.views.generic.simple',
-                       (r'^test/run.html$', 'direct_to_template', {'template': 'tests/run-tests.html'}),
-                       )
 thesePatterns = patterns('django.views.generic.simple',
                        (r'^$', 'direct_to_template', {'template': 'home.html'}),
                        (r'^index.html$', 'direct_to_template', {'template': 'home.html'}),
@@ -35,4 +32,4 @@ thesePatterns += patterns('',
                            {"next_page": "/"}, name='auth_logout'),
 )
 
-urlpatterns = thesePatterns + auth_patterns + urlpatterns + testPatterns
+urlpatterns = thesePatterns + auth_patterns + urlpatterns

@@ -1,4 +1,4 @@
-var myroot = "/home/jon/data/workspace3.3/evolveJsgoogle";
+var myroot = "../../..";
 var local=[
             "evolve.core",
             "jquery.jquery-depends",
@@ -52,12 +52,12 @@ dependencies = {
    ],
 
    prefixes: [
-      [ "evolve", myroot+"/resources/js/evolve",  myroot+"/resources/copyright.txt"],
-      [ "fragments", myroot+"/resources/fragments",  myroot+"/resources/copyright.txt" ],
-      [ "jquery", myroot+"/resources/js/jquery",  myroot+"/resources/copyright.txt" ],
-      [ "external", myroot+"/resources/js/external",  myroot+"/resources/copyright.txt" ],
-      [ "image", myroot+"/resources/image",  myroot+"/resources/copyright.txt" ],
-      [ "style", myroot+"/resources/style",  myroot+"/resources/copyright.txt" ],
+      [ "evolve", myroot+"/resources/js/evolve"],
+      [ "fragments", myroot+"/resources/fragments" ],
+      [ "jquery", myroot+"/resources/js/jquery" ],
+      [ "external", myroot+"/resources/js/external" ],
+      [ "image", myroot+"/resources/image" ],
+      [ "style", myroot+"/resources/style" ],
       [ "dijit", "../dijit"],
       [ "dojox", "../dojox"]
       
