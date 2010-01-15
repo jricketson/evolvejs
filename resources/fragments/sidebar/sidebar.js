@@ -1,5 +1,3 @@
-dojo.require("dijit.layout.AccordionContainer");
-dojo.require("dijit.form.Slider");
 (function() {
    function expand(self) {
       self.element.css({
@@ -23,16 +21,15 @@ dojo.require("dijit.form.Slider");
    }
 
    function setHeight(self) {
-      self.element.height($("#contentDisplay").innerHeight() - 50);
-      var dij = dijit.getEnclosingWidget($(".options", self.element)[0]);
-      dij.resize();
+      //self.element.height($("#contentDisplay").innerHeight() - 50);
+      //var dij = dijit.getEnclosingWidget($(".options", self.element)[0]);
+      //dij.resize();
    }
 
-   function setupInstructionsPerCycleSlider(self) {
-      var dij = dijit.byId("instructionsPerCycleSlider");
-      dij.onChange=function(value) {
-         CORE.environment.setInstructionsPerCycle(value);
-      };
+   function setupInstructionsPerCycle(self) {
+      $("input#instructionsPerCycle").change(function() {
+         CORE.environment.setInstructionsPerCycle(this.val());
+      });
    }
 
    return $.gadget.register("sidebar", {
@@ -47,9 +44,7 @@ dojo.require("dijit.form.Slider");
                         expand(self);
                      });
                setTimeout(function() {
-                        var dij = dijit.getEnclosingWidget(self.element.find(".options")[0]);
-                        dij.resize();
-                        setupInstructionsPerCycleSlider(self);
+                        setupInstructionsPerCycle(self);
                      }, 1000);
             
                self.element.find("button.createProcess").click(function() {
@@ -66,10 +61,6 @@ dojo.require("dijit.form.Slider");
 
                self.expanded = true;
                self.element.fadeTo(0, 0.8);
-               setHeight(self);
-               $(window).resize(function(e) {
-                        setHeight(self);
-                     });
                CORE.trackEvent('core', 'helpPanel', 'initialise');
             }
          });

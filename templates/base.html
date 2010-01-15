@@ -78,13 +78,20 @@
         <script>
             {% if on_production_server %}
             window.onerror = CORE.handleErrorAsWarning;
+         	var _gaq = _gaq || [];
+         	  _gaq.push(['_setAccount', 'UA-5647908-3']);
+         	  _gaq.push(['_trackPageview']);
+
+         	  (function() {
+         	    var ga = document.createElement('script');
+         	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 
+         	        'http://www') + '.google-analytics.com/ga.js';
+         	    ga.setAttribute('async', 'true');
+         	    document.documentElement.firstChild.appendChild(ga);
+         	  })();
             {% else %}
             window.onerror = CORE.handleErrorAsError;
             {% endif %}
-             $.dependsOnScripts(["http://www.google-analytics.com/ga.js"], function() {
-                 CORE.pageTracker = _gat._getTracker("UA-5647908-3");
-                 CORE.pageTracker._trackPageview();
-             });
         </script>
     </body>
 </html>

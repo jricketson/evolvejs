@@ -3,8 +3,8 @@
         <button class="opener">+</button>
         <button class="closer">-</button>
     </div>
-    <div dojoType="dijit.layout.AccordionContainer" duration="200" class="options">
-        <div dojoType="dijit.layout.AccordionPane" title="Information" class="infoTab">
+    <div class="accordion options">
+        <div title="Information" class="pane infoTab">
            <table>
               <tr><td>Loops</td><td><div id="loopCount"></div></td></tr>
               <tr><td>Processes</td><td><div id="processCount"></div></td></tr>
@@ -14,7 +14,7 @@
               <div class="speciesList"></div>
            </div>
         </div>
-        <div dojoType="dijit.layout.AccordionPane" title="Process Details" class="processTab">
+        <div title="Process Details" class="pane processTab">
            <table>
               <tr><td>species name</td><td><div class="name"></div></td></tr>
               <tr><td>process age</td><td><div class="age"></div></td></tr>
@@ -23,7 +23,7 @@
               <tr><td>code</td><td><div class="code"></div></td></tr>
            </table>
         </div>
-        <div dojoType="dijit.layout.AccordionPane" title="Create Process" class="createTab">
+        <div title="Create Process" class="pane createTab">
            <table>
               <tr><td colspan="2"><button class="createProcess">Create Process</button></td></tr>
               <tr><td>id</td><td><input class="createProcessId" /></td></tr>
@@ -31,27 +31,11 @@
               <tr><td>code</td><td><textarea class="createProcessCode" ></textarea></td></tr>
            </table>
         </div>
-        <div dojoType="dijit.layout.AccordionPane" title="Advanced Options" class="advancedTab">
+        <div title="Advanced Options" class="pane advancedTab">
             <span>instructions per cycle</span>
-            <div id="instructionsPerCycleSlider" 
-                 dojoType="dijit.form.HorizontalSlider" 
-                 value="50" 
-                 minimum="1" maximum="300"
-                 intermediateChanges="true"
-                 showButtons="false" 
-                 style="width:200px">
-              <ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration"
-                  style="height:1.5em;font-size:75%;color:gray;">
-                <li></li>
-                <li>20%</li>
-                <li>40%</li>
-                <li>60%</li>
-                <li>80%</li>
-                <li></li>
-              </ol>
-            </div>
+            <input id="instructionsPerCycle" value="50" />
         </div>
-        <div dojoType="dijit.layout.AccordionPane" title="Logging" class="logTab">
+        <div title="Logging" class="pane logTab">
             <div class="log"></div>
         </div>
     </div>
