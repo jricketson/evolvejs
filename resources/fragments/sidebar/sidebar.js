@@ -36,6 +36,7 @@ dojo.require("dijit.form.Slider");
    }
 
    return $.gadget.register("sidebar", {
+            templatePath: dojo.moduleUrl("fragments.sidebar", "sidebar.html"),     
             initialiseGadget : function(options) {
                var self = this;
                dojo.parser.parse(self.element[0]);
