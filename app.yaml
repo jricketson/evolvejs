@@ -43,7 +43,7 @@ skip_files: |
   (notUsed/.*)|
   (_generated_media/.*)|
   (common/zip-packages/django/.*)|
-  (media/[0-9]*/(devStyle|dijit|dojox|jquery|mooleer|style|test|util).*)|
-  (media/[0-9]*/dojo/.*(LICENSE|README|css|html).*)|
+  (media/[0-9.]*/(devStyle|dijit|dojox|jquery|mooleer|style|test|util).*)|
+  (media/[0-9.]*/dojo/.*(LICENSE|README|css|html).*)|
   (test/.*)|
   )$

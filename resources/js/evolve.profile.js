@@ -27,7 +27,6 @@ var foreign = [
             "dojo.parser",
             "dijit.layout.ContentPane",
             "dijit.layout.BorderContainer",
-            "dijit.layout.AccordionContainer",
             "jquery.jquery-1-3-2",
             "external.json2"
          ];
@@ -48,7 +47,17 @@ dependencies = {
       {
          name: "application.js",
          dependencies: foreign.concat(local)
-      }
+      },
+      {
+         name: "speciesList.js",
+         dependencies: ["jquery.jquery-1-3-2",
+                        "external.json2",
+                        "evolve.core",
+                        'evolve.speciesList',
+                        "evolve.assembly",
+                        "evolve.vm",
+                        'evolve.dataAccess']
+      },
    ],
 
    prefixes: [

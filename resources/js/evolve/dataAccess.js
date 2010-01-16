@@ -26,6 +26,10 @@ CORE.data = function() {
             species.pk=speciesFromServer.pk;
          });
       },
+      getSingleSpecies : function(id, callback) {
+         $.getJSON(this.SPECIES_URL + "id/" + id+"/", callback);
+
+      },
       getSpecies : function(count, callback) {
          $.getJSON(this.SPECIES_URL + "list/0/" + count, callback);
 

@@ -6,4 +6,5 @@ urlpatterns = patterns('django.views.generic.simple',
 )
 urlpatterns += patterns('evolve.views',
                        (r'^admin/clearCache$', 'clearCache'),
+                       (r'^speciesList.html$', 'speciesList'),
 )

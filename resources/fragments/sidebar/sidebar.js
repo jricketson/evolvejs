@@ -7,7 +7,6 @@
       self.element.find(".opener").hide();
       self.element.find(".closer").show();
       self.expanded = true;
-      setHeight(self);
    }
 
    function collapse(self) {
@@ -18,12 +17,6 @@
       self.element.find(".opener").show();
       self.element.find(".closer").hide();
       self.expanded = false;
-   }
-
-   function setHeight(self) {
-      //self.element.height($("#contentDisplay").innerHeight() - 50);
-      //var dij = dijit.getEnclosingWidget($(".options", self.element)[0]);
-      //dij.resize();
    }
 
    function setupInstructionsPerCycle(self) {
@@ -60,7 +53,6 @@
                      });
 
                self.element.find(".pane .title").click(function() {
-                  //$(this).parent().find(".content").toggle();
                   $(this).parent().toggleClass("expanded")
                   $(this).parent().toggleClass("collapsed")
                });
