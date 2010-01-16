@@ -28,7 +28,8 @@ var foreign = [
             "dijit.layout.ContentPane",
             "dijit.layout.BorderContainer",
             "jquery.jquery-1-3-2",
-            "external.json2"
+            "external.json2",
+            "external.contrast"
          ];
 dependencies = {
    layers: [
@@ -57,7 +58,7 @@ dependencies = {
                         "evolve.assembly",
                         "evolve.vm",
                         'evolve.dataAccess']
-      },
+      }
    ],
 
    prefixes: [
