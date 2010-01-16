@@ -40,6 +40,7 @@ ln -s $WD/common/django_aep_export/admin_media/media $RD/$VERSION/admin_media
 rm $RD/$VERSION/$PROJECT -r
 rm $RD/$VERSION/fragments -r
 rm $RD/$VERSION/jquery -r
+rm $RD/$VERSION/image -r
 ln -s $WD/resources/fragments $RD/$VERSION/fragments
 ln -s $WD/resources/js/$PROJECT $RD/$VERSION/$PROJECT
 ln -s $WD/resources/js/jquery $RD/$VERSION/jquery

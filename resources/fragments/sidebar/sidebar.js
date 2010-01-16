@@ -59,6 +59,11 @@
                         CORE.environment.addProcess(process, null);
                      });
 
+               self.element.find(".pane .title").click(function() {
+                  //$(this).parent().find(".content").toggle();
+                  $(this).parent().toggleClass("expanded")
+                  $(this).parent().toggleClass("collapsed")
+               });
                self.expanded = true;
                self.element.fadeTo(0, 0.8);
                CORE.trackEvent('core', 'helpPanel', 'initialise');

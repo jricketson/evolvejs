@@ -4,18 +4,21 @@
         <button class="closer">-</button>
     </div>
     <div class="accordion options">
-        <div title="Information" class="pane infoTab">
-           <table>
+        <div title="Information" class="pane infoTab expanded">
+        	  <div class="title">Simulation Information</div>
+           <table class="content">
               <tr><td>Loops</td><td><div id="loopCount"></div></td></tr>
               <tr><td>Processes</td><td><div id="processCount"></div></td></tr>
               <tr><td>Cpu speed (Hz)</td><td><div id="instrRate"></div></td></tr>
            </table>
-           <div>Species List
-              <div class="speciesList"></div>
-           </div>
         </div>
-        <div title="Process Details" class="pane processTab">
-           <table>
+        <div class="pane expanded">
+        	  <div class="title">Species List</div>
+           <div class="speciesList content"></div>
+        </div>
+        <div title="Process Details" class="pane processTab collapsed">
+        	  <div class="title">Single Process Information</div>
+           <table class="content">
               <tr><td>species name</td><td><div class="name"></div></td></tr>
               <tr><td>process age</td><td><div class="age"></div></td></tr>
               <tr><td>cpuTime</td><td><div class="cputime"></div></td></tr>
@@ -23,20 +26,25 @@
               <tr><td>code</td><td><div class="code"></div></td></tr>
            </table>
         </div>
-        <div title="Create Process" class="pane createTab">
-           <table>
+        <div title="Create Process" class="pane createTab collapsed">
+        	  <div class="title">Create a New Species</div>
+           <table class="content">
               <tr><td colspan="2"><button class="createProcess">Create Process</button></td></tr>
               <tr><td>id</td><td><input class="createProcessId" /></td></tr>
               <tr><td>colour</td><td><input class="createProcessColour"/></td></tr>
               <tr><td>code</td><td><textarea class="createProcessCode" ></textarea></td></tr>
            </table>
         </div>
-        <div title="Advanced Options" class="pane advancedTab">
+        <div title="Advanced Options" class="pane advancedTab collapsed">
+        	  <div class="title">Advanced Options</div>
+        	  <div class="content">
             <span>instructions per cycle</span>
             <input id="instructionsPerCycle" value="50" />
+            </div>
         </div>
-        <div title="Logging" class="pane logTab">
-            <div class="log"></div>
+        <div title="Logging" class="pane logTab collapsed">
+        	  <div class="title">Logging</div>
+            <div class="log content"></div>
         </div>
     </div>
   </div>

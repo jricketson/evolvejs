@@ -43,3 +43,32 @@
 #sidebar .createTab input {
     width: 220px;
 }
+
+#sidebar div.pane {
+	border:black solid;
+	border-width: 1px 0;
+	margin: 0 0 1em 0;
+}
+
+#sidebar div.pane .title {
+	font-weight: bold;
+	padding-left: 17px;
+}
+#sidebar div.pane .content {
+	padding-left: 17px;
+}
+#sidebar div.pane.expanded .title {
+	background-image: url("minus.gif");
+	background-repeat: no-repeat;
+}
+#sidebar div.pane.expanded .content {
+	display: block;
+}
+
+#sidebar div.pane.collapsed .title {
+	background-image: url("plus.gif");
+	background-repeat: no-repeat;
+}
+#sidebar div.pane.collapsed .content {
+	display: none;
+}
