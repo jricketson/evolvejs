@@ -7,6 +7,7 @@ CORE.species.Species = function(fromObject) {
       this.name = this.fields.name;
       this.id = this.pk;
    }
+   this.sentCount=0;
 };
 /**
  * gets the id of the next parent in the chain that has been saved

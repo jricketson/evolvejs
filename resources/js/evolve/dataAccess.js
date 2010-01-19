@@ -16,7 +16,7 @@ CORE.data = function() {
          var postData = {
             "code" : this.convertCodeToString(species.code),
             "name" : species.name,
-            "count" : species.count
+            "count" : species.count-species.sentCount
          };
          if (species.getParent()!==null) {
             postData.parentRef= species.getParent().pk;
@@ -40,6 +40,7 @@ CORE.data = function() {
                });
       },
       convertStringToCode : function(codeString) {
+         if (codeString===null) { return [];}
          var codeStringArray = codeString.split(",");
          var codeArray = [];
          var operation;

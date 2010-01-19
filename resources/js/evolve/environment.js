@@ -4,7 +4,7 @@ CORE.environment = {
    // *****************************************
    _gridX : 80, // these are default values
    _gridY : 40,
-   _timeDelay : 0, // time to delay between simulation cycles
+   _timeDelay : 10, // time to delay between simulation cycles
    _instructionsPerCycle : 50,
    _running : false, // if the simulation should keep running
    _INITIAL_POPULATION_SIZE_FROM_SERVER : 10,
@@ -129,12 +129,14 @@ CORE.environment = {
    _attack : function(attacker, x, y) {
       var defender = CORE.environment._grid[x][y];
       var lowCpu = Math.min(attacker.cputime, defender.cputime);
+      //$.debug(attacker.cputime, defender.cputime, defender.memory.length, CORE.environment._embodiedEnergy);
       attacker.cputime -= (lowCpu * 0.8);
       defender.cputime -= lowCpu;
       if (defender.cputime <= 0) {
+         //$.debug("defender killed, attacker gained ", defender.memory.length * CORE.environment._embodiedEnergy);
          attacker.cputime += (defender.memory.length * CORE.environment._embodiedEnergy);
          // give the attacker cputime and the embodied energy in the body size
-         kill(defender);
+         CORE.environment._kill(defender);
       }
    },
 
@@ -271,9 +273,3 @@ CORE.environment = {
    }
 };
 
-// *****************************************
-// these are Lifecycle Events
-// *****************************************
-jQuery(document).ready( function() {
-   CORE.speciesLibrary.checkForExtinctSpeciesRegularly();
-});

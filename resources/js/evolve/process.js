@@ -98,9 +98,8 @@ CORE.Thread.prototype.step = function step() {
          CORE.vm.execute(this);
          this.process.decrCpuTime(this.speed);
       } catch (err) {
-         //$.debug("(" + this.process.name + ") process threw an error: ",
-         //      this.process);
-         //$.debug(err);
+         $.debug("(" + this.process.name + ") process threw an error: ", this.process);
+         $.debug(err);
          CORE.environment.killProcess(this.process);
       }
    }

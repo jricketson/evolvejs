@@ -144,3 +144,11 @@ Function.prototype.curry = function() {
       return fn.apply(null, finalArgs);
    };
 };
+
+//From http://javascript.crockford.com/
+String.prototype.supplant = function(o) {
+   return this.replace(/\{([^\{\}]*)\}/g, function(a, b) {
+      var r = o[b];
+      return typeof r === 'string' || typeof r === 'number' ? r : a;
+   });
+};
