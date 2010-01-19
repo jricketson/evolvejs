@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from google.appengine.ext import db
 from ragendja.auth.models import EmailUser
+from aetycoon import DerivedProperty
+import random
 
 class User(EmailUser):
     receiveAdminEmail = db.BooleanProperty(default=True)
@@ -28,6 +30,10 @@ class Species(AbstractOwnedModel):
     hashCode=db.StringProperty()
     parentRef=db.SelfReferenceProperty(collection_name="children_set")
     ancestor = db.SelfReferenceProperty(collection_name="descendants-set")
+    
+    @DerivedProperty
+    def randomFloat(self):
+        return random.random()
     
     def put(self):
         super(Species, self).put()

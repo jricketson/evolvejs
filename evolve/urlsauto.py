@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('django.views.generic.simple',
-                       (r'^$', 'direct_to_template', {'template': 'application.html'}),
+rootpatterns = patterns('django.views.generic.simple',
+                       (r'^evolve.html$', 'direct_to_template', {'template': 'application.html'}),
 )
-urlpatterns += patterns('evolve.views',
+
+migrationpatterns = patterns("evolve.migrate",
+                       (r'^migrate/resetStagingDb$', 'resetStagingDb'),
+                       (r'^migrate/migrate$', 'migrate'),
+                       (r'^worker/migrate/(?P<model_name>[^/]+)$', 'migrateModel'),
+)
+
+rootpatterns += patterns('evolve.views',
                        (r'^admin/clearCache$', 'clearCache'),
                        (r'^speciesList.html$', 'speciesList'),
-)
+) + migrationpatterns

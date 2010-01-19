@@ -1,3 +1,5 @@
+import random
+
 from django.forms import ModelForm
 from django.forms.util import ErrorList
 from django.core.paginator import Paginator
@@ -11,6 +13,7 @@ from models import *
 class SpeciesForm(ModelForm):
     class Meta:
         model = Species
+        exclude =('randomFloat',)
     def clean(self):
         super(SpeciesForm, self).clean()
 
@@ -34,7 +37,7 @@ class SpeciesRestfulController(RestfulController):
         return super(SpeciesRestfulController, self).create()  
 
     def list (self, offset, limit):
-        return self.modelClass.all().order("-count").fetch(int(limit), int(offset))
+        return self.modelClass.all().filter("randomFloat > ", random.random()).order("randomFloat").fetch(int(limit),0)
     
 class UserOptionsForm(ModelForm):
     class Meta:

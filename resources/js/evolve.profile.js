@@ -1,4 +1,5 @@
 var myroot = "../../..";
+var jquery="jquery.jquery-1-3-2";
 var local=[
             "evolve.core",
             "jquery.jquery-depends",
@@ -18,7 +19,7 @@ var local=[
             "fragments.sidebar.sidebar"
          ];
 var about=[
-            "jquery.jquery-1-3-2",
+            jquery,
             "jquery.jquery-log",
             "evolve.core",
             "jquery.jquery-depends"
@@ -27,7 +28,7 @@ var foreign = [
             "dojo.parser",
             "dijit.layout.ContentPane",
             "dijit.layout.BorderContainer",
-            "jquery.jquery-1-3-2",
+            jquery,
             "external.json2",
             "external.contrast"
          ];
@@ -51,7 +52,7 @@ dependencies = {
       },
       {
          name: "speciesList.js",
-         dependencies: ["jquery.jquery-1-3-2",
+         dependencies: [jquery,
                         "external.json2",
                         "evolve.core",
                         'evolve.speciesList',

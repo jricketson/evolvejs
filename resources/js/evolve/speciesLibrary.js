@@ -1,14 +1,13 @@
 // requires species to be loaded before this
 
 CORE.speciesLibrary = function() {
-   var speciesStore = new CORE.species.SpeciesStore(); // stored by memory
-   // hashcode
+   var speciesStore = new CORE.species.SpeciesStore(); // stored by memory hashcode
    return {
       placeProcess : function placeProcess(process, parent) {
          var hashcode = process.getHashCode();
          var species = speciesStore.findSpecies(process.memory, hashcode);
          if (!species) {
-            var parentSpecies = parent == null ? null : parent.species;
+            var parentSpecies = parent === null ? null : parent.species;
             species = new CORE.species.Species({
                      code : process.memory,
                      hashCode : hashcode,
@@ -33,6 +32,7 @@ CORE.speciesLibrary = function() {
             if (powersOfTen == Math.round(powersOfTen)) {
                CORE.data.saveSpecies(species);
                species.saved = true;
+               console.info("species saved", species.name)
             }
          }
 

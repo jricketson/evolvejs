@@ -153,7 +153,8 @@ CORE.environment = function() {
 
    function runSimulationLoop(ii) {
       var jj;
-      for (jj = 0; jj <= instructionsPerCycle; jj += 1) {
+      var start=(new Date()).getTime();
+      for (jj = 0;(new Date()).getTime() - start < instructionsPerCycle; jj += 1) {
          if (ii >= currentProcesses.length) {
             // do this first, the length of currentProcesses may have changed (one killed)
             ii = 0;

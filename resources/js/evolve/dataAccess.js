@@ -18,7 +18,7 @@ CORE.data = function() {
             "name" : species.name,
             "count" : species.count
          };
-         if (species.getParent()!=null) {
+         if (species.getParent()!==null) {
             postData.parentRef= species.getParent().pk;
          }
          $.post(this.SPECIES_URL, postData, function(data){

@@ -96,9 +96,16 @@ $.ajaxSetup( {
    cache : false
 });
 $("#loadingMessage").ajaxStart( function(e) {
-   $(this).stop(true, true).fadeIn(500);
+   $(this).show();
 }).ajaxStop( function(e) {
-   $(this).stop(true, true).fadeOut(500);
+   $(this).hide();
+});
+$("#ajaxErrorMessage").ajaxError( function(e) {
+   var self = this;
+   $(self).stop(true, true).fadeIn(500);
+   setTimeout(function(){
+      $(self).stop(true, true).fadeOut(500);
+   },5000);
 });
 
 dojo.declare("CORE.Throttle", null, {
