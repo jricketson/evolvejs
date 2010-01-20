@@ -43,7 +43,7 @@ CORE.assembler = function() {
          var humanReadable = CORE.assembler.deCompile(codeArray);
          var codeHtml = "";
          for (var ii = 0; ii < humanReadable.length; ii += 1) {
-            codeHtml += '["' + humanReadable[ii][0] + '", ' + humanReadable[ii][1] + '],<br/>';
+            codeHtml += '["' + humanReadable[ii][0] + '", ' + humanReadable[ii][1] + '],<br>';
          }
          return codeHtml;
       }

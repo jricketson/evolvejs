@@ -198,7 +198,10 @@ CORE.display = {   // *****************************************
          tab.find("div.age").html(CORE.display._currentlyDisplayedProcess.age);
          var displayableCode = CORE.assembler
                .makeDisplayableHtml(CORE.display._currentlyDisplayedProcess.memory);
-         tab.find("div.code").html(displayableCode);
+         if (tab.find("div.code").html() != displayableCode) {
+            //don't update it with the same content. Makes it hard to select the text if it keeps getting updated
+            tab.find("div.code").html(displayableCode);
+         }
       } else {
          tab.find("div.id").html("");
          tab.find("div.cputime").html("");

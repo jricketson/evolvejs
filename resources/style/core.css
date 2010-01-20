@@ -8,7 +8,7 @@ html, body, #viewport {
 	width:100%;
 	margin:0;
 	padding:0;
-    background-color: #ADFF2F;
+   background-color: white;
 }
 
 div#loadingMessage {
