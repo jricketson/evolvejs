@@ -10,6 +10,7 @@ CORE.environment = {
    _INITIAL_POPULATION_SIZE_FROM_SERVER : 10,
 
    _currentProcesses : [], // all the currently alive processes.
+   _currentProcessExecuteIndex:0,
    _grid : [], // the grid that the processes move about on. They are not actually stored here.
 
    _loopCount : 0, // number of instructions executed
@@ -136,6 +137,7 @@ CORE.environment = {
          //$.debug("defender killed, attacker gained ", defender.memory.length * CORE.environment._embodiedEnergy);
          attacker.cputime += (defender.memory.length * CORE.environment._embodiedEnergy);
          // give the attacker cputime and the embodied energy in the body size
+         $.debug("KILLED: process attacked and lost");
          CORE.environment._kill(defender);
       }
    },
@@ -162,25 +164,23 @@ CORE.environment = {
       }
    },
 
-   _runSimulationLoop : function(ii) {
+   _runSimulationLoop : function() {
       var jj;
       var start = (new Date()).getTime();
       for (jj = 0; (new Date()).getTime() - start < CORE.environment._instructionsPerCycle; jj += 1) {
-         if (ii >= CORE.environment._currentProcesses.length) {
+         if (CORE.environment._currentProcessExecuteIndex >= CORE.environment._currentProcesses.length) {
             // do this first, the length of currentProcesses may have changed (one killed)
-            ii = 0;
+            CORE.environment._currentProcessExecuteIndex = 0;
             CORE.environment._loopCount += 1;
             CORE.environment._shineSun();
          }
-         // $.debug(currentProcesses[ii].id, currentProcesses[ii].getState());
-         CORE.environment._currentProcesses[ii].step();
-         ii += 1;
+         // $.debug(currentProcesses[CORE.environment._currentProcessExecuteIndex].id, currentProcesses[CORE.environment._currentProcessExecuteIndex].getState());
+         CORE.environment._currentProcesses[CORE.environment._currentProcessExecuteIndex].step();
+         CORE.environment._currentProcessExecuteIndex += 1;
       }
       // TODO: ii should not increment if the most recent process was killed.
       if (CORE.environment._running) {
-         setTimeout( function() {
-            CORE.environment._runSimulationLoop(ii);
-         }, CORE.environment._timeDelay);
+         setTimeout(CORE.environment._runSimulationLoop, CORE.environment._timeDelay);
       }
 
    },

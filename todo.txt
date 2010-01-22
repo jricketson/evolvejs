@@ -1,9 +1,6 @@
 bugs:
-if the simulation is paused: some number of animals die once it restarts. Why??
-when number of animals is sent to server: should be 10 + 90 + 900 + 9000
 registration should not require referral source
 seeing animal goes one too far when calculating distance to prey
-posting births at 1000 isn't happening????
 
 high priority: (before first public alpha release)
 better documentation
@@ -12,13 +9,13 @@ for scoring, two pieces of information need to be stored:
 	which user created an species
 	which user uploaded a set of births
 counting how many animals have been created per species on the server is pointless, instead should be recording -1,0,+1 for went extinct, didn't succeed, succeeded(generated more than 100 animals as a proxy)
-
+species chart/tree showing ancestors
 
 medium priority: (before first public beta release)
 tutorial (in the same style as mooleer)
 calculate a users score:
-  total animals reproduced from my species
-  total animals reproduced in my environment
+  total species reproduced from my species
+  total cputime run in my environment
 show users their score
 allow users to change their notification options
 allow users to change their password

@@ -48,8 +48,8 @@
                            return;
                         }
                         var process = new CORE.Process(CORE.assembler.compile(array), self.element.find(".createProcessId").val());
-                        process.colour = self.element.find(".createProcessColour").val();
                         CORE.environment.addProcess(process, null);
+                        CORE.display.setColourForSpecies(process.species,self.element.find(".createProcessColour").val());
                         CORE.display.setCurrentlyDisplayedProcess(process);
                      });
 

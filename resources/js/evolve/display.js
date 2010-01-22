@@ -136,9 +136,9 @@ CORE.display = {   // *****************************************
       e.stopPropagation();
       var divClicked = $(e.target).closest(".species")[0];
 
-      var species = CORE.display._speciesDivStore[divClicked.id];
-      if (species !== undefined) {
-         species = species.species;
+      var speciesEntry = CORE.display._speciesDivStore[divClicked.id];
+      if (speciesEntry !== undefined) {
+         var species = speciesEntry.species;
          for ( var i = 0; i < species.processes.length; i++) {
             CORE.display._processDivStore[species.processes[i]].fadeOut()
                   .fadeIn();
@@ -273,6 +273,19 @@ CORE.display = {   // *****************************************
          CORE.display._currentlyDisplayedProcess.debug = true;
       }
       CORE.display._updateProcessDisplay();
+   },
+   setColourForSpecies: function(species, colour) {
+      var speciesEntry = CORE.display._speciesDivStore[species.id];
+      speciesEntry.colour = colour;
+      speciesEntry.div.css( {
+         background : colour
+      });
+      var species = speciesEntry.species;
+      for ( var i = 0; i < species.processes.length; i++) {
+         CORE.display._processDivStore[species.processes[i]].css( {
+            background : colour
+         });
+      }
    }
 };
 

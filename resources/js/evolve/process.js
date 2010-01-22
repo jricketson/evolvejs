@@ -48,6 +48,7 @@ CORE.Process.prototype.spliceMemory = function(position, elementCount, element) 
 CORE.Process.prototype.decrCpuTime = function(decrement) {
    this.cputime -= decrement;
    if (this.cputime < 0) {
+      $.debug("KILLED: process ran out of cputime");
       CORE.environment.killProcess(this);
    }
 };
@@ -117,6 +118,7 @@ CORE.Thread.prototype.step = function step() {
             $.debug("(" + this.process.name + ") process threw an error: ", this.process);
             $.debug(err);
          }
+         $.debug("KILLED: process made a mistake");
          CORE.environment.killProcess(this.process);
       }
    }
