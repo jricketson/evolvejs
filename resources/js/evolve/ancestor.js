@@ -249,7 +249,7 @@ CORE.ancestor = function() {
          return CORE.assembler.compile([
                // START
                // repro cell
-               ["nop", 5], // 0
+               ["nop", 5],
                ["jmpReadPtrB", 5], // jmp to template 5
                ["jmpWritePtrF", 2], // jmp to template 2
                ["pushMemSize", 0], 
@@ -261,13 +261,13 @@ CORE.ancestor = function() {
                ["incReadPtr", 0], 
                ["incWritePtr", 0],
 
-               ["pushWritePtr", 0], // 10
+               ["pushWritePtr", 0], 
                ["pushMemSize", 0], // if writeptr < memSize
                ["lt", 0], 
                ["ifDo", 1], 
                ["jmpB", 1], // jmp to template 1
 
-               ["nop", 6], // 15
+               ["nop", 6], 
 
                ["divide", 0], 
                ["ifDo", 1], // if division successful
@@ -275,21 +275,21 @@ CORE.ancestor = function() {
 
                // count the number of times that this has happened
                ["pushM", 0], 
-               ["add", 1], //20
+               ["add", 1], 
                ["popM", 0], 
                ["pushM", 0], 
                ["push", 4], 
                ["gte", 0],
-               ["ifDo", 3], //25
+               ["ifDo", 3],
                ["sleep", 450], 
                ["push", 0], 
                ["popM", 0],
 
                ["turnR", 0], // turn around and try again 
-               ["jmpB", 6], //30
+               ["jmpB", 6],
 
                // END
-               ["nop", 2] // 31
+               ["nop", 2] 
 
                ]);
       }

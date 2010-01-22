@@ -18,13 +18,29 @@
         </div>
         <div title="Process Details" class="pane processTab collapsed">
         	  <div class="title">Single Process Information</div>
-           <table class="content">
-              <tr><td>species name</td><td><div class="name"></div></td></tr>
-              <tr><td>process age</td><td><div class="age"></div></td></tr>
-              <tr><td>cpuTime</td><td><div class="cputime"></div></td></tr>
-              <tr><td>activeThreads</td><td><div class="activeThreadCount"></div></td></tr>
-              <tr><td>code</td><td><div class="code"></div></td></tr>
-           </table>
+        	  <div class="content">
+	           <table>
+	              <tr><td>species name</td><td><div class="name"></div></td></tr>
+	              <tr><td>process age</td><td><div class="age"></div></td></tr>
+	              <tr><td>cpuTime</td><td><div class="cputime"></div></td></tr>
+	              <tr><td>activeThreads</td><td><div class="activeThreadCount"></div></td></tr>
+	              <tr><td>facing</td><td><div class="facing"></div></td></tr>
+	           </table>
+	           <div class="pane collapsed">
+		        	  <div class="title">thread 1</div>
+		           <table class="content">
+		              <tr><td>stack</td><td><div class="stack"></div></td></tr>
+		              <tr><td>counters</td><td><div class="counter"></div></td></tr>
+		              <tr><td>short term memory</td><td><div class="shortTermMemory"></div></td></tr>
+		              <tr><td>execution pointer</td><td><div class="executionPointer"></div></td></tr>
+		              <tr><td>read pointer</td><td><div class="readPointer"></div></td></tr>
+		              <tr><td>write pointer</td><td><div class="writePointer"></div></td></tr>
+		              <tr><td>speed</td><td><div class="speed"></div></td></tr>
+		           </table>
+	           </div>
+	           <div>code</div>
+              <div class="code"></div>
+           </div>
         </div>
         <div title="Create Process" class="pane createTab collapsed">
         	  <div class="title">Create a New Species</div>

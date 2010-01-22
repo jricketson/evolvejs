@@ -42,7 +42,7 @@
             
                self.element.find("button.createProcess").click(function() {
                         try {
-                           var array = eval(self.element.find(".createProcessCode").val());
+                           var array = JSON.parse("["+self.element.find(".createProcessCode").val()+"]");
                         } catch (e) {
                            CORE.displayMessage("Something went wrong. If you aren't sure if it was your fault, try asking in the forums.<br/>" + e);
                            return;
@@ -50,6 +50,7 @@
                         var process = new CORE.Process(CORE.assembler.compile(array), self.element.find(".createProcessId").val());
                         process.colour = self.element.find(".createProcessColour").val();
                         CORE.environment.addProcess(process, null);
+                        CORE.display.setCurrentlyDisplayedProcess(process);
                      });
 
                self.element.find(".pane .title").click(function() {

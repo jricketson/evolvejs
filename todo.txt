@@ -11,7 +11,7 @@ better documentation
 for scoring, two pieces of information need to be stored:
 	which user created an species
 	which user uploaded a set of births
-do we really need the series of nops as the jmp labels? or would a special target be enough, even a nop,tNo?
+counting how many animals have been created per species on the server is pointless, instead should be recording -1,0,+1 for went extinct, didn't succeed, succeeded(generated more than 100 animals as a proxy)
 
 
 medium priority: (before first public beta release)
@@ -45,3 +45,7 @@ should alloc have a cost?? perhaps related to the embodiedEnergy constant
 backlog of ideas:
 add a random (low) chance that an animal will die in any one round
 debug mode: turn off mutations, turn off sending to server
+
+animals:
+animal moves forward one and places baby behind it
+animal does not cannibalise / how does the animal check that the other animal is the same species?

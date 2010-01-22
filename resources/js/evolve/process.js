@@ -74,11 +74,23 @@ CORE.Process.prototype.getState = function getState() {
    return state;
 };
 
+CORE.SparseArray = function() {
+}
+CORE.SparseArray.prototype.toString = function() {
+   var result=[];
+   for (var i in this) {
+      if (this.hasOwnProperty(i)) {
+         result.push(i+"["+this[i]+"]");
+      }
+   }
+   return result.join(",");
+}
+
 CORE.Thread = function(process, name) {
    this.process = process;
    this.stack = [];
-   this.counter = [];
-   this.shortTermMemory = [];
+   this.counter = new CORE.SparseArray();
+   this.shortTermMemory = new CORE.SparseArray();
    this.executionPtr = 0;
    this.readPtr = 0;
    this.writePtr = 0;
@@ -98,8 +110,13 @@ CORE.Thread.prototype.step = function step() {
          CORE.vm.execute(this);
          this.process.decrCpuTime(this.speed);
       } catch (err) {
-         $.debug("(" + this.process.name + ") process threw an error: ", this.process);
-         $.debug(err);
+         if (this.process.debug) {
+            $(document).trigger(
+                  CORE.EVENT_LOG_MESSAGE,
+                  "process threw an error: {err}".supplant({err:err.toString}));
+            $.debug("(" + this.process.name + ") process threw an error: ", this.process);
+            $.debug(err);
+         }
          CORE.environment.killProcess(this.process);
       }
    }

@@ -134,7 +134,7 @@ CORE.display = {   // *****************************************
    },
    _speciesClickedHandler : function(e) {
       e.stopPropagation();
-      var divClicked = e.originalTarget;
+      var divClicked = $(e.target).closest(".species")[0];
 
       var species = CORE.display._speciesDivStore[divClicked.id];
       if (species !== undefined) {
@@ -166,19 +166,9 @@ CORE.display = {   // *****************************************
 
    _processClickedHandler : function(e) {
       e.stopPropagation();
-      // console.log(e, e.originalTarget);
-      if (CORE.display._currentlyDisplayedProcess !== null) {
-         CORE.display._currentlyDisplayedProcess.debug = false;
-      }
-      var divClicked = e.originalTarget;
+      var divClicked = $(e.target).closest(".process")[0];
 
-      CORE.display._currentlyDisplayedProcess = CORE.display._processStore[divClicked.id];
-      if (CORE.display._currentlyDisplayedProcess === undefined) {
-         CORE.display._currentlyDisplayedProcess = null;
-      } else {
-         CORE.display._currentlyDisplayedProcess.debug = true;
-      }
-      CORE.display._updateProcessDisplay();
+      CORE.display.setCurrentlyDisplayedProcess(CORE.display._processStore[divClicked.id]);
    },
    _logMessageHandler : function(e, message) {
       e.stopPropagation();
@@ -187,20 +177,28 @@ CORE.display = {   // *****************************************
 
    _updateProcessDisplay : function() {
       var tab = $("div.processTab");
-      if (CORE.display._currentlyDisplayedProcess !== null) {
-         tab.find("div.id").html(CORE.display._currentlyDisplayedProcess.id);
-         tab.find("div.cputime").html(
-               CORE.display._currentlyDisplayedProcess.cputime);
-         tab.find("div.activeThreadCount").html(
-               CORE.display._currentlyDisplayedProcess.threads.length);
-         tab.find("div.name")
-               .html(CORE.display._currentlyDisplayedProcess.name);
-         tab.find("div.age").html(CORE.display._currentlyDisplayedProcess.age);
-         var displayableCode = CORE.assembler
-               .makeDisplayableHtml(CORE.display._currentlyDisplayedProcess.memory);
+      var process = CORE.display._currentlyDisplayedProcess;
+      if (process !== null) {
+         tab.find("div.id").html(process.id);
+         tab.find("div.cputime").html(process.cputime);
+         tab.find("div.activeThreadCount").html(process.threads.length);
+         tab.find("div.name").html(process.name);
+         tab.find("div.age").html(process.age);
+         tab.find("div.facing").html(process.facing);
+         var displayableCode = CORE.assembler.makeDisplayableHtml(process.memory);
          if (tab.find("div.code").html() != displayableCode) {
             //don't update it with the same content. Makes it hard to select the text if it keeps getting updated
             tab.find("div.code").html(displayableCode);
+         }
+         for (var i=0;i<process.threads.length;i++) {
+            var thread = process.threads[i];
+            tab.find("div.stack").html(thread.stack.toString());
+            tab.find("div.counter").html(thread.counter.toString());
+            tab.find("div.shortTermMemory").html(thread.shortTermMemory.toString());
+            tab.find("div.executionPointer").html(thread.executionPtr.toString());
+            tab.find("div.readPointer").html(thread.readPtr.toString());
+            tab.find("div.writePointer").html(thread.writePtr.toString());
+            tab.find("div.speed").html(thread.speed.toString());
          }
       } else {
          tab.find("div.id").html("");
@@ -263,6 +261,18 @@ CORE.display = {   // *****************************************
       CORE.display._updateProcessDisplay();
       CORE.display._updateSpeciesDisplay();
       setTimeout(CORE.display.updateDisplay, CORE.display._timeDelay);
+   },
+   setCurrentlyDisplayedProcess: function(process) {
+      if (CORE.display._currentlyDisplayedProcess !== null) {
+         CORE.display._currentlyDisplayedProcess.debug = false;
+      }
+      CORE.display._currentlyDisplayedProcess = process;
+      if (CORE.display._currentlyDisplayedProcess === undefined) {
+         CORE.display._currentlyDisplayedProcess = null;
+      } else {
+         CORE.display._currentlyDisplayedProcess.debug = true;
+      }
+      CORE.display._updateProcessDisplay();
    }
 };
 

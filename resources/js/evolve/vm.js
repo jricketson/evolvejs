@@ -191,7 +191,11 @@ CORE.vm.instructionSet = {
       thread.executionPtr += 1;
    },
    pushM : function pushM(thread, operand) { // pushes operand from memPtr(+operand) to stack
-      thread.stack.push(thread.shortTermMemory[operand]);
+      if (thread.shortTermMemory[operand]==undefined) {
+         thread.stack.push(0);
+      } else {
+         thread.stack.push(thread.shortTermMemory[operand]);
+      }
       thread.executionPtr += 1;
    },
    popM : function popM(thread, operand) { // pops stack to operand at memPtr(+operand)
@@ -199,7 +203,11 @@ CORE.vm.instructionSet = {
       thread.executionPtr += 1;
    },
    incCounter : function incCounter(thread, operand) {
-      thread.counter[operand] += 1;
+      if (thread.counter[operand] ===undefined) {
+         thread.counter[operand]=1;
+      } else {
+         thread.counter[operand] += 1;
+      }
       thread.executionPtr += 1;
    },
    resetCounter : function resetCounter(thread, operand) {
@@ -207,7 +215,11 @@ CORE.vm.instructionSet = {
       thread.executionPtr += 1;
    },
    pushCounter : function pushCounter(thread, operand) {
-      thread.stack.push(thread.counter[operand]);
+      if (thread.counter[operand]) {
+         thread.stack.push(0);
+      } else {
+         thread.stack.push(thread.counter[operand]);
+      }
       thread.executionPtr += 1;
    },
    pushMemSize : function pushMemSize(thread, operand) {

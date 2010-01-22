@@ -184,6 +184,10 @@ CORE.environment = {
       }
 
    },
+   _resetCpuRate: function() {
+         CORE.environment.resetStartTime();
+         CORE.vm.resetInstrCount();
+   },
    // *****************************************
    // these are PUBLIC functions and variables
    // *****************************************
@@ -214,8 +218,8 @@ CORE.environment = {
    start : function() {
       CORE.environment._running = true;
       CORE.environment._runSimulationLoop(0);
-      CORE.environment.resetStartTime();
-      CORE.vm.resetInstrCount();
+      CORE.environment._resetCpuRate();
+      setInterval(CORE.environment._resetCpuRate, 5000);
    },
    stop : function() {
       CORE.environment._running = false;
@@ -272,4 +276,3 @@ CORE.environment = {
       }
    }
 };
-
