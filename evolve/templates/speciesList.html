@@ -13,7 +13,11 @@
       <div id="speciesList">
       	<table>
       {% for species in speciesList %}
-      	<tr class="species" data-key="{{species.key}}"><td>{{species.name}}</td><td>{{species.count}}</td></tr>
+      	<tr class="species" data-key="{{species.key}}">
+      		<td>{{species.name}}</td>
+      		<td>{% if species.validScore %}{{species.score}}{% else %}not enough matches yet {% endif %}</td>
+      		<td>{{species.scoreList}}</td>
+     		</tr>
       {% endfor %}
       	</table>
       </div>

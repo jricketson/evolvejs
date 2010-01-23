@@ -126,6 +126,7 @@ CORE.display = {   // *****************************************
          color : contrast !== false ? contrast[1] : "white"
       });
       CORE.display._updateSpeciesDiv(divMarker, species);
+      $.debug(species.saved,species.count, species);
       CORE.display._speciesDivStore[species.id] = {
          div : divMarker,
          species : species,
@@ -152,6 +153,11 @@ CORE.display = {   // *****************************************
             species.count + '</span><span class="currentCount">' +
             species.processes.length +
             '</span><div style="clear:both;"></div>');
+      if (species.count>1 || species.saved) {
+         div.show();
+      } else {
+         div.hide();
+      }
    },
 
    _speciesExtinctHandler : function(e, species) {

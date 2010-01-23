@@ -92,9 +92,10 @@ def migrate(request):
     [taskqueue.addTask(url=Worker.worker_url % i, queueName=taskqueue.BACKGROUND_QUEUE) for i in modelsToMigrate]
     return HttpResponse("created all tasks for processing")
 
-#class ads_dailypageviewrecordWorker(MigrationWorker):
-#    kind="ads_dailypageviewrecord"
+#class evolve_speciesWorker(MigrationWorker):
+#    kind="evolve_species"
 #    def processItemAsEntity(self, item):
 #        logging.info("processing %s %s" % (item.kind(), item.key()))
 #        logging.info(item)
-#        item['website']=db.get(item['advertisingSection']).website.key()
+#        if item.has_key('scoreList'):
+#            del item['scoreList']

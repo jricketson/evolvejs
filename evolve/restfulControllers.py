@@ -13,7 +13,7 @@ from models import *
 class SpeciesForm(ModelForm):
     class Meta:
         model = Species
-        exclude =('randomFloat',)
+        exclude =('randomFloat','scoreList', 'score')
     def clean(self):
         super(SpeciesForm, self).clean()
 
@@ -37,7 +37,13 @@ class SpeciesRestfulController(RestfulController):
         return super(SpeciesRestfulController, self).create()  
 
     def list (self, offset, limit):
-        return self.modelClass.all().filter("randomFloat > ", random.random()).order("randomFloat").fetch(int(limit),0)
+        return self.modelClass.all().order("score").order("randomFloat").fetch(int(limit),0)
+    
+    def addScore(self,key):
+        score = self.request.GET['score']
+        species = db.get(key)
+        species.scoreList.append(int(score))
+        species.put()
     
 class UserOptionsForm(ModelForm):
     class Meta:

@@ -8,7 +8,6 @@ CORE.environment = {
    _instructionsPerCycle : 50,
    _running : false, // if the simulation should keep running
    _INITIAL_POPULATION_SIZE_FROM_SERVER : 10,
-
    _currentProcesses : [], // all the currently alive processes.
    _currentProcessExecuteIndex:0,
    _grid : [], // the grid that the processes move about on. They are not actually stored here.
@@ -26,28 +25,32 @@ CORE.environment = {
       // inject the first Process(s)
       CORE.data
             .getSpecies(CORE.environment._INITIAL_POPULATION_SIZE_FROM_SERVER,
-                  function(species) {
+                  function getSpeciesCallback(species) {
                      var population = [];
                      if (species.length !== 0) {
                         // construct a process from each species
-                  for ( var ii = 0; ii < species.length; ii += 1) {
-                     var code = CORE.data
-                           .convertStringToCode(species[ii].fields.code);
-                     species[ii].code = code;
-                     var specie = new CORE.species.Species(species[ii]);
-                     CORE.speciesLibrary.addSpeciesFromServer(specie);
-                     population.push(new CORE.Process(code, specie.name));
-                  }
-               } else {
-                  population = [
-                        new CORE.Process(CORE.ancestor.tree(), "tree"),
-                        new CORE.Process(CORE.ancestor.blindAnimal(),
-                              "blindAnimal"),
-                        new CORE.Process(CORE.ancestor.seeingAnimal(),
-                              "seeingAnimal") ];
-               }
-               CORE.environment._initialisePopulation(population);
-            });
+                        for ( var ii = 0; ii < species.length; ii += 1) {
+                           var code = CORE.data
+                                 .convertStringToCode(species[ii].fields.code);
+                           species[ii].code = code;
+                           var specie = new CORE.species.Species(species[ii]);
+                           specie.saved=true;
+                           
+                           CORE.speciesLibrary.addSpeciesFromServer(specie);
+                           var process = new CORE.Process(code, specie.name);
+                           process.tempSpeciePk=species[ii].pk;
+                           population.push(process);
+                        }
+                     } else {
+                        population = [
+                              new CORE.Process(CORE.ancestor.tree(), "tree"),
+                              new CORE.Process(CORE.ancestor.blindAnimal(),
+                                    "blindAnimal"),
+                              new CORE.Process(CORE.ancestor.seeingAnimal(),
+                                    "seeingAnimal") ];
+                     }
+                     CORE.environment._initialisePopulation(population);
+                  });
    },
 
    _initialisePopulation : function(population) {
@@ -127,7 +130,7 @@ CORE.environment = {
     * 
     * this means that if the attacker loses, it doesn't die
     */
-   _attack : function(attacker, x, y) {
+   _attack : function attack(attacker, x, y) {
       var defender = CORE.environment._grid[x][y];
       var lowCpu = Math.min(attacker.cputime, defender.cputime);
       //$.debug(attacker.cputime, defender.cputime, defender.memory.length, CORE.environment._embodiedEnergy);
@@ -202,6 +205,8 @@ CORE.environment = {
    EVENT_SPECIES_CREATED : "speciesCreated",
    EVENT_SPECIES_EXTINCT : "speciesExtinct",
 
+   VALID_SPECIES: 10, 
+   SUCCESS_PROXY: 100, 
    mutationRate : 1000, // approximate chance of mutation (1 in x copy operations)
    startTime : 0,
    horizon : 10,

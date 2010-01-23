@@ -25,3 +25,20 @@ indexes:
   - name: user
   - name: action_time
     direction: desc
+
+- kind: evolve_species
+  properties:
+  - name: randomFloat>
+  - name: randomFloat
+  - name: score
+
+- kind: evolve_species
+  properties:
+  - name: score
+  - name: randomFloat
+
+- kind: evolve_species
+  properties:
+  - name: score
+    direction: desc
+  - name: scoreCount

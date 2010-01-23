@@ -14,4 +14,5 @@ migrationpatterns = patterns("evolve.migrate",
 rootpatterns += patterns('evolve.views',
                        (r'^admin/clearCache$', 'clearCache'),
                        (r'^speciesList.html$', 'speciesList'),
+                       (r'^cron/randomiseSpecies$', 'randomiseSpecies'),
 ) + migrationpatterns

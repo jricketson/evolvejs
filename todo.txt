@@ -10,6 +10,10 @@ for scoring, two pieces of information need to be stored:
 	which user uploaded a set of births
 counting how many animals have been created per species on the server is pointless, instead should be recording -1,0,+1 for went extinct, didn't succeed, succeeded(generated more than 100 animals as a proxy)
 species chart/tree showing ancestors
+limit max size of stack, probably just cut off the end of the stack if a new element is added
+download species for simulation that have either not been tested (less than 10 entries in score list) or those with high scores.
+	species with lower recent scores should drop off the list of species that are downloaded
+
 
 medium priority: (before first public beta release)
 tutorial (in the same style as mooleer)
@@ -20,14 +24,11 @@ show users their score
 allow users to change their notification options
 allow users to change their password
 show all species on server
-show all users with their scores
+show all users with their scores (allow users to opt out)
 highlight currently selected animal
 select a species needs to be more obvious
-species colour system needs to be overhauled
 allow users to change the colour of a species
 when number of animals is sent to server: should this be encrypted somehow?
-instead of sending births every power of ten: 
-	maybe should just have a timer thread uploading what has happened over the last x minutes for successful species 
 	
 
 low priority:

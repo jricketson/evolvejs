@@ -8,6 +8,7 @@ CORE.species.Species = function(fromObject) {
       this.id = this.pk;
    }
    this.sentCount=0;
+   this.successScored=false;
 };
 /**
  * gets the id of the next parent in the chain that has been saved
@@ -32,7 +33,7 @@ CORE.species.SpeciesStore.prototype.addSpecies = function(species) {
    }
    this.store[species.hashCode].push(species);
 };
-CORE.species.SpeciesStore.prototype.findSpecies = function(memory, hashCode) {
+CORE.species.SpeciesStore.prototype.findSpecies = function findSpecies(memory, hashCode) {
    if (!this.store.hasOwnProperty(hashCode)) {
       return null;
    }
@@ -42,10 +43,7 @@ CORE.species.SpeciesStore.prototype.findSpecies = function(memory, hashCode) {
       var storedMemory = speciesArray[ii].code;
       if (memory.length === storedMemory.length) {
          for ( var jj = 0; jj < memory.length; jj += 1) {
-            if (memory[jj][0] === 0 && storedMemory[jj][0] !== 0) {
-               equal = false;
-               break;
-            } else if (memory[jj][0] != storedMemory[jj][0]) {
+            if (memory[jj][0] != storedMemory[jj][0] || memory[jj][1] != storedMemory[jj][1]) {
                equal = false;
                break;
             }
@@ -62,6 +60,9 @@ CORE.species.SpeciesStore.prototype.removeSpecies = function(species) {
          .trigger(CORE.environment.EVENT_SPECIES_EXTINCT, [ species ]);
    var hashArray = this.store[species.hashCode];
    CORE.removeElementFromArray(hashArray, species);
+   if (species.saved) {
+      CORE.data.putScore(species,-1);
+   }
 };
 CORE.species.SpeciesStore.prototype.checkForExtinctSpecies = function() {
    for (hashcode in this.store) {

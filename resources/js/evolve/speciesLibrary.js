@@ -5,7 +5,7 @@ CORE.speciesLibrary = {
    placeProcess : function placeProcess(process, parent) {
       var hashcode = process.getHashCode();
       var species = CORE.speciesLibrary._speciesStore.findSpecies(process.memory, hashcode);
-      if (!species) {
+      if (species === null) {
          var parentSpecies = parent === null ? null : parent.species;
          species = new CORE.species.Species( {
             code : process.memory,
@@ -25,16 +25,16 @@ CORE.speciesLibrary = {
       }
       process.species = species;
 
-      // check if the count of processes born for this species is a power
-      // of 10
-      var powersOfTen = CORE.logToBase(species.count, 10);
-      if (species.count > 1) {
-         if (powersOfTen == Math.round(powersOfTen)) {
-            CORE.data.saveSpecies(species);
-            console.info("species saved(", species.name, species.count - species.sentCount, ")");
-            species.sentCount=species.count;
-            species.saved = true;
-         }
+      // check if the count of processes born for this species greater is greater than success proxy value
+      if (species.count > CORE.environment.VALID_SPECIES && ! species.saved) {
+         CORE.data.saveSpecies(species);
+         console.info("species saved(", species.name, species.count - species.sentCount, ")");
+         species.saved = true;
+      }
+      if (species.count > CORE.environment.SUCCESS_PROXY && ! species.successScored) {
+         console.info("species successful(", species.count, ")");
+         CORE.data.putScore(species,1);
+         species.successScored=true;
       }
       return species;
    },

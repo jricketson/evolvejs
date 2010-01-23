@@ -1,5 +1,5 @@
 CORE.data = function() {
-   var EIGHT_BIT_MASK = 511;
+   var OPERAND_MASK = 16777215;
    function stringToDate(key, value) {
       var a;
       if (typeof value === 'string') {
@@ -26,6 +26,9 @@ CORE.data = function() {
             species.pk=speciesFromServer.pk;
          });
       },
+      putScore : function(species,score,callback) {
+         $.get(this.SPECIES_URL + "addScore/" + species.pk+"/?score="+score, callback);
+      },
       getSingleSpecies : function(id, callback) {
          $.getJSON(this.SPECIES_URL + "id/" + id+"/", callback);
 
@@ -39,13 +42,13 @@ CORE.data = function() {
                   callback(JSON.parse(data, stringToDate));
                });
       },
-      convertStringToCode : function(codeString) {
+      convertStringToCode : function convertStringToCode(codeString) {
          if (codeString===null) { return [];}
          var codeStringArray = codeString.split(",");
          var codeArray = [];
          var operation;
          for (var ii = 0; ii < codeStringArray.length; ii += 1) {
-            operation = [codeStringArray[ii] >> 24, codeStringArray[ii] & EIGHT_BIT_MASK];
+            operation = [Number(codeStringArray[ii]) >> 24, Number(codeStringArray[ii]) & OPERAND_MASK];
             codeArray.push(operation);
          }
          return codeArray;

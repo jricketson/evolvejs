@@ -30,10 +30,24 @@ class Species(AbstractOwnedModel):
     hashCode=db.StringProperty()
     parentRef=db.SelfReferenceProperty(collection_name="children_set")
     ancestor = db.SelfReferenceProperty(collection_name="descendants-set")
+    scoreList = db.ListProperty(int)
     
     @DerivedProperty
     def randomFloat(self):
         return random.random()
+    
+    @DerivedProperty
+    def score(self):
+        if len(self.scoreList) < 10:
+            return 10
+        return sum(self.scoreList[-10:])
+    
+    @DerivedProperty
+    def validScore(self):
+        return len(self.scoreList) >= 10
+    @DerivedProperty
+    def scoreCount(self):
+        return len(self.scoreList)
     
     def put(self):
         super(Species, self).put()

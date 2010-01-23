@@ -45,7 +45,7 @@ CORE.Process.prototype.spliceMemory = function(position, elementCount, element) 
  * decrements the processes cputime, if the available cputime ever drops below
  * 0, the process is killed
  */
-CORE.Process.prototype.decrCpuTime = function(decrement) {
+CORE.Process.prototype.decrCpuTime = function decrCpuTime (decrement) {
    this.cputime -= decrement;
    if (this.cputime < 0) {
       $.debug("KILLED: process ran out of cputime");

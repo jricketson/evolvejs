@@ -1,0 +1,5 @@
+cron:
+- description: roll up clicks and views
+  url: /cron/randomiseSpecies
+  schedule: every 1 minutes
+

@@ -31,8 +31,8 @@
             <div dojoType="dijit.layout.BorderContainer" gutters="false" region="center" id="contentDisplay">
                 {% block content %}{% endblock content %}
             </div>
+                   {% if False %}
             <div id="ads" dojoType="dijit.layout.ContentPane" region="right">
-                   {% if on_production_server %}
                   <script type="text/javascript"><!--
                      google_ad_client = "pub-7238105427277163";
                      /* 160x600, created 25/02/08 */
@@ -42,9 +42,8 @@
                      //-->
                   </script>
                   <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
-                   {% else %}
-                   {% endif %}
             </div>
+                   {% endif %}
         </div>
         <div id="jslog"></div>
         <script type="text/javascript">
