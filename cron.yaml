@@ -1,5 +1,5 @@
 cron:
-- description: roll up clicks and views
+- description: randomise species so that they interact with different animals as much as possible in new scenarios
   url: /cron/randomiseSpecies
-  schedule: every 1 minutes
+  schedule: every 10 minutes
 

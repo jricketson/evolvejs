@@ -31,11 +31,9 @@ CORE.data = function() {
       },
       getSingleSpecies : function(id, callback) {
          $.getJSON(this.SPECIES_URL + "id/" + id+"/", callback);
-
       },
       getSpecies : function(count, callback) {
          $.getJSON(this.SPECIES_URL + "list/0/" + count, callback);
-
       },
       getUserProfile : function(callback) {
          $.get("/data/user/id/0", function(data) {

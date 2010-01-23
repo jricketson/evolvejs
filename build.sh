@@ -26,10 +26,12 @@ mv $RD/$VERSION/dojo/foreign.js.uncompressed.js $RD/$VERSION/dojo/foreign.js
 cat $RD/$VERSION/dojo/dojo.js $RD/$VERSION/dojo/application.js | $YUICOMPRESSJS > $RD/$VERSION/combined/complete.js
 cat $WD/resources/js/$PROJECT/vm.js | $YUICOMPRESSJS --nomunge > $RD/$VERSION/vm.min.js
 cat $RD/$VERSION/vm.min.js >> $RD/$VERSION/combined/complete.js
+cat $RD/$VERSION/dojo/dojo.js $RD/$VERSION/dojo/speciesList.js | $YUICOMPRESSJS > $RD/$VERSION/combined/speciesList.js
 
 cat $RD/$VERSION/dijit/themes/tundra/tundra.css $RD/$VERSION/dojo/resources/dojo.css $RD/$VERSION/style/static.css > $RD/$VERSION/combined/static.css
 cat $RD/$VERSION/dijit/themes/tundra/tundra.css $RD/$VERSION/dojo/resources/dojo.css $RD/$VERSION/style/registration.css > $RD/$VERSION/combined/registration.css
 cat $RD/$VERSION/dijit/themes/tundra/tundra.css $RD/$VERSION/dojo/resources/dojo.css $RD/$VERSION/style/application.css > $RD/$VERSION/combined/evolve.css
+cat $RD/$VERSION/dijit/themes/tundra/tundra.css $RD/$VERSION/dojo/resources/dojo.css $RD/$VERSION/style/speciesList.css > $RD/$VERSION/combined/speciesList.css
 
 ln -s $WD/common/.dojo-js/util/ $RD/$VERSION/util
 

@@ -13,7 +13,7 @@ from models import *
 class SpeciesForm(ModelForm):
     class Meta:
         model = Species
-        exclude =('randomFloat','scoreList', 'score')
+        exclude =('randomFloat','scoreList', 'score', 'scoreCount','validScore')
     def clean(self):
         super(SpeciesForm, self).clean()
 
@@ -45,6 +45,10 @@ class SpeciesRestfulController(RestfulController):
         species.scoreList.append(int(score))
         species.put()
     
+    #def parent(self,key):
+    #    species = db.get(key)
+    #    return [species.parentRef]
+
 class UserOptionsForm(ModelForm):
     class Meta:
         model = User

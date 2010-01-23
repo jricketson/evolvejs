@@ -25,14 +25,14 @@ CORE.speciesLibrary = {
       }
       process.species = species;
 
-      // check if the count of processes born for this species greater is greater than success proxy value
-      if (species.count > CORE.environment.VALID_SPECIES && ! species.saved) {
+      if (species.processes.length > CORE.environment.VALID_SPECIES && ! species.saved) {
          CORE.data.saveSpecies(species);
          console.info("species saved(", species.name, species.count - species.sentCount, ")");
          species.saved = true;
       }
-      if (species.count > CORE.environment.SUCCESS_PROXY && ! species.successScored) {
-         console.info("species successful(", species.count, ")");
+      // check if the count of processes around now for this species greater is greater than success proxy value
+      if (species.processes.length > CORE.environment.SUCCESS_PROXY && ! species.successScored) {
+         console.info("species successful(", species.processes.length, ")");
          CORE.data.putScore(species,1);
          species.successScored=true;
       }

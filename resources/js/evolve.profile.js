@@ -53,6 +53,7 @@ dependencies = {
       {
          name: "speciesList.js",
          dependencies: [jquery,
+                        "jquery.jquery-log",
                         "external.json2",
                         "evolve.core",
                         'evolve.speciesList',

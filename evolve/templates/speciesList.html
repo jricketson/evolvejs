@@ -9,20 +9,21 @@
    {% endif %}
 {% endblock %}
 {% block content %}
-   <body >
       <div id="speciesList">
       	<table>
       {% for species in speciesList %}
       	<tr class="species" data-key="{{species.key}}">
       		<td>{{species.name}}</td>
       		<td>{% if species.validScore %}{{species.score}}{% else %}not enough matches yet {% endif %}</td>
-      		<td>{{species.scoreList}}</td>
+      		<td>{{species.scoreList|join:","}}</td>
+      		<td>{{species.parentRef}}</td>
      		</tr>
       {% endfor %}
       	</table>
       </div>
       <div id="speciesCode"></div>
-   </body>
+      <div id="ancestry">
+      </div>
 {% endblock %}
 {% block js %}
 {% if on_production_server %}

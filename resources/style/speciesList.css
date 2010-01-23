@@ -9,3 +9,16 @@ div#speciesCode {
    overflow: auto;
    width: 200px;
 }
+
+#ancestry {
+	float: right;
+	width: 100px;
+}
+#ancestry .species {
+	border: 1px solid black;
+	width: 100px;
+}
+
+#ancestry .thisSpecies {
+	background-color: #999;
+}
