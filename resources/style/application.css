@@ -9,6 +9,21 @@
     display: none;
 }
 
+#viewport {
+	height: 100%;
+	width: 100%;	
+	position: relative;
+}
+
+#layoutTop {
+	height: 4em;
+	position: relative;
+}
+
+#layoutCenter {
+	position: relative;
+}
+
 div#gridDisplay {
     position: relative;
 }
@@ -57,10 +72,6 @@ div#gridDisplay {
     border: 1px solid black;
 }
 
-#yui-main .yui-b {
-    margin-left: 2em !important;
-}
-
 div#controlButtons {
     font-size: 125%;
     left: 300px;
@@ -82,3 +93,19 @@ div#controlButtons {
     padding: 0 4px 0 4px;
 }
 
+div#messages{
+	margin: 0 33%;
+	width: 33%;
+    z-index: 1000;
+    position: absolute;
+    top:0;
+}
+div#messages .msg{
+    background-color: orange;
+    color: black;
+    margin: 2px;
+    padding: 2px 2px 2px 6px;
+    font-size: 1.1em;
+    -moz-border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+}

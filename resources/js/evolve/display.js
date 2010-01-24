@@ -49,6 +49,7 @@ CORE.display = {   // *****************************************
          "#FFFFFF" ],
 
    _calculateMarkerSize : function() {
+      $("#layoutCenter").height(($("#viewport").innerHeight()-$("#layoutTop").outerHeight()-2)+"px");
       var screenwidth = $("div#gridDisplay").width();
       var screenheight = $("div#gridDisplay").height();
       CORE.display._markerWidth = Math.round(screenwidth / CORE.environment.getGridX());
@@ -126,7 +127,6 @@ CORE.display = {   // *****************************************
          color : contrast !== false ? contrast[1] : "white"
       });
       CORE.display._updateSpeciesDiv(divMarker, species);
-      $.debug(species.saved,species.count, species);
       CORE.display._speciesDivStore[species.id] = {
          div : divMarker,
          species : species,
@@ -228,7 +228,7 @@ CORE.display = {   // *****************************************
    // *****************************************
    // these are Lifecycle Events
    // *****************************************
-   _initialise : function() {
+   initialise : function() {
       $(document).bind(CORE.environment.EVENT_PROCESS_CREATED,
             CORE.display._processCreateHandler);
       $(document).bind(CORE.environment.EVENT_PROCESS_MOVED,
@@ -294,5 +294,3 @@ CORE.display = {   // *****************************************
       }
    }
 };
-
-$(document).ready(CORE.display._initialise);

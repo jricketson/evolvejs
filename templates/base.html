@@ -14,8 +14,8 @@
   </head>
    <body class="tundra"> 
         <div id="loadingMessage">Loading...</div>
-        <div id="viewport" dojoType="dijit.layout.BorderContainer" design="headline">
-            <div dojoType="dijit.layout.ContentPane" region="top" id="header" >
+        <div id="viewport">
+            <div id="layoutTop">
                   <div class="topLinks">
                       <span id="username"></span> | 
                       <a href="/speciesList.html">all species</a> |
@@ -28,11 +28,11 @@
                   <br />Evolution the way God intended
                   {% block extraHeader%}{%endblock%}
             </div>
-            <div dojoType="dijit.layout.BorderContainer" gutters="false" region="center" id="contentDisplay">
+            <div id="layoutCenter">
                 {% block content %}{% endblock content %}
             </div>
                    {% if False %}
-            <div id="ads" dojoType="dijit.layout.ContentPane" region="right">
+            <div id="ads">
                   <script type="text/javascript"><!--
                      google_ad_client = "pub-7238105427277163";
                      /* 160x600, created 25/02/08 */
@@ -46,6 +46,7 @@
                    {% endif %}
         </div>
         <div id="jslog"></div>
+        {% block extraPage %}{% endblock %}
         <script type="text/javascript">
             var djConfig = {
                   parseOnLoad:true,

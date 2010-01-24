@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
+import random
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.views.decorators.cache import cache_page
 from django.shortcuts import render_to_response
+from django.core.urlresolvers import reverse
 
 from google.appengine.api import memcache
 from google.appengine.api import users
 
 from models import Species
+import taskqueue
 
 from appenginepatcher import on_production_server
 if on_production_server:
@@ -20,12 +24,6 @@ def clearCache(request):
 
 def speciesList(request):
     return render_to_response("speciesList.html",
-                              {"speciesList":Species.all().order("-score").order("-scoreCount")},
+                              {"speciesList":Species.all().order("-score").order("-scoreCount").order("randomFloat")},
                               context_instance=RequestContext(request))
-def randomiseSpecies(request):
-    def fn(p):
-        p.randomFloat=random.random()
-        p.put()
-    query = Species.all()
-    return taskqueue.executeByPage(request, query, fn, reverse(randomiseSpecies))
     

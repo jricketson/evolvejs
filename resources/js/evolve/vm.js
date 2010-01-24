@@ -215,7 +215,7 @@ CORE.vm.instructionSet = {
       thread.executionPtr += 1;
    },
    pushCounter : function pushCounter(thread, operand) {
-      if (thread.counter[operand]) {
+      if (thread.counter[operand] === undefined) {
          thread.stack.push(0);
       } else {
          thread.stack.push(thread.counter[operand]);

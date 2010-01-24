@@ -52,7 +52,7 @@ CORE.indexHtml = function() {
                   $(this).hide();
                   $("#play").show();
                });
-         $("#contentDisplay").createGadget("sidebar", function(gadget) {
+         $("#layoutCenter").createGadget("sidebar", function(gadget) {
                   self.sidebar = gadget;
                }, {
                   method : "append"
@@ -60,6 +60,7 @@ CORE.indexHtml = function() {
          // initialise the environment
          CORE.environment.initialise();
          $(document).trigger(this.EVENT_PAGE_READY);
+         CORE.display.initialise();
       }
    };
 

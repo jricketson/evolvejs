@@ -25,16 +25,24 @@ CORE.speciesLibrary = {
       }
       process.species = species;
 
-      if (species.processes.length > CORE.environment.VALID_SPECIES && ! species.saved) {
-         CORE.data.saveSpecies(species);
-         console.info("species saved(", species.name, species.count - species.sentCount, ")");
-         species.saved = true;
+      if (species.processes.length > CORE.environment.VALID_SPECIES && ! (species.saved || species.beingSaved)) {
+         CORE.displayMessage("{name} species valid and being saved".supplant(species));
+         CORE.data.saveSpecies(species, function(){
+            console.info("species saved(", species.name, species.processes.length, ")");
+            species.saved = true;
+            species.beingSaved = false;
+         });
+         species.beingSaved = true;
       }
       // check if the count of processes around now for this species greater is greater than success proxy value
-      if (species.processes.length > CORE.environment.SUCCESS_PROXY && ! species.successScored) {
-         console.info("species successful(", species.processes.length, ")");
-         CORE.data.putScore(species,1);
-         species.successScored=true;
+      if (species.processes.length > CORE.environment.SUCCESS_PROXY && ! (species.successScored || species.beingSuccessScored) && species.saved) {
+         CORE.displayMessage("{name} species successful".supplant(species));
+         CORE.data.putScore(species,1, function(){
+            console.info("species successful (", species.name, species.processes.length, ")");
+            species.successScored = true;
+            species.beingSuccessScored = false;
+         });
+         species.beingSuccessScored = true;
       }
       return species;
    },

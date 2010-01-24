@@ -13,7 +13,7 @@ from models import *
 class SpeciesForm(ModelForm):
     class Meta:
         model = Species
-        exclude =('randomFloat','scoreList', 'score', 'scoreCount','validScore')
+        exclude =('randomFloat','scoreList', 'score', 'scoreCount','validScore','created','version','timesEvolved')
     def clean(self):
         super(SpeciesForm, self).clean()
 
@@ -31,6 +31,7 @@ class SpeciesRestfulController(RestfulController):
         for species in matching:
             if species.code==self.request.POST['code']:
                 species.count+=int(self.request.POST['count'])
+                species.timesEvolved+=1
                 species.put()
                 self.invalidateCache()
                 return [species]

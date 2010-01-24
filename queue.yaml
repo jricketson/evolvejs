@@ -5,4 +5,4 @@ queue:
   rate: 2000/d
   bucket_size: 20
 - name: background-processing
-  rate: 5/s
+  rate: 10/s

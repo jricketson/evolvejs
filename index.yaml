@@ -12,11 +12,6 @@ indexes:
 
 - kind: Species
   properties:
-  - name: count
-    direction: desc
-
-- kind: Species
-  properties:
   - name: owner
   - name: created
 
@@ -49,3 +44,11 @@ indexes:
     direction: desc
   - name: scoreCount
     direction: desc
+
+- kind: evolve_species
+  properties:
+  - name: score
+    direction: desc
+  - name: scoreCount
+    direction: desc
+  - name: randomFloat

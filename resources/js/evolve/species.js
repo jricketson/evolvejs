@@ -61,6 +61,7 @@ CORE.species.SpeciesStore.prototype.removeSpecies = function(species) {
    var hashArray = this.store[species.hashCode];
    CORE.removeElementFromArray(hashArray, species);
    if (species.saved) {
+      CORE.displayMessage("{name} species extinct".supplant(species));
       CORE.data.putScore(species,-1);
    }
 };

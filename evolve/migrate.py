@@ -92,10 +92,10 @@ def migrate(request):
     [taskqueue.addTask(url=Worker.worker_url % i, queueName=taskqueue.BACKGROUND_QUEUE) for i in modelsToMigrate]
     return HttpResponse("created all tasks for processing")
 
-#class evolve_speciesWorker(MigrationWorker):
-#    kind="evolve_species"
-#    def processItemAsEntity(self, item):
-#        logging.info("processing %s %s" % (item.kind(), item.key()))
-#        logging.info(item)
-#        if item.has_key('scoreList'):
-#            del item['scoreList']
+class evolve_speciesWorker(MigrationWorker):
+    kind="evolve_species"
+    def processItemAsEntity(self, item):
+        logging.info("processing %s %s" % (item.kind(), item.key()))
+        logging.info(item)
+        if item.has_key('scoreList'):
+            del item['scoreList']

@@ -1,5 +1,2 @@
 cron:
-- description: randomise species so that they interact with different animals as much as possible in new scenarios
-  url: /cron/randomiseSpecies
-  schedule: every 10 minutes
 

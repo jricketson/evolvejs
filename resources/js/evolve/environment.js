@@ -2,12 +2,12 @@ CORE.environment = {
    // *****************************************
    // these are PRIVATE functions and variables
    // *****************************************
-   _gridX : 80, // these are default values
-   _gridY : 40,
+   _gridX : 90, // these are default values
+   _gridY : 45,
    _timeDelay : 10, // time to delay between simulation cycles
    _instructionsPerCycle : 50,
    _running : false, // if the simulation should keep running
-   _INITIAL_POPULATION_SIZE_FROM_SERVER : 10,
+   _INITIAL_POPULATION_SIZE_FROM_SERVER : 20,
    _currentProcesses : [], // all the currently alive processes.
    _currentProcessExecuteIndex:0,
    _grid : [], // the grid that the processes move about on. They are not actually stored here.
@@ -27,6 +27,7 @@ CORE.environment = {
             .getSpecies(CORE.environment._INITIAL_POPULATION_SIZE_FROM_SERVER,
                   function getSpeciesCallback(species) {
                      var population = [];
+                     $.debug(species);
                      if (species.length !== 0) {
                         // construct a process from each species
                         for ( var ii = 0; ii < species.length; ii += 1) {
@@ -38,7 +39,7 @@ CORE.environment = {
                            
                            CORE.speciesLibrary.addSpeciesFromServer(specie);
                            var process = new CORE.Process(code, specie.name);
-                           process.tempSpeciePk=species[ii].pk;
+                           process.facing = Math.round(Math.random() * 3);
                            population.push(process);
                         }
                      } else {
@@ -49,6 +50,7 @@ CORE.environment = {
                               new CORE.Process(CORE.ancestor.seeingAnimal(),
                                     "seeingAnimal") ];
                      }
+                     $.debug(population);
                      CORE.environment._initialisePopulation(population);
                   });
    },
@@ -206,7 +208,7 @@ CORE.environment = {
    EVENT_SPECIES_EXTINCT : "speciesExtinct",
 
    VALID_SPECIES: 10, 
-   SUCCESS_PROXY: 100, 
+   SUCCESS_PROXY: 75, 
    mutationRate : 1000, // approximate chance of mutation (1 in x copy operations)
    startTime : 0,
    horizon : 10,

@@ -31,6 +31,7 @@ class Species(AbstractOwnedModel):
     parentRef=db.SelfReferenceProperty(collection_name="children_set")
     ancestor = db.SelfReferenceProperty(collection_name="descendants-set")
     scoreList = db.ListProperty(int)
+    timesEvolved = db.IntegerProperty(default=1)
     
     @DerivedProperty
     def randomFloat(self):

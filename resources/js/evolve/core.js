@@ -82,16 +82,18 @@ CORE.handleErrorAsWarning = function handleError(msg, url, l) {
 CORE.logError = function(error) {
    $.post("/data/errorLog/", error);
 };
+CORE.messageTemplate='<div class="msg">{msg}</div>'
 CORE.displayMessage = function(msg, timeout) {
    timeout = timeout || 10000;
-   $("div.coreMessage").remove();
-   var msgDiv = $('<div class="coreMessage">' + msg + '</div>');
-   $("body").append(msgDiv);
-   setTimeout( function() {
+   var msgDiv = $(CORE.messageTemplate.supplant({msg:msg})).hide();
+   var close=function(){
+      msgDiv.slideUp("normal");
       msgDiv.remove();
-   }, timeout);
+   };
+   $("#messages").append(msgDiv);
+   msgDiv.slideDown("normal").click(close)
+   setTimeout(close, timeout);
 };
-
 $.ajaxSetup( {
    cache : false
 });

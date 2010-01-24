@@ -26,8 +26,6 @@ var about=[
 ];
 var foreign = [
             "dojo.parser",
-            "dijit.layout.ContentPane",
-            "dijit.layout.BorderContainer",
             jquery,
             "external.json2",
             "external.contrast"
@@ -70,7 +68,6 @@ dependencies = {
       [ "external", myroot+"/resources/js/external" ],
       [ "image", myroot+"/resources/image" ],
       [ "style", myroot+"/resources/style" ],
-      [ "dijit", "../dijit"],
       [ "dojox", "../dojox"]
       
    ]
