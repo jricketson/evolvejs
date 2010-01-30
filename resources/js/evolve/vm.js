@@ -337,16 +337,16 @@ CORE.vm.instructionSet = {
    /*
     * The original organism keeps the state of its memory up until the read-head. The
     * offspring's memory is initialized to everything between the read-head and the
-    * write-head. All memory past the write-head is removed entirely.
+    * write-head.
     * 
     * the offspring is attempted to be placed in front of the current process (in the
     * direction that it is facing) pushes result (successful division) to stack
     */
    divideProcess : function divide(thread) {
       //$.debug(thread.readPtr, thread.writePtr);
-      var newProcessMemory = thread.process.memory.slice(thread.readPtr,
-            thread.writePtr);
-      var oldProcessMemory = thread.process.memory.slice(0, thread.readPtr);
+      var newProcessMemory = thread.process.memory.splice(thread.readPtr,
+            thread.writePtr - thread.readPtr);
+      //var oldProcessMemory = thread.process.memory.slice(0, thread.readPtr);
       var newProcess = new CORE.Process(newProcessMemory, thread.process.name);
       newProcess.facing = thread.process.facing;
       var coords = CORE.vm._calculateXYForward(thread.process.gridX,
@@ -355,7 +355,7 @@ CORE.vm.instructionSet = {
       var success = CORE.environment.addProcess(newProcess, thread.process,
             coords[0], coords[1]);
       if (success) {
-         thread.process.setMemory(oldProcessMemory);
+        // thread.process.setMemory(oldProcessMemory);
          thread.process.cputime = Math.round(thread.process.cputime / 2);
          newProcess.cputime = thread.process.cputime;
       }

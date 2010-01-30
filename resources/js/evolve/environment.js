@@ -195,8 +195,11 @@ CORE.environment = {
 
    },
    _resetCpuRate: function() {
-         CORE.environment.resetStartTime();
-         CORE.vm.resetInstrCount();
+      var secsSinceStart = (Number(new Date()) - CORE.environment
+            .getStartTime()) / 1000;
+      CORE.environment.current_rate = Math.round(CORE.vm.getInstrCount() / secsSinceStart);
+      CORE.environment.resetStartTime();
+      CORE.vm.resetInstrCount();
    },
    // *****************************************
    // these are PUBLIC functions and variables
@@ -292,4 +295,5 @@ CORE.environment = {
          return null;
       }
    }
+
 };

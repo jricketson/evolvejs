@@ -285,10 +285,7 @@ CORE.display = {   // *****************************************
    updateDisplay : function updateDisplay() {
       $("div#loopCount").html("" + CORE.environment.getLoopCount());
       $("div#processCount").html("" + CORE.environment.getProcessCount());
-      var secsSinceStart = (Number(new Date()) - CORE.environment
-            .getStartTime()) / 1000;
-      var instrsPerSec = CORE.vm.getInstrCount() / secsSinceStart;
-      $("div#instrRate").html("" + Math.round(instrsPerSec * 100) / 100);
+      $("div#instrRate").html(CORE.environment.current_rate);
 
       CORE.display._updateProcessDisplay();
       CORE.display._updateSpeciesDisplay();

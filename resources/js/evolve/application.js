@@ -56,14 +56,14 @@ CORE.indexHtml = function() {
                   $("#play").show();
                   $("#step").show();
                });
-         /*$("#layoutCenter").createGadget("sidebar", function(gadget) {
+         // initialise the environment
+         $("#layoutCenter").createGadget("sidebar", function(gadget) {
                   self.sidebar = gadget;
                }, {
                   method : "append"
-               });*/
-         // initialise the environment
+               });
+         CORE.display.initialise();
          CORE.environment.initialise();
-         //CORE.display.initialise();
       }
    };
 

@@ -14,7 +14,8 @@ CORE.Process = function(memory, name) {
    this.id = CORE.environment.getSerialCode();
 };
 CORE.Process.prototype.setMemory = function(memory) {
-   this.memory = memory.slice(); //copies the memory passed in to a new array
+   this.memory = memory; // does not copy the memory passed in to a new array.
+   //Please ensure that the memory used is always only for this process
    for ( var ii = 0; ii < this.memory.length; ii += 1) {
       "" + this.memory[ii][0]; // without this somewhere else throws
       // an error, and I don't understand
