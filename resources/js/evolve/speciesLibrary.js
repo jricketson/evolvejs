@@ -11,7 +11,7 @@ CORE.speciesLibrary = {
          //   $.debug("using name (a)");
          //}
          species = new CORE.species.Species( {
-            code : process.memory,
+            code : process.memory.slice(),
             hashCode : hashcode,
             count : 1,
             parent : parentSpecies,

@@ -53,6 +53,7 @@ CORE.environment = {
       // inject the first Process(s)
       CORE.data.getSpecies(CORE.environment._INITIAL_POPULATION_SIZE_FROM_SERVER,
                            CORE.environment._getSpeciesCallback);
+      setInterval(CORE.environment._resetCpuRate, 5000);
    },
 
    _initialisePopulation : function(population) {
@@ -235,7 +236,6 @@ CORE.environment = {
       CORE.environment._stepping = false;
       CORE.environment._runSimulationLoop();
       CORE.environment._resetCpuRate();
-      setInterval(CORE.environment._resetCpuRate, 5000);
    },
    step : function() {
       CORE.environment._stepping = true;

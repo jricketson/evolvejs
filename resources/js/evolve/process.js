@@ -109,7 +109,7 @@ CORE.Thread.prototype.step = function threadStep() {
          CORE.vm.execute(this);
          if (this.stack.length > CORE.Thread._maxStackSize) {
             this.process.decrCpuTime(this.speed*this.speed); //extra decrement if it does not control stack size
-            this.stack = this.stack.slice(0, CORE.Thread._maxStackSize);
+            this.stack.splice(CORE.Thread._maxStackSize, this.stack.length-CORE.Thread._maxStackSize);
          }
          this.process.decrCpuTime(this.speed*this.speed);
       } catch (err) {

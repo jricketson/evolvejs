@@ -6,7 +6,7 @@ CORE.species.Species = function Species(fromObject) {
    this.id = fromObject.id;
    this.processes = fromObject.processes;
    this.name = fromObject.name;
-   this.code = fromObject.code.slice(); // shallow copy
+   this.code = fromObject.code; // shallow copy
    if (fromObject.fields) {
       this.name = fromObject.fields.name;
       this.id = fromObject.pk;
