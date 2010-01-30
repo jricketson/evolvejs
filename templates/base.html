@@ -57,6 +57,7 @@
             CORE.mediaUrl = "{{ MEDIA_URL }}";
             {% if on_production_server %}
             {% else %}
+            {% if False %}
             function getDependencies(layerName) {
                 for (var i=0;i<dependencies.layers.length;i++) {
                    var layer=dependencies.layers[i];
@@ -72,6 +73,7 @@
                      dojo.require(deps[i], true);
                  }
              }
+             {% endif %}
              {% endif %}
         </script>
         {% block js %}{% endblock js %}

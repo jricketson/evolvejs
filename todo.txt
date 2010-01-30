@@ -1,6 +1,7 @@
 bugs:
 registration should not require referral source
 seeing animal goes one too far when calculating distance to prey
+jmp* should have no effect if the label that they are jumping to is not found
 
 high priority: (before first public alpha release)
 better documentation

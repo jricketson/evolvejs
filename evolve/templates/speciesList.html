@@ -13,9 +13,10 @@
       	<table>
       {% for species in speciesList %}
       	<tr class="species" data-key="{{species.key}}">
+      		<td>{{forloop.counter}}</td>
       		<td>{{species.name}}</td>
-      		<td>{% if species.validScore %}{{species.score}}{% else %}not enough matches yet {% endif %}</td>
-      		<td>{{species.scoreList|join:","}}</td>
+      		<td>{% if species.validScore %}{{species.score}}{% else %}not enough matches yet {% endif %}({{species.score}}}</td>
+      		<td>{{species.scoreList|slice:"-5:"|join:","}}</td>
       		<td>{{species.parentRef|yesno:"Has parent,No parent"}}</td>
      		</tr>
       {% endfor %}

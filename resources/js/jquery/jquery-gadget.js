@@ -90,15 +90,20 @@
    }
    
    function processTemplate(gadgetId, callback, fragment) {
-       var template = new dojox.dtl.Template(fragment);
-       templates[gadgetId] = template;
-       callback(template);
+      var template;
+      if (window.dojox !== undefined && dojox.dtl !== undefined && dojox.dtl.Template !== undefined ) {
+         template = new dojox.dtl.Template(fragment);
+      } else {
+         template = fragment;
+      }
+      templates[gadgetId] = template;
+      callback(template);
     }
    
    function getTemplate(gadgetId, gadget, cache, callback) {
       if (templates[gadgetId] === undefined) {
     	 if (gadget.templatePath) {
-	         $.dependsOnHtml(gadget.templatePath.path, processTemplate.curry(gadgetId, callback), {
+	         $.dependsOnHtml(gadget.templatePath, processTemplate.curry(gadgetId, callback), {
 	            cache : cache
 	         });
     	 } else if (gadget.templateString) {
@@ -113,7 +118,11 @@
    
    function insertIntoDom(template, data, method, element, wrapInDiv) {
       var domElement, html;
+      if (window.dojox !== undefined && dojox.dtl !== undefined && dojox.dtl.Template !== undefined ) {
       html = template.render(new dojox.dtl.Context($.extend({MEDIA_URL:CORE.mediaUrl},data)));
+      } else {
+         html=template;
+      }
       if (wrapInDiv) {
          html="<div>"+html+"</div>";
       }

@@ -24,6 +24,6 @@ def clearCache(request):
 
 def speciesList(request):
     return render_to_response("speciesList.html",
-                              {"speciesList":Species.all().order("-score").order("-scoreCount").order("randomFloat")},
+                              {"speciesList":Species.all().order("-score").order("randomFloat")},
                               context_instance=RequestContext(request))
     

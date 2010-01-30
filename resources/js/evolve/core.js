@@ -1,5 +1,3 @@
-dojo.require("dojox.dtl");
-dojo.require("dojox.dtl.Context");
 // if no firebug installed
 if (!window.console) {
    var console = {
@@ -82,7 +80,7 @@ CORE.handleErrorAsWarning = function handleError(msg, url, l) {
 CORE.logError = function(error) {
    $.post("/data/errorLog/", error);
 };
-CORE.messageTemplate='<div class="msg">{msg}</div>'
+CORE.messageTemplate='<div class="msg">{msg}</div>';
 CORE.displayMessage = function(msg, timeout) {
    timeout = timeout || 10000;
    var msgDiv = $(CORE.messageTemplate.supplant({msg:msg})).hide();
@@ -91,7 +89,7 @@ CORE.displayMessage = function(msg, timeout) {
       msgDiv.remove();
    };
    $("#messages").append(msgDiv);
-   msgDiv.slideDown("normal").click(close)
+   msgDiv.slideDown("normal").click(close);
    setTimeout(close, timeout);
 };
 $.ajaxSetup( {
@@ -110,13 +108,12 @@ $("#ajaxErrorMessage").ajaxError( function(e) {
    },5000);
 });
 
-dojo.declare("CORE.Throttle", null, {
-   constructor : function(fn, delay) {
+CORE.Throttle = function(fn, delay) {
       this.fn = fn;
       this.delay = delay || 50; /* milliseconds - vary as desired */
       this.executionTimer = null;
-   },
-   execute : function() {
+   };
+CORE.Throttle.prototype.execute = function() {
       if (this.executionTimer) {
          clearTimeout(this.executionTimer);
       }
@@ -125,8 +122,7 @@ dojo.declare("CORE.Throttle", null, {
       this.executionTimer = setTimeout( function() {
          fn.apply(null, args);
       }, this.delay);
-   }
-});
+   };
 
 if (typeof Object.create !== 'function') {
    Object.create = function(o) {

@@ -38,7 +38,7 @@ class SpeciesRestfulController(RestfulController):
         return super(SpeciesRestfulController, self).create()  
 
     def list (self, offset, limit):
-        return self.modelClass.all().order("score").order("randomFloat").fetch(int(limit),0)
+        return self.modelClass.all().order("-score").order("randomFloat").fetch(int(limit),0)
     
     def addScore(self,key):
         score = self.request.GET['score']

@@ -36,6 +36,12 @@ indexes:
   properties:
   - name: score
     direction: desc
+  - name: randomFloat
+
+- kind: evolve_species
+  properties:
+  - name: score
+    direction: desc
   - name: scoreCount
 
 - kind: evolve_species

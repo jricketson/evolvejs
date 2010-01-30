@@ -19,7 +19,6 @@ CORE.indexHtml = function() {
       }
    }
    return {
-      EVENT_PAGE_READY : "page_ready",
       initialise : function() {
          $.ajaxSetup({
                   beforeSend : rpcStart,
@@ -46,21 +45,25 @@ CORE.indexHtml = function() {
                   CORE.environment.start();
                   $(this).hide();
                   $("#pause").show();
+                  $("#step").hide();
                });
+         $("#step").click(function() {
+            CORE.environment.step();
+         });
          $("#pause").click(function() {
                   CORE.environment.stop();
                   $(this).hide();
                   $("#play").show();
+                  $("#step").show();
                });
-         $("#layoutCenter").createGadget("sidebar", function(gadget) {
+         /*$("#layoutCenter").createGadget("sidebar", function(gadget) {
                   self.sidebar = gadget;
                }, {
                   method : "append"
-               });
+               });*/
          // initialise the environment
          CORE.environment.initialise();
-         $(document).trigger(this.EVENT_PAGE_READY);
-         CORE.display.initialise();
+         //CORE.display.initialise();
       }
    };
 

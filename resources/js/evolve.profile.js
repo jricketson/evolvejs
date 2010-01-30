@@ -25,7 +25,6 @@ var about=[
             "jquery.jquery-depends"
 ];
 var foreign = [
-            "dojo.parser",
             jquery,
             "external.json2",
             "external.contrast"
@@ -67,8 +66,7 @@ dependencies = {
       [ "jquery", myroot+"/resources/js/jquery" ],
       [ "external", myroot+"/resources/js/external" ],
       [ "image", myroot+"/resources/image" ],
-      [ "style", myroot+"/resources/style" ],
-      [ "dojox", "../dojox"]
+      [ "style", myroot+"/resources/style" ]
       
    ]
 };

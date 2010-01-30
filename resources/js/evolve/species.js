@@ -1,11 +1,15 @@
 CORE.species={};
-CORE.species.Species = function(fromObject) {
-   this.parent=null;
-   dojo.mixin(this, fromObject);
+CORE.species.Species = function speciesConstructor(fromObject) {
+   this.hashCode = fromObject.hashCode;
+   this.count = fromObject.count;
+   this.parent = fromObject.parent;
+   this.id = fromObject.id;
+   this.processes = fromObject.processes;
+   this.name = fromObject.name;
    this.code = fromObject.code.slice(); // shallow copy
-   if (this.fields) {
-      this.name = this.fields.name;
-      this.id = this.pk;
+   if (fromObject.fields) {
+      this.name = fromObject.fields.name;
+      this.id = fromObject.pk;
    }
    this.sentCount=0;
    this.successScored=false;
@@ -24,10 +28,13 @@ CORE.species.Species.prototype.getParent = function() {
 /**
  * The SpeciesStore stores species much like a Java HashMap.
  */
+CORE.species.count=0;
 CORE.species.SpeciesStore = function() {
    this.store = {};
 };
 CORE.species.SpeciesStore.prototype.addSpecies = function(species) {
+   CORE.species.count+=1;
+   //$.debug("species count:" + CORE.species.count);
    if (!this.store.hasOwnProperty(species.hashCode)) {
       this.store[species.hashCode] = [];
    }

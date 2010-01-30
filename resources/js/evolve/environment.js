@@ -2,12 +2,12 @@ CORE.environment = {
    // *****************************************
    // these are PRIVATE functions and variables
    // *****************************************
-   _gridX : 90, // these are default values
-   _gridY : 45,
+   _gridX : 80, // these are default values
+   _gridY : 40,
    _timeDelay : 10, // time to delay between simulation cycles
    _instructionsPerCycle : 50,
    _running : false, // if the simulation should keep running
-   _INITIAL_POPULATION_SIZE_FROM_SERVER : 20,
+   _INITIAL_POPULATION_SIZE_FROM_SERVER : 5,
    _currentProcesses : [], // all the currently alive processes.
    _currentProcessExecuteIndex:0,
    _grid : [], // the grid that the processes move about on. They are not actually stored here.
@@ -17,42 +17,42 @@ CORE.environment = {
    _embodiedEnergy : 5,
 
    _startTime : 0,
+   _stepping : false,
 
    _serialProcessIdSeries : Number(new Date()), // initialise to an essentially random number
 
+   _getSpeciesCallback : function getSpeciesCallback(species) {
+      var population = [];
+      if (species.length !== 0) {
+         // construct a process from each species
+         for ( var ii = 0; ii < species.length; ii += 1) {
+            var code = CORE.data
+                  .convertStringToCode(species[ii].fields.code);
+            species[ii].code = code;
+            var specie = new CORE.species.Species(species[ii]);
+            specie.saved=true;
+            
+            CORE.speciesLibrary.addSpeciesFromServer(specie);
+            var process = new CORE.Process(code, specie.name);
+            process.facing = Math.round(Math.random() * 3);
+            population.push(process);
+         }
+      } else {
+         population = [
+               new CORE.Process(CORE.ancestor.tree(), "tree"),
+               new CORE.Process(CORE.ancestor.blindAnimal(),
+                     "blindAnimal"),
+               new CORE.Process(CORE.ancestor.seeingAnimal(),
+                     "seeingAnimal") ];
+      }
+      CORE.environment._initialisePopulation(population);
+   },
+   
    _initialiseEnvironment : function() {
       CORE.environment._resizeGrid();
       // inject the first Process(s)
-      CORE.data
-            .getSpecies(CORE.environment._INITIAL_POPULATION_SIZE_FROM_SERVER,
-                  function getSpeciesCallback(species) {
-                     var population = [];
-                     $.debug(species);
-                     if (species.length !== 0) {
-                        // construct a process from each species
-                        for ( var ii = 0; ii < species.length; ii += 1) {
-                           var code = CORE.data
-                                 .convertStringToCode(species[ii].fields.code);
-                           species[ii].code = code;
-                           var specie = new CORE.species.Species(species[ii]);
-                           specie.saved=true;
-                           
-                           CORE.speciesLibrary.addSpeciesFromServer(specie);
-                           var process = new CORE.Process(code, specie.name);
-                           process.facing = Math.round(Math.random() * 3);
-                           population.push(process);
-                        }
-                     } else {
-                        population = [
-                              new CORE.Process(CORE.ancestor.tree(), "tree"),
-                              new CORE.Process(CORE.ancestor.blindAnimal(),
-                                    "blindAnimal"),
-                              new CORE.Process(CORE.ancestor.seeingAnimal(),
-                                    "seeingAnimal") ];
-                     }
-                     $.debug(population);
-                     CORE.environment._initialisePopulation(population);
-                  });
+      CORE.data.getSpecies(CORE.environment._INITIAL_POPULATION_SIZE_FROM_SERVER,
+                           CORE.environment._getSpeciesCallback);
    },
 
    _initialisePopulation : function(population) {
@@ -91,6 +91,9 @@ CORE.environment = {
       CORE.environment._grid[x][y] = process;
       process.gridX = x;
       process.gridY = y;
+      if (parent !== null) {
+         process.facing = parent.facing;
+      }
       CORE.environment._currentProcesses.push(process);
       var species = CORE.speciesLibrary.placeProcess(process, parent);
       jQuery(document).trigger(CORE.environment.EVENT_PROCESS_CREATED,
@@ -136,13 +139,12 @@ CORE.environment = {
       var defender = CORE.environment._grid[x][y];
       var lowCpu = Math.min(attacker.cputime, defender.cputime);
       //$.debug(attacker.cputime, defender.cputime, defender.memory.length, CORE.environment._embodiedEnergy);
-      attacker.cputime -= (lowCpu * 0.8);
-      defender.cputime -= lowCpu;
-      if (defender.cputime <= 0) {
+      if (defender.cputime -lowCpu <=0) {
          //$.debug("defender killed, attacker gained ", defender.memory.length * CORE.environment._embodiedEnergy);
-         attacker.cputime += (defender.memory.length * CORE.environment._embodiedEnergy);
+         var gain = (defender.memory.length * CORE.environment._embodiedEnergy) - (lowCpu * 0.8);
+         attacker.cputime += gain ;
          // give the attacker cputime and the embodied energy in the body size
-         $.debug("KILLED: process attacked and lost");
+         //$.debug("KILLED: process {defender} was attacked by {attacker} and lost. Attacker gained {gain} and ended up with {cputime}".supplant({attacker:attacker.name,defender:defender.name,gain:gain,cputime:attacker.cputime }));
          CORE.environment._kill(defender);
       }
    },
@@ -178,6 +180,9 @@ CORE.environment = {
             CORE.environment._currentProcessExecuteIndex = 0;
             CORE.environment._loopCount += 1;
             CORE.environment._shineSun();
+            if (CORE.environment._stepping) {
+               break;
+            }
          }
          // $.debug(currentProcesses[CORE.environment._currentProcessExecuteIndex].id, currentProcesses[CORE.environment._currentProcessExecuteIndex].getState());
          CORE.environment._currentProcesses[CORE.environment._currentProcessExecuteIndex].step();
@@ -224,9 +229,14 @@ CORE.environment = {
    },
    start : function() {
       CORE.environment._running = true;
-      CORE.environment._runSimulationLoop(0);
+      CORE.environment._stepping = false;
+      CORE.environment._runSimulationLoop();
       CORE.environment._resetCpuRate();
       setInterval(CORE.environment._resetCpuRate, 5000);
+   },
+   step : function() {
+      CORE.environment._stepping = true;
+      CORE.environment._runSimulationLoop();
    },
    stop : function() {
       CORE.environment._running = false;

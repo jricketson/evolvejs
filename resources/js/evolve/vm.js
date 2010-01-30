@@ -166,18 +166,28 @@ CORE.vm.instructionSet = {
    },
    add : function add(thread, operand) {
       var a = thread.stack.pop();
-      thread.stack.push(a + operand);
+      if (a !== undefined) {
+         thread.stack.push(a + operand);
+      } else {
+         thread.stack.push(operand);
+      }
       thread.executionPtr += 1;
    },
    mult : function mult(thread, operand) {
       var a = thread.stack.pop();
-      thread.stack.push(a * operand);
+      if (a !== undefined) {
+         thread.stack.push(a + operand);
+      } else {
+         thread.stack.push(0);
+      }
       thread.executionPtr += 1;
    },
    dupTop : function dupTop(thread, operand) {
       var a = thread.stack.pop();
-      thread.stack.push(a);
-      thread.stack.push(a);
+      if (a !== undefined) {
+         thread.stack.push(a);
+         thread.stack.push(a);
+      } 
       thread.executionPtr += 1;
    },
    push : function push(thread, operand) {
@@ -190,8 +200,8 @@ CORE.vm.instructionSet = {
       }
       thread.executionPtr += 1;
    },
-   pushM : function pushM(thread, operand) { // pushes operand from memPtr(+operand) to stack
-      if (thread.shortTermMemory[operand]==undefined) {
+   pushM : function pushM(thread, operand) { // pushes operand from mem[operand] to stack
+      if (thread.shortTermMemory[operand]===undefined) {
          thread.stack.push(0);
       } else {
          thread.stack.push(thread.shortTermMemory[operand]);
@@ -199,7 +209,11 @@ CORE.vm.instructionSet = {
       thread.executionPtr += 1;
    },
    popM : function popM(thread, operand) { // pops stack to operand at memPtr(+operand)
-      thread.shortTermMemory[operand] = thread.stack.pop();
+      if (thread.stack.length >0) {
+         thread.shortTermMemory[operand] = thread.stack.pop();
+      } else {
+         thread.shortTermMemory[operand] = 0;
+      }
       thread.executionPtr += 1;
    },
    incCounter : function incCounter(thread, operand) {
@@ -299,13 +313,15 @@ CORE.vm.instructionSet = {
       if (a) {
          thread.executionPtr += 1;
       } else {
-         thread.executionPtr += (1 + operand);
+         CORE.vm._jmpPtr(thread, thread.executionPtr, true, operand,
+         "executionPtr");
       }
    },
    ifNotDo : function ifNotDo(thread, operand) {
       var a = thread.stack.pop();
       if (a) {
-         thread.executionPtr += (1 + operand);
+         CORE.vm._jmpPtr(thread, thread.executionPtr, true, operand,
+         "executionPtr");
       } else {
          thread.executionPtr += 1;
       }
@@ -408,6 +424,10 @@ CORE.vm.instructionSet = {
    sleep : function sleep(thread, operand) {
       thread.sleepCycles = operand;
       thread.executionPtr += 1;
+   },
+   setSpeed : function setSpeed(thread, operand) {
+      thread.speed = operand;
+      thread.executionPtr += 1;
    }
 };
 
@@ -447,7 +467,8 @@ CORE.vm.instructionCodes = {
    22 : CORE.vm.instructionSet.look,
    23 : CORE.vm.instructionSet.turnR,
    24 : CORE.vm.instructionSet.move,
-   25 : CORE.vm.instructionSet.sleep
+   25 : CORE.vm.instructionSet.sleep,
+   35 : CORE.vm.instructionSet.setSpeed
 };
 
 // This contains a methodName -> code mapping

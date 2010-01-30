@@ -1,4 +1,6 @@
 (function() {
+
+   
    function expand(self) {
       self.element.css({
                width : "300px"
@@ -26,10 +28,9 @@
    }
 
    return $.gadget.register("sidebar", {
-            templatePath: dojo.moduleUrl("fragments.sidebar", "sidebar.html"),     
+            templatePath: CORE.mediaUrl+"fragments/sidebar/sidebar.html",     
             initialiseGadget : function(options) {
                var self = this;
-               dojo.parser.parse(self.element[0]);
                self.element.find(".closer").click(function() {
                         collapse(self);
                      });
@@ -53,7 +54,7 @@
                         CORE.display.setCurrentlyDisplayedProcess(process);
                      });
 
-               self.element.find(".pane .title").click(function() {
+               self.element.find(".pane .title").live("click",function() {
                   $(this).parent().toggleClass("expanded");
                   $(this).parent().toggleClass("collapsed");
                });

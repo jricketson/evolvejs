@@ -3,9 +3,7 @@
    {% if on_production_server %}
         <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}combined/evolve.css" />
    {% else %}
-       <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}dijit/themes/tundra/tundra.css" />
-       <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}dojo/resources/dojo.css" />
-       <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}devStyle/application.css" media="screen, print"/>
+       <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}devStyle/application.css"/>
    {% endif %}
 {% endblock %}
 
@@ -13,18 +11,32 @@
 {% if on_production_server %}
     <script type="text/javascript" src="{{ MEDIA_URL }}combined/complete.js"></script>
 {% else %}
-    <script type="text/javascript" src="{{ MEDIA_URL }}dojo/dojo.js.uncompressed.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}dojo/foreign.js"></script>
-    <script>
-        dojo.require("evolve-profile", true);
-        loadDependencies("application.js");
-    </script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}jquery/jquery-1-3-2.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}external/json2.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}external/contrast.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}evolve/core.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}jquery/jquery-depends.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}jquery/jquery-gadget.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}jquery/jquery-log.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/environment.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/process.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/dataAccess.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/species.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/speciesLibrary.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/display.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/assembly.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/application.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/ancestor.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/util.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/vm.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}fragments/sidebar/sidebar.js"></script>
 {% endif %}
 {% endblock %}
 {% block extraHeader %}
    <div id="controlButtons">
       <button id="play">Play</button>
       <button id="pause">Pause</button>
+      <button id="step">Step</button>
    </div>
 {% endblock %}
 {% block content %}

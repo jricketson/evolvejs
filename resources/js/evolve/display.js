@@ -55,10 +55,9 @@ CORE.display = {   // *****************************************
       CORE.display._markerWidth = Math.round(screenwidth / CORE.environment.getGridX());
       CORE.display._markerHeight = Math.round(screenheight / CORE.environment.getGridY());
 
-      var processes = CORE.environment.getCurrentProcesses();
       var marker, process;
-      for ( var ii = 0; ii < processes.length; ii += 1) {
-         process = processes[ii];
+      for ( var processid in CORE.display._processStore) {
+         process = CORE.display._processStore[processid];
          marker = CORE.display._processDivStore[process.id];
          marker.css( {
             top : CORE.display._markerHeight * process.gridY,
@@ -141,13 +140,15 @@ CORE.display = {   // *****************************************
       if (speciesEntry !== undefined) {
          var species = speciesEntry.species;
          for ( var i = 0; i < species.processes.length; i++) {
-            CORE.display._processDivStore[species.processes[i]].fadeOut()
-                  .fadeIn();
+            CORE.display._processDivStore[species.processes[i]].fadeOut().fadeIn();
          }
       }
    },
 
-   _updateSpeciesDiv : function(div, species) {
+   _updateSpeciesDiv : function updateSpeciesDiv(div, species) {
+     //if (species === null) {
+     //   $.debug("using name");
+     //}
       var name = species.name === undefined ? species.id : species.name;
       div.html('<span class="id">' + name + '</span><span class="totalCount">' + 
             species.count + '</span><span class="currentCount">' +
@@ -181,10 +182,25 @@ CORE.display = {   // *****************************************
       $("#sidebar .log").append("<div>" + message + "</div>");
    },
 
-   _updateProcessDisplay : function() {
+   
+   _threadHtml :'<div class="pane collapsed thread{threadNumber}">' +
+   '<div class="title">thread {threadNumber}</div>'+
+   '<table class="content">'+
+      '<tr><td>stack</td><td><div class="stack"></div></td></tr>'+
+      '<tr><td>counters</td><td><div class="counter"></div></td></tr>'+
+      '<tr><td>short term memory</td><td><div class="shortTermMemory"></div></td></tr>'+
+      '<tr><td>execution pointer</td><td><div class="executionPointer"></div></td></tr>'+
+      '<tr><td>read pointer</td><td><div class="readPointer"></div></td></tr>'+
+      '<tr><td>write pointer</td><td><div class="writePointer"></div></td></tr>'+
+      '<tr><td>speed</td><td><div class="speed"></div></td></tr>'+
+   '</table>'+
+'</div>',
+
+   
+   _updateProcessDisplay : function updateProcessDisplay() {
       var tab = $("div.processTab");
       var process = CORE.display._currentlyDisplayedProcess;
-      if (process !== null) {
+      if (process !== null && tab.hasClass("expanded")) {
          tab.find("div.id").html(process.id);
          tab.find("div.cputime").html(process.cputime);
          tab.find("div.activeThreadCount").html(process.threads.length);
@@ -196,15 +212,25 @@ CORE.display = {   // *****************************************
             //don't update it with the same content. Makes it hard to select the text if it keeps getting updated
             tab.find("div.code").html(displayableCode);
          }
+         tab.find(".code .current").removeClass("current");
          for (var i=0;i<process.threads.length;i++) {
+            var threadDom = tab.find(".thread"+i);
+            if (threadDom.length ===0) {
+               threadDom=$(CORE.display._threadHtml.supplant({threadNumber:i}));
+               tab.find("#threads").append(threadDom);
+            }
             var thread = process.threads[i];
-            tab.find("div.stack").html(thread.stack.toString());
-            tab.find("div.counter").html(thread.counter.toString());
-            tab.find("div.shortTermMemory").html(thread.shortTermMemory.toString());
-            tab.find("div.executionPointer").html(thread.executionPtr.toString());
-            tab.find("div.readPointer").html(thread.readPtr.toString());
-            tab.find("div.writePointer").html(thread.writePtr.toString());
-            tab.find("div.speed").html(thread.speed.toString());
+            threadDom.find("div.stack").html(thread.stack.toString());
+            threadDom.find("div.counter").html(thread.counter.toString());
+            threadDom.find("div.shortTermMemory").html(thread.shortTermMemory.toString());
+            threadDom.find("div.executionPointer").html(thread.executionPtr.toString());
+            threadDom.find("div.readPointer").html(thread.readPtr.toString());
+            threadDom.find("div.writePointer").html(thread.writePtr.toString());
+            threadDom.find("div.sleepCycles").html(thread.sleepCycles.toString());
+            threadDom.find("div.speed").html(thread.speed.toString());
+            tab.find(".code .line"+thread.executionPtr.toString()).addClass("current");
+            tab.find(".code .line"+thread.writePtr.toString()).before("<div class='pointers'>w</div>");
+            tab.find(".code .line"+thread.readPtr.toString()).before("<div class='pointers'>r</div>");
          }
       } else {
          tab.find("div.id").html("");
@@ -240,11 +266,11 @@ CORE.display = {   // *****************************************
       $(document).bind(CORE.environment.EVENT_SPECIES_EXTINCT,
             CORE.display._speciesExtinctHandler);
       $(document).bind(CORE.EVENT_LOG_MESSAGE, CORE.display._logMessageHandler);
-      $("#gridDisplay").bind("click", CORE.display._processClickedHandler);
+      $("#gridDisplay").click(CORE.display._processClickedHandler); 
 
       $(document).ready(CORE.display._calculateMarkerSize);
       $(window).resize(CORE.display._calculateMarkerSize);
-      setTimeout(CORE.display.updateDisplay, CORE.display._timeDelay);
+      setInterval(CORE.display.updateDisplay, CORE.display._timeDelay);
       // TODO: fix this terrible hack. The specieslist hasn't been created
       // yet
       setTimeout( function() {
@@ -266,15 +292,13 @@ CORE.display = {   // *****************************************
 
       CORE.display._updateProcessDisplay();
       CORE.display._updateSpeciesDisplay();
-      setTimeout(CORE.display.updateDisplay, CORE.display._timeDelay);
    },
    setCurrentlyDisplayedProcess: function(process) {
       if (CORE.display._currentlyDisplayedProcess !== null) {
          CORE.display._currentlyDisplayedProcess.debug = false;
       }
-      CORE.display._currentlyDisplayedProcess = process;
-      if (CORE.display._currentlyDisplayedProcess === undefined) {
-         CORE.display._currentlyDisplayedProcess = null;
+      if (process !== undefined) {
+         CORE.display._currentlyDisplayedProcess = process;
       } else {
          CORE.display._currentlyDisplayedProcess.debug = true;
       }
@@ -286,7 +310,6 @@ CORE.display = {   // *****************************************
       speciesEntry.div.css( {
          background : colour
       });
-      var species = speciesEntry.species;
       for ( var i = 0; i < species.processes.length; i++) {
          CORE.display._processDivStore[species.processes[i]].css( {
             background : colour

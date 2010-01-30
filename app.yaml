@@ -1,4 +1,4 @@
-﻿application: evolve-staging
+﻿application: evolvethefuture
 version: 4
 runtime: python
 api_version: 1
@@ -18,6 +18,10 @@ handlers:
 - url: /favicon.ico
   static_files: compiled/evolve/image/favicon.gif
   upload: compiled/evolve/images/favicon.ico
+
+- url: /remote_api_abcddd
+  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
+  login: admin
 
 - url: /.*
   script: common/appenginepatch/main.py

@@ -109,3 +109,20 @@ div#messages .msg{
     -moz-border-radius: 0.5em;
     -webkit-border-radius: 0.5em;
 }
+
+.code .current {
+	background-color: red;	
+}
+
+.code .pointers {
+	float: right;
+	margin: 1px;
+}
+
+.code .line {
+	border-bottom: 1px dotted black;
+}
+
+.clear {
+	clear: both;
+}

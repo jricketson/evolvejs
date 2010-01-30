@@ -34,10 +34,6 @@ CORE.Process.prototype.step = function() {
       }
    }
 };
-/**
- * keeps a copy of the operands in a separate list. This copy is used in vm.js -
- * searchArray
- */
 CORE.Process.prototype.spliceMemory = function(position, elementCount, element) {
    this.memory.splice(position, elementCount, element);
 };
@@ -48,7 +44,7 @@ CORE.Process.prototype.spliceMemory = function(position, elementCount, element) 
 CORE.Process.prototype.decrCpuTime = function decrCpuTime (decrement) {
    this.cputime -= decrement;
    if (this.cputime < 0) {
-      $.debug("KILLED: process ran out of cputime");
+      $.debug("KILLED: {name} process ran out of cputime".supplant(this));
       CORE.environment.killProcess(this);
    }
 };
@@ -76,7 +72,7 @@ CORE.Process.prototype.getState = function getState() {
 };
 
 CORE.SparseArray = function() {
-}
+};
 CORE.SparseArray.prototype.toString = function() {
    var result=[];
    for (var i in this) {
@@ -85,7 +81,7 @@ CORE.SparseArray.prototype.toString = function() {
       }
    }
    return result.join(",");
-}
+};
 
 CORE.Thread = function(process, name) {
    this.process = process;
@@ -97,11 +93,12 @@ CORE.Thread = function(process, name) {
    this.writePtr = 0;
    this.speed = 1; // speed of execution, how many instructions to
    // execute per
-   // cycle, also cost of execution
+   // cycle, also cost of execution is speed*speed
    this.sleepCycles = 0;
    this.name = name;
 };
-CORE.Thread.prototype.step = function step() {
+CORE.Thread._maxStackSize = 8;
+CORE.Thread.prototype.step = function threadStep() {
    if (this.sleepCycles > 0) {
       this.sleepCycles -= 1;
       return;
@@ -109,16 +106,23 @@ CORE.Thread.prototype.step = function step() {
    for ( var ii = 0; ii < this.speed; ii += 1) {
       try {
          CORE.vm.execute(this);
-         this.process.decrCpuTime(this.speed);
-      } catch (err) {
-         if (this.process.debug) {
-            $(document).trigger(
-                  CORE.EVENT_LOG_MESSAGE,
-                  "process threw an error: {err}".supplant({err:err.toString}));
-            $.debug("(" + this.process.name + ") process threw an error: ", this.process);
-            $.debug(err);
+         if (this.stack.length > CORE.Thread._maxStackSize) {
+            this.process.decrCpuTime(this.speed*this.speed); //extra decrement if it does not control stack size
+            this.stack = this.stack.slice(0, CORE.Thread._maxStackSize);
          }
-         $.debug("KILLED: process made a mistake");
+         this.process.decrCpuTime(this.speed*this.speed);
+      } catch (err) {
+         //if (this.process.debug) {
+         //   $(document).trigger(
+         //         CORE.EVENT_LOG_MESSAGE,
+         //         "process threw an error: {err}".supplant({err:err.toString}));
+         //}
+         if (this.process === null) {
+            $.debug("using name from null process");
+         }
+         $.debug("KILLED: {name} process made a mistake".supplant(this.process));
+         //$.debug("(" + this.process.name + ") process threw an error: ", this.process);
+         //$.debug(err);
          CORE.environment.killProcess(this.process);
       }
    }

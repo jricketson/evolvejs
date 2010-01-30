@@ -39,13 +39,11 @@ class Species(AbstractOwnedModel):
     
     @DerivedProperty
     def score(self):
-        if len(self.scoreList) < 10:
-            return 10
-        return sum(self.scoreList[-10:])
+        return 5 - len(self.scoreList[-5:]) + sum(self.scoreList[-5:])
     
     @DerivedProperty
     def validScore(self):
-        return len(self.scoreList) >= 10
+        return len(self.scoreList) >= 5
     @DerivedProperty
     def scoreCount(self):
         return len(self.scoreList)

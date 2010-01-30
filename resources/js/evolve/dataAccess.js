@@ -12,7 +12,8 @@ CORE.data = function() {
    }
    return {
       SPECIES_URL : "/data/species/",
-      saveSpecies : function(species) {
+      saveSpecies : function saveSpecies(species) {
+         //$.debug("using name");
          var postData = {
             "code" : this.convertCodeToString(species.code),
             "name" : species.name,
