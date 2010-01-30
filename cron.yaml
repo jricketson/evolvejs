@@ -1,2 +1,5 @@
 cron:
+- description: resave species and randomise list
+  url: /cron/randomiseSpecies
+  schedule: every 10 minutes
 

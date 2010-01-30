@@ -26,4 +26,10 @@ def speciesList(request):
     return render_to_response("speciesList.html",
                               {"speciesList":Species.all().order("-score").order("randomFloat")},
                               context_instance=RequestContext(request))
-    
+
+#The randomFloat field automatically randomises on a put
+def randomiseSpecies(request):
+    def fn(p):
+        p.put()
+    query = Species.all()
+    return taskqueue.executeByPage(request, query, fn, reverse(randomiseSpecies))
