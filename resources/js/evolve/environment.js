@@ -7,7 +7,7 @@ CORE.environment = {
    _timeDelay : 10, // time to delay between simulation cycles
    _instructionsPerCycle : 50,
    _running : false, // if the simulation should keep running
-   _INITIAL_POPULATION_SIZE_FROM_SERVER : 5,
+   _INITIAL_POPULATION_SIZE_FROM_SERVER : 15,
    _currentProcesses : [], // all the currently alive processes.
    _currentProcessExecuteIndex:0,
    _grid : [], // the grid that the processes move about on. They are not actually stored here.

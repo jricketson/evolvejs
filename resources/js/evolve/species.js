@@ -1,5 +1,5 @@
 CORE.species={};
-CORE.species.Species = function speciesConstructor(fromObject) {
+CORE.species.Species = function Species(fromObject) {
    this.hashCode = fromObject.hashCode;
    this.count = fromObject.count;
    this.parent = fromObject.parent;
@@ -10,6 +10,7 @@ CORE.species.Species = function speciesConstructor(fromObject) {
    if (fromObject.fields) {
       this.name = fromObject.fields.name;
       this.id = fromObject.pk;
+      this.pk = fromObject.pk;
    }
    this.sentCount=0;
    this.successScored=false;
@@ -19,7 +20,7 @@ CORE.species.Species = function speciesConstructor(fromObject) {
  */
 CORE.species.Species.prototype.getParent = function() {
    var parent = this.parent;
-   while (parent !== null && parent.pk === undefined) {
+   while (parent !== null && parent.id === undefined) {
       parent = parent.parent;
    }
    return parent;
@@ -67,10 +68,6 @@ CORE.species.SpeciesStore.prototype.removeSpecies = function(species) {
          .trigger(CORE.environment.EVENT_SPECIES_EXTINCT, [ species ]);
    var hashArray = this.store[species.hashCode];
    CORE.removeElementFromArray(hashArray, species);
-   if (species.saved) {
-      CORE.displayMessage("{name} species extinct".supplant(species));
-      CORE.data.putScore(species,-1);
-   }
 };
 CORE.species.SpeciesStore.prototype.checkForExtinctSpecies = function() {
    for (hashcode in this.store) {

@@ -30,6 +30,7 @@ CORE.speciesLibrary = {
 
       if (species.processes.length > CORE.environment.VALID_SPECIES && ! (species.saved || species.beingSaved)) {
          CORE.displayMessage("{name} species valid and being saved".supplant(species));
+         $.debug("save it",species);
          CORE.data.saveSpecies(species, function(){
             //if (species === null) {
             //   $.debug("using name (b)");
@@ -42,6 +43,7 @@ CORE.speciesLibrary = {
       }
       // check if the count of processes around now for this species greater is greater than success proxy value
       if (species.processes.length > CORE.environment.SUCCESS_PROXY && ! (species.successScored || species.beingSuccessScored) && species.saved) {
+         $.debug("score it",species);
          CORE.displayMessage("{name} species successful".supplant(species));
          CORE.data.putScore(species,1, function(){
             //if (species === null) {
@@ -60,6 +62,11 @@ CORE.speciesLibrary = {
       CORE.removeElementFromArray(process.species.processes, process.id);
       if (process.species.processes.length === 0) {
          CORE.speciesLibrary._speciesStore.removeSpecies(process.species);
+         if (process.species.saved) {
+            $.debug("extinct it",process.species);
+            CORE.displayMessage("{name} species extinct".supplant(process.species));
+            CORE.data.putScore(process.species,-1);
+         }
       }
       process.species = null;
 
