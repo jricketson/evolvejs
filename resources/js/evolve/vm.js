@@ -7,40 +7,46 @@ CORE.vm = {
    _maxOperand : 10000,
 
    _instrCount : 0,
+   
+   _indexOf : function(arr, elt, from) {
+      var len = arr.length;
 
-   _searchArray : function(process, startPt, endPt, dirForward, size) {
-      // get the operands starting from 'start'
-      var ops = dirForward ? process.memory.slice(startPt) : process.memory
-            .slice(0, startPt).reverse();
-      for ( var ii = 0; ii < ops.length; ii++) {
-         if (ops[ii][0] === 0 && ops[ii][1] == size) {
-            return (dirForward ? startPt + ii : (startPt - ii - 1));
+      for (; from < len; from++) {
+         if (arr[from][0] === 0 && arr[from][1] === elt) {
+            return from;
          }
       }
       return -1;
    },
-   /**
-    * if going forward to return the index of the last element of the template if going backward
-    * return the index of the first instruction of the template the search wraps around the end of
-    * memory back to the start
-    */
+   _lastIndexOf : function(arr, elt, from) {
+      var len = arr.length;
 
-   _findTemplate : function(process, start, dirForward, size) {
-      var ii;
-      ii = CORE.vm._searchArray(process, start, (dirForward ? process.memory.length : -1), dirForward, size);
-      if (ii == -1) {
-         return CORE.vm._searchArray(process, (dirForward ? 0 : process.memory.length - 1), start, dirForward, size);
+      for (; from > -1; from--) {
+         if (arr[from][0] === 0 && arr[from][1] === elt) {
+            return from;
+         }
+      }
+      return -1;
+   },
+   _searchArray : function(arr, startPt, dirForward, label) {
+      if (dirForward) {
+         return CORE.vm._indexOf(arr,label,startPt);
       } else {
-         return ii;
+         return CORE.vm._lastIndexOf(arr,label,startPt);
       }
    },
 
-   _jmpPtr : function(thread, start, dirForward, size, ptrName) {
-      var pos = CORE.vm._findTemplate(thread.process, start, dirForward, size);
+   /**
+   * the search wraps around the end of memory back to the start
+   */
+   _jmpPtr : function(thread, start, dirForward, label, ptrName) {
+      var pos = CORE.vm._searchArray(thread.process.memory, start, dirForward, label);
+      if (pos == -1) {
+         pos = CORE.vm._searchArray(thread.process.memory, (dirForward ? 0 : thread.process.memory.length - 1), dirForward, label);
+      }
       if (pos > -1) {
          thread[ptrName] = pos;
       }
-
    },
 
    _calculateXYForward : function(curX, curY, direction) {
@@ -131,7 +137,6 @@ CORE.vm = {
       }
       var instrCode = thread.process.memory[thread.executionPtr];
       var operator = this.instructionCodes[instrCode[0]];
-      // instrCode);
       if (operator) {
          operator(thread, instrCode[1]);
          if (thread.process.debug) {
@@ -344,23 +349,24 @@ CORE.vm.instructionSet = {
     */
    divideProcess : function divide(thread) {
       //$.debug(thread.readPtr, thread.writePtr);
-      var newProcessMemory = thread.process.memory.splice(thread.readPtr,
-            thread.writePtr - thread.readPtr);
-      //var oldProcessMemory = thread.process.memory.slice(0, thread.readPtr);
-      var newProcess = new CORE.Process(newProcessMemory, thread.process.name);
-      newProcess.facing = thread.process.facing;
-      var coords = CORE.vm._calculateXYForward(thread.process.gridX,
-            thread.process.gridY, thread.process.facing);
-
-      var success = CORE.environment.addProcess(newProcess, thread.process,
-            coords[0], coords[1]);
-      if (success) {
-        // thread.process.setMemory(oldProcessMemory);
+       var coords = CORE.vm._calculateXYForward(thread.process.gridX,
+             thread.process.gridY, thread.process.facing);
+      if (CORE.environment.checkCanBirth(coords[0],coords[1])) {
+         var newProcessMemory = thread.process.memory.splice(thread.readPtr,
+               thread.writePtr - thread.readPtr);
+         var newProcess = new CORE.Process(newProcessMemory, thread.process.name);
+         newProcess.facing = thread.process.facing;
+         
+         CORE.environment.addProcess(newProcess, thread.process,
+               coords[0], coords[1]);
+         
          thread.process.cputime = Math.round(thread.process.cputime / 2);
          newProcess.cputime = thread.process.cputime;
+         success = 1;
+      } else {
+         success = 0;
       }
-
-      thread.stack.push(success / 1);
+      thread.stack.push(success);
       thread.executionPtr += 1;
       return newProcess;
    },
@@ -368,7 +374,7 @@ CORE.vm.instructionSet = {
       var a = thread.stack.pop();
       var finalLength = thread.process.memory.length + a;
       for ( var ii = thread.process.memory.length; ii < finalLength; ii += 1) {
-         thread.process.memory[ii] = 0;
+         thread.process.memory[ii] = [0,0];
       }
       thread.executionPtr += 1;
    },
