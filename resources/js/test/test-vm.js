@@ -169,15 +169,16 @@ CORE.test.vm = new YAHOO.tool.TestCase(function() {
    testIfdont: function () {
       var Assert = YAHOO.util.Assert;
       this.data.firstThread.stack.push(0);
-      CORE.vm.instructionSet.ifDo(this.data.firstThread,1);
-      Assert.areEqual(this.data.executionPtr+2,this.data.firstThread.executionPtr, "executionPtr should increment by 2");
+      this.data.firstThread.executionPtr=13;
+      CORE.vm.instructionSet.ifDo(this.data.firstThread,6);
+      Assert.areEqual(16,this.data.firstThread.executionPtr, "executionPtr should point to nop,6");
       Assert.areEqual(0,this.data.firstThread.stack.length, "stack should be empty");
    },
    testJmpF: function () {
       var Assert = YAHOO.util.Assert;
       this.data.firstThread.executionPtr=12;
       CORE.vm.instructionSet.jmpF(this.data.firstThread,2);
-      Assert.areEqual(32,this.data.firstThread.executionPtr);
+      Assert.areEqual(31,this.data.firstThread.executionPtr);
       Assert.areEqual(0,this.data.firstThread.stack.length, "stack should be empty");
    },
    testJmpB: function () {
@@ -216,7 +217,7 @@ CORE.test.vm = new YAHOO.tool.TestCase(function() {
       this.data.firstThread.writePtr=26;
       var numProcesses = CORE.environment.getProcessCount();
       var newProcess = CORE.vm.instructionSet.divideProcess(this.data.firstThread);
-      Assert.areEqual(12, this.data.firstThread.process.memory.length);
+      Assert.areEqual(17, this.data.firstThread.process.memory.length);
       Assert.areEqual(14, newProcess.memory.length);
       Assert.areEqual(numProcesses+1, CORE.environment.getProcessCount());
    },

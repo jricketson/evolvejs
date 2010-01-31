@@ -54,7 +54,7 @@
                         CORE.display.setCurrentlyDisplayedProcess(process);
                      });
 
-               self.element.find(".pane .title").live("click",function() {
+               $("#sidebar .pane .title").live("click",function() {
                   $(this).parent().toggleClass("expanded");
                   $(this).parent().toggleClass("collapsed");
                });

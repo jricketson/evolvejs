@@ -43,8 +43,10 @@ rm $RD/$VERSION/$PROJECT -r
 rm $RD/$VERSION/fragments -r
 rm $RD/$VERSION/jquery -r
 rm $RD/$VERSION/image -r
+rm $RD/$VERSION/test -r
 ln -s $WD/resources/fragments $RD/$VERSION/fragments
 ln -s $WD/resources/js/$PROJECT $RD/$VERSION/$PROJECT
 ln -s $WD/resources/js/jquery $RD/$VERSION/jquery
 ln -s $WD/resources/style $RD/$VERSION/devStyle
 ln -s $WD/resources/image $RD/$VERSION/image
+ln -s $WD/resources/js/test $RD/$VERSION/test
