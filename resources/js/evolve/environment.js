@@ -87,7 +87,7 @@ CORE.environment = {
       }
       return false;
    },
-
+   
    _initialiseProcess : function(process, parent, x, y) {
       CORE.environment._grid[x][y] = process;
       process.gridX = x;
@@ -201,6 +201,7 @@ CORE.environment = {
       CORE.environment.current_rate = Math.round(CORE.vm.getInstrCount() / secsSinceStart);
       CORE.environment.resetStartTime();
       CORE.vm.resetInstrCount();
+      //$.debug("cpu rate: ", CORE.environment.current_rate);
    },
    // *****************************************
    // these are PUBLIC functions and variables
@@ -294,6 +295,10 @@ CORE.environment = {
       } else {
          return null;
       }
+   },
+   checkCanBirth: function(x,y) {
+      return ! Boolean(CORE.environment._grid[x][y]);
    }
+
 
 };

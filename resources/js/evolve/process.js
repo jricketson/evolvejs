@@ -122,8 +122,8 @@ CORE.Thread.prototype.step = function threadStep() {
             $.debug("using name from null process");
          }
          $.debug("KILLED: {name} process made a mistake".supplant(this.process));
-         //$.debug("(" + this.process.name + ") process threw an error: ", this.process);
-         //$.debug(err);
+         $.debug("(" + this.process.name + ") process threw an error: ", this.process);
+         $.debug(err);
          CORE.environment.killProcess(this.process);
       }
    }

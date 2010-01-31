@@ -69,7 +69,7 @@ CORE.display = {   // *****************************************
    },
 
    _processCreateHandler : function(e, process) {
-      e.stopPropagation();
+      e.stopImmediatePropagation();
       // $.debug(e, process.id, process.gridX, process.gridY);
       $("div#gridDisplay").append(
             '<div class="process" id="' + process.id + '">&nbsp;</div>');
@@ -87,7 +87,7 @@ CORE.display = {   // *****************************************
    },
 
    _processMoveHandler : function(e, process) {
-      e.stopPropagation();
+      e.stopImmediatePropagation();
       // console.log(e, process.id, process.gridX, process.gridY);
       CORE.display._processDivStore[process.id].stop(); // removes all current
       // animations
@@ -103,7 +103,7 @@ CORE.display = {   // *****************************************
    },
 
    _processKillHandler : function(e, process) {
-      e.stopPropagation();
+      e.stopImmediatePropagation();
       // console.log(e);
       var processDiv = CORE.display._processDivStore[process.id];
       if (processDiv) {
@@ -115,7 +115,7 @@ CORE.display = {   // *****************************************
 
    _speciesCreateHandler : function(e, species) {
       //$.debug(e, species);
-      e.stopPropagation();
+      e.stopImmediatePropagation();
       var sidebar = $("#sidebar div.speciesList");
       sidebar.append('<div class="species" id="' + species.id + '"></div>');
       var divMarker = $("#sidebar div.speciesList div.species:last");
@@ -133,7 +133,7 @@ CORE.display = {   // *****************************************
       };
    },
    _speciesClickedHandler : function(e) {
-      e.stopPropagation();
+      e.stopImmediatePropagation();
       var divClicked = $(e.target).closest(".species")[0];
 
       var speciesEntry = CORE.display._speciesDivStore[divClicked.id];
@@ -163,7 +163,7 @@ CORE.display = {   // *****************************************
 
    _speciesExtinctHandler : function(e, species) {
       //$.debug(e, species);
-      e.stopPropagation();
+      e.stopImmediatePropagation();
       CORE.display._speciesDivStore[species.id].div.fadeOut("normal",
             CORE.display._removeThisElement);
       CORE.display._colours
@@ -172,7 +172,7 @@ CORE.display = {   // *****************************************
    },
 
    _processClickedHandler : function(e) {
-      e.stopPropagation();
+      e.stopImmediatePropagation();
       var divClicked = $(e.target).closest(".process")[0];
 
       CORE.display.setCurrentlyDisplayedProcess(CORE.display._processStore[divClicked.id]);

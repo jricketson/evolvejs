@@ -145,6 +145,9 @@ Function.prototype.curry = function() {
 
 //From http://javascript.crockford.com/
 String.prototype.supplant = function(o) {
+   if (o=== null) {
+      $.debug("o is null", this);
+   }
    return this.replace(/\{([^\{\}]*)\}/g, function(a, b) {
       var r = o[b];
       return typeof r === 'string' || typeof r === 'number' ? r : a;

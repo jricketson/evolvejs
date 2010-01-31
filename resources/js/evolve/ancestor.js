@@ -236,12 +236,13 @@ CORE.ancestor = function() {
                //moveToTarget function
                ["nop", 9], //T9
                ["resetCounter",2],//var loop counter
-               ["jmpF", 1],
-               ["nop", 1], //T1
+               ["nop", 1],
                ["pushM",0],
                ["pushCounter",2],
                ["lt",0],
-               ["ifNotDo",3],
+               ["ifDo",15],
+               ["jmpB",3],
+               ["nop", 15],
                ["incCounter",2],
                ["move",0],
                ["jmpB",1],
