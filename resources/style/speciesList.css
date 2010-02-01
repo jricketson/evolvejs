@@ -3,10 +3,10 @@
 div#speciesList {
    float:left;
 }
-div.dropTarget {
+div.box {
    float:left;
    text-align: left;
-   margin-left: 10px;
+   margin: 0 0 10px 10px;
    height: 100%;
    overflow: none;
    width: 200px;
@@ -14,20 +14,34 @@ div.dropTarget {
    border: 1px solid #ddd;
    padding: 1em;
 }
-div.dropTarget.active {
-	background: #005;
+
+div.box .display {
+	margin-top: 1em;
 }
-#ancestry {
+
+div.dragging {
+	position: absolute;
+	border: 1px solid black;
+	background: #ddd;
+	width: 50px;
+	height: 50px;
+}
+div.dropTarget.active {
+	background: #059;
+}
+.ancestry {
 	float: right;
 	width: 100px;
 }
-#ancestry .species {
+.ancestry .species {
 	border: 1px solid black;
 	width: 100px;
+	padding: 2px;
+	cursor: pointer;
 }
 
-#ancestry .thisSpecies {
-	background-color: #999;
+.ancestry .thisSpecies {
+	background-color: #ddd;
 }
 
 #layoutCenter {

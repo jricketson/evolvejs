@@ -27,17 +27,17 @@
       {% endfor %}
       	</table>
       </div>
-      <div class="dropTarget code">Drop a species here to see its code
-      	<div class="display"></div>
+      <div class="box dropTarget code">Drop a species here to see its code
+      	<div id="code1" class="display"></div>
       </div>
-      <div class="dropTarget code">Drop a species here to see its code
-      	<div class="display"></div>
+      <div class="box dropTarget code">Drop a species here to see its code
+      	<div id="code2" class="display"></div>
       </div>
-      <div class="dropTarget code">Drop a species here to see its code
+      <div class="box differences">Differences between the two species code
    	   <div class="display"></div>
       </div>
-      <div class="dropTarget">Drop a species here to see its ancestry
-	      <div id="ancestry"></div>
+      <div class="box dropTarget ancestry">Drop a species here to see its ancestry
+	      <div class="display"></div>
       </div>
       <div style="clear:both;"></div>
 {% endblock %}
@@ -49,6 +49,7 @@
     <script type="text/javascript" src="{{ MEDIA_URL }}jquery/jquery-event-drag-1-5.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}jquery/jquery-event-drop-1-2.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}external/json2.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}external/diff_match_patch.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}jquery/jquery-log.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}evolve/core.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/speciesList.js"></script>

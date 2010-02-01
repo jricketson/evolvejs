@@ -40,6 +40,12 @@ CORE.assembler = function() {
       },
 
       makeDisplayableHtml : function makeDisplayableHtml(codeArray) {
+         return CORE.assembler._makeDisplayable(codeArray, '<div class="line line{lineNumber}">["{operator}", {operand}],</div>');
+      },
+      makeDisplayableText : function makeDisplayableHtml(codeArray) {
+         return CORE.assembler._makeDisplayable(codeArray, '["{operator}", {operand}],\n');
+      },
+      _makeDisplayable: function(codeArray, template) {
          var humanReadable = CORE.assembler.deCompile(codeArray);
          var codeHtml = "";
          var data;
@@ -49,11 +55,12 @@ CORE.assembler = function() {
             } else {
                data = {lineNumber:ii,operator:"",operand:""};
             }
-            
-            codeHtml += '<div class="line line{lineNumber}">["{operator}", {operand}],</div>'.supplant(data);
+            codeHtml += template.supplant(data);
          }
          return codeHtml;
+         
       }
+      
       
    };
 

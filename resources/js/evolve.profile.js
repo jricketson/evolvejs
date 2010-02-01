@@ -53,6 +53,7 @@ dependencies = {
                         "jquery.jquery-event-drag-1-5",
                         "jquery.jquery-event-drop-1-2",
                         "jquery.jquery-log",
+                        "external.diff_match_patch",
                         "external.json2",
                         "evolve.core",
                         'evolve.speciesList',
