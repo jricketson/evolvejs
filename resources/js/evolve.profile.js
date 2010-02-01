@@ -50,6 +50,8 @@ dependencies = {
       {
          name: "speciesList.js",
          dependencies: [jquery,
+                        "jquery.jquery-event-drag-1-5",
+                        "jquery.jquery-event-drop-1-2",
                         "jquery.jquery-log",
                         "external.json2",
                         "evolve.core",

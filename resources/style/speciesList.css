@@ -3,15 +3,20 @@
 div#speciesList {
    float:left;
 }
-div#speciesCode {
+div.dropTarget {
    float:left;
    text-align: left;
    margin-left: 10px;
    height: 100%;
-   overflow: auto;
+   overflow: none;
    width: 200px;
+   min-height: 400px;
+   border: 1px solid #ddd;
+   padding: 1em;
 }
-
+div.dropTarget.active {
+	background: #005;
+}
 #ancestry {
 	float: right;
 	width: 100px;
@@ -27,6 +32,7 @@ div#speciesCode {
 
 #layoutCenter {
 	border: 1px solid black;
+	padding-top:1em;
 }
 
 #loadingMessage {
@@ -35,6 +41,7 @@ div#speciesCode {
 
 #speciesList {
 	font-size: 1.2em;
+	position: relative;
 }
 
 #speciesList td {
@@ -46,7 +53,11 @@ div#speciesCode {
 	padding: 2px;
 }
 
-#speciesList tr:hover {
-	background: #DDD;
+#speciesList tr.species {
 	cursor: pointer;
 }
+#speciesList tr.species:hover {
+	background: #DDD;
+}
+	
+	
