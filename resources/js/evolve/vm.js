@@ -95,6 +95,7 @@ CORE.vm = {
     */
    _elementsToCopy : function(memory, ptr) {
       var val = Math.random() * CORE.environment.mutationRate;
+      //var val = 2;
       // console.log(val);
       if (val < 1) {
          // mutate
@@ -296,6 +297,7 @@ CORE.vm.instructionSet = {
          thread.process.spliceMemory(thread.writePtr, 1, eleToCopy[0]);
          for ( var ii = 1; ii < eleToCopy.length; ii += 1) {
             thread.process.spliceMemory(thread.writePtr, 0, eleToCopy[ii]);
+            thread.writePtr+=1;
          }
       }
       thread.executionPtr += 1;

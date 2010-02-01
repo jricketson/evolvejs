@@ -2,11 +2,11 @@
 
 CORE.speciesLibrary = {
    _speciesStore : new CORE.species.SpeciesStore(), // stored by memory hashcode
-   placeProcess : function placeProcess(process, parent) {
+   placeProcess : function placeProcess(process, parentProcess) {
       var hashcode = process.getHashCode();
       var species = CORE.speciesLibrary._speciesStore.findSpecies(process.memory, hashcode);
       if (species === null) {
-         var parentSpecies = parent === null ? null : parent.species;
+         var parentSpecies = parentProcess === null ? null : parentProcess.species;
          //if (process === null) {
          //   $.debug("using name (a)");
          //}
@@ -20,6 +20,7 @@ CORE.speciesLibrary = {
             name : process.name
          });
          CORE.speciesLibrary._speciesStore.addSpecies(species);
+         //$.debug("new species created. Old Species:",parentSpecies, "new Species:", species);
          jQuery(document).trigger(CORE.environment.EVENT_SPECIES_CREATED,
                [ species ]);
       } else {

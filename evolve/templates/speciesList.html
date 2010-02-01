@@ -3,14 +3,19 @@
    {% if on_production_server %}
         <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}combined/speciesList.css" />
    {% else %}
-       <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}dijit/themes/tundra/tundra.css" />
-       <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}dojo/resources/dojo.css" />
        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}devStyle/speciesList.css"/>
    {% endif %}
 {% endblock %}
 {% block content %}
       <div id="speciesList">
       	<table>
+      	<tr>
+      		<th>#</th>
+      		<th>Species name</th>
+      		<th>Score</th>
+      		<th>Recent results</th>
+      		<th>Has parent?</th>
+      	</tr>
       {% for species in speciesList %}
       	<tr class="species" data-key="{{species.key}}">
       		<td>{{forloop.counter}}</td>
@@ -30,10 +35,13 @@
 {% if on_production_server %}
     <script type="text/javascript" src="{{ MEDIA_URL }}combined/speciesList.js"></script>
 {% else %}
-    <script type="text/javascript" src="{{ MEDIA_URL }}dojo/dojo.js.uncompressed.js"></script>
-    <script>
-        dojo.require("evolve-profile", true);
-        loadDependencies("speciesList.js");
-    </script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}jquery/jquery-1-4-1.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}external/json2.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}jquery/jquery-log.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}evolve/core.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/speciesList.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/assembly.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/vm.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}evolve/dataAccess.js"></script>
 {% endif %}
 {% endblock %}

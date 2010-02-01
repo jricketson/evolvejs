@@ -67,10 +67,10 @@ CORE.environment = {
     * adds a process to the queue, also places it in the grid x and y are optional, if not supplied
     * will be placed randomly
     */
-   _birthProcess : function(process, parent, x, y) {
+   _birthProcess : function(process, parentProcess, x, y) {
       if (x !== undefined && y !== undefined) {
          if (!CORE.environment._grid[x][y]) {
-            CORE.environment._initialiseProcess(process, parent, x, y);
+            CORE.environment._initialiseProcess(process, parentProcess, x, y);
             return true;
          } else {
             return false;
@@ -80,7 +80,7 @@ CORE.environment = {
             var xx = Math.round(Math.random() * (CORE.environment._gridX - 1));
             var yy = Math.round(Math.random() * (CORE.environment._gridY - 1));
             if (!CORE.environment._grid[xx][yy]) {
-               CORE.environment._initialiseProcess(process, parent, xx, yy);
+               CORE.environment._initialiseProcess(process, parentProcess, xx, yy);
                return true;
             }
          }
@@ -88,15 +88,15 @@ CORE.environment = {
       return false;
    },
    
-   _initialiseProcess : function(process, parent, x, y) {
+   _initialiseProcess : function(process, parentProcess, x, y) {
       CORE.environment._grid[x][y] = process;
       process.gridX = x;
       process.gridY = y;
-      if (parent !== null) {
-         process.facing = parent.facing;
+      if (parentProcess !== null) {
+         process.facing = parentProcess.facing;
       }
       CORE.environment._currentProcesses.push(process);
-      var species = CORE.speciesLibrary.placeProcess(process, parent);
+      var species = CORE.speciesLibrary.placeProcess(process, parentProcess);
       jQuery(document).trigger(CORE.environment.EVENT_PROCESS_CREATED,
             [ process ]);
       return species;
@@ -246,8 +246,8 @@ CORE.environment = {
       CORE.environment._running = false;
    },
 
-   addProcess : function(process, parent, x, y) {
-      return CORE.environment._birthProcess(process, parent, x, y);
+   addProcess : function(process, parentProcess, x, y) {
+      return CORE.environment._birthProcess(process, parentProcess, x, y);
    },
    moveProcess : function(process, x, y) {
       CORE.environment._move(process, x, y);

@@ -19,11 +19,10 @@ CORE.data = function() {
             "count" : species.count-species.sentCount
          };
          if (species.getParent()!==null) {
-            postData.parentRef= species.getParent().id;
+            postData.parentRef= species.getParent().pk;
          }
-         $.post(this.SPECIES_URL, postData, function(data){
-            var speciesFromServer = JSON.parse(data, stringToDate)[0];
-            species.pk=speciesFromServer.pk;
+         $.post(this.SPECIES_URL, postData, function saveSpeciesCallback(data){
+            species.pk=data[0].pk;
          });
       },
       putScore : function(species,score,callback) {
