@@ -38,6 +38,7 @@ div.dropTarget.active {
 	width: 100px;
 	padding: 2px;
 	cursor: pointer;
+	margin: 2px;
 }
 
 .ancestry .thisSpecies {

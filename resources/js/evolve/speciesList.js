@@ -10,19 +10,23 @@ CORE.speciesList = function () {
             $(this).removeClass('active');
          });
          $('div.dropTarget.code').bind('drop',function(event){
-               var target= this;
-               CORE.data.getSingleSpecies($(event.dragProxy).attr("data-key"), function(species){
-                  CORE.speciesList.displayCode(species[0].fields.code, target);
-               });
+            var target= this;
+            $(target).find(".display").empty();
+            CORE.data.getSingleSpecies($(event.dragProxy).attr("data-key"), function(species){
+               CORE.speciesList.displayCode(species[0].fields.code, target);
+            });
+            $(event.dragProxy).fadeOut().remove();
          });
          $('div.dropTarget.ancestry').bind('drop',function(event){
             var target= this;
+            $(target).find(".display").empty();
             CORE.data.getSingleSpecies($(event.dragProxy).attr("data-key"), function(species){
                var speciesDiv = $("<div class='thisSpecies species' data-key='{pk}'>{name}</div>".supplant({name:species[0].fields.name,pk:species[0].pk}));
-               $(target).find(".display").empty().append(speciesDiv);
+               $(target).find(".display").append(speciesDiv);
                CORE.speciesList._makeDraggable(speciesDiv);
                CORE.speciesList.displayAncestor(species[0], target);
             });
+            $(event.dragProxy).fadeOut().remove();
          });
       },
       _makeDraggable: function(element) {
@@ -34,8 +38,6 @@ CORE.speciesList = function () {
             return proxy;
          }).bind('drag',function(event){
             $(event.dragProxy).css({top:event.clientY,left:event.clientX});
-         }).bind('dragend',function(event){
-            $(event.dragProxy).fadeOut().remove();
          });
       },
       displayCode: function(code, target){

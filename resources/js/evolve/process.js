@@ -1,5 +1,5 @@
 CORE.Process = function(memory, name) {
-   this.setMemory(memory);
+   this.memory = memory;
    this.threads = [];
    this.cputime = 3000;
    this.gridX = 0;
@@ -12,15 +12,6 @@ CORE.Process = function(memory, name) {
 
    this.threads.push(new CORE.Thread(this, "0"));
    this.id = CORE.environment.getSerialCode();
-};
-CORE.Process.prototype.setMemory = function(memory) {
-   this.memory = memory; // does not copy the memory passed in to a new array.
-   //Please ensure that the memory used is always only for this process
-   for ( var ii = 0; ii < this.memory.length; ii += 1) {
-      "" + this.memory[ii][0]; // without this somewhere else throws
-      // an error, and I don't understand
-      // why...
-   }
 };
 /**
  * steps the process through a single cycle, may be multiple instructions, each
@@ -42,7 +33,7 @@ CORE.Process.prototype.spliceMemory = function(position, elementCount, element) 
  * decrements the processes cputime, if the available cputime ever drops below
  * 0, the process is killed
  */
-CORE.Process.prototype.decrCpuTime = function decrCpuTime (decrement) {
+CORE.Process.prototype.decrCpuTime = function decrCpuTime(decrement) {
    this.cputime -= decrement;
    if (this.cputime < 0) {
       $.debug("KILLED: {name} process ran out of cputime".supplant(this));
@@ -51,7 +42,7 @@ CORE.Process.prototype.decrCpuTime = function decrCpuTime (decrement) {
 };
 
 CORE.Process.prototype.killMe = function() {
-   for (var i = 0;i<this.threads.length;i++) {
+   for ( var i = 0; i < this.threads.length; i++) {
       this.threads[i].killMe();
    }
    this.threads = [];
@@ -75,10 +66,10 @@ CORE.Process.prototype.getState = function getState() {
 CORE.SparseArray = function() {
 };
 CORE.SparseArray.prototype.toString = function() {
-   var result=[];
-   for (var i in this) {
+   var result = [];
+   for ( var i in this) {
       if (this.hasOwnProperty(i)) {
-         result.push(i+"["+this[i]+"]");
+         result.push(i + "[" + this[i] + "]");
       }
    }
    return result.join(",");
@@ -108,29 +99,28 @@ CORE.Thread.prototype.step = function threadStep() {
       try {
          CORE.vm.execute(this);
          if (this.stack.length > CORE.Thread._maxStackSize) {
-            this.process.decrCpuTime(this.speed*this.speed); //extra decrement if it does not control stack size
-            this.stack.splice(CORE.Thread._maxStackSize, this.stack.length-CORE.Thread._maxStackSize);
+            this.process.decrCpuTime(this.speed * this.speed); 
+            // extra decrement if it does not control stack  size
+            this.stack.splice(CORE.Thread._maxStackSize, this.stack.length - CORE.Thread._maxStackSize);
          }
-         this.process.decrCpuTime(this.speed*this.speed);
+         this.process.decrCpuTime(this.speed * this.speed);
       } catch (err) {
          //if (this.process.debug) {
          //   $(document).trigger(
          //         CORE.EVENT_LOG_MESSAGE,
          //         "process threw an error: {err}".supplant({err:err.toString}));
-         //}
-         if (this.process === null) {
-            $.debug("using name from null process");
+         // }
+         if (this.process !== null) {
+            $.debug("KILLED: {name} process made a mistake".supplant(this.process));
+            $.debug("(" + this.process.name + ") process threw an error: ", this.process);
          }
-         $.debug("KILLED: {name} process made a mistake".supplant(this.process));
-         $.debug("(" + this.process.name + ") process threw an error: ", this.process);
          $.debug(err);
          CORE.environment.killProcess(this.process);
       }
    }
 };
 CORE.Thread.prototype.getState = function getState() {
-   return [ this.stack, this.process.memory.length, this.executionPtr,
-         this.readPtr, this.writePtr ];
+   return [ this.stack, this.process.memory.length, this.executionPtr, this.readPtr, this.writePtr ];
 };
 CORE.Thread.prototype.killMe = function() {
    this.process = null;
@@ -138,4 +128,3 @@ CORE.Thread.prototype.killMe = function() {
    this.stack = null;
    this.counter = null;
 };
-

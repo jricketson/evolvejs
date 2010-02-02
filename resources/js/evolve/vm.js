@@ -7,6 +7,7 @@ CORE.vm = {
    _maxOperand : 10000,
 
    _instrCount : 0,
+   _OPERAND_MASK : 16777215,
    
    _indexOf : function(arr, elt, from) {
       var len = arr.length;
@@ -30,9 +31,9 @@ CORE.vm = {
    },
    _searchArray : function(arr, startPt, dirForward, label) {
       if (dirForward) {
-         return CORE.vm._indexOf(arr,label,startPt);
+         return arr.indexOf(label,startPt);
       } else {
-         return CORE.vm._lastIndexOf(arr,label,startPt);
+         return arr.lastIndexOf(label,startPt);
       }
    },
 
@@ -120,13 +121,19 @@ CORE.vm = {
    },
 
    _constructRandomOperation : function() {
-      return [ Math.round(Math.random() * CORE.vm._maxOpCode),
-            Math.round(Math.random() * CORE.vm._maxOperand) ];
+      return this.encode(Math.round(Math.random() * this._maxOpCode),
+            Math.round(Math.random() * this._maxOperand) );
    },
 
    // *****************************************
    // these are PUBLIC functions and variables
    // *****************************************
+   decode : function(instruction) {
+      return [instruction >> 24, instruction & this._OPERAND_MASK];
+   },
+   encode : function(operator, operand) {
+      return (operator << 24) + operand;
+   },
    resetInstrCount : function() {
       CORE.vm._instrCount = 0;
    },
@@ -136,16 +143,17 @@ CORE.vm = {
                      thread.executionPtr + ", thread.process.memory.length: " +
                      thread.process.memory.length + ")");
       }
-      var instrCode = thread.process.memory[thread.executionPtr];
-      var operator = this.instructionCodes[instrCode[0]];
+      var opcode = thread.process.memory[thread.executionPtr] >> 24;
+      var operand = thread.process.memory[thread.executionPtr] & this._OPERAND_MASK;
+      var operator =this.instructionCodes[opcode];
       if (operator) {
-         operator(thread, instrCode[1]);
+         operator(thread, operand);
          if (thread.process.debug) {
             var logtemplate = "{operator} {operand} stack[{stack}], counters[{counters}], shortMem[{shortMem}], ePtr: {ePtr}, rPtr:{rPtr}, wPtr:{wPtr}";
             $(document).trigger(
                   CORE.EVENT_LOG_MESSAGE,
                   logtemplate.supplant({operator:operator.name,
-                                        operand:instrCode[1],
+                                        operand:operand,
                                         stack:thread.stack.toString(),
                                         counters:thread.counter.toString(),
                                         shortMem:thread.shortTermMemory.toString(),
@@ -293,6 +301,7 @@ CORE.vm.instructionSet = {
          thread.process.spliceMemory(thread.writePtr, 1, eleToCopy[0]);
       } else if (eleToCopy.length === 0) {
          thread.process.spliceMemory(thread.writePtr, 1);
+         thread.writePtr-=1;
       } else { // multiple elements
          thread.process.spliceMemory(thread.writePtr, 1, eleToCopy[0]);
          for ( var ii = 1; ii < eleToCopy.length; ii += 1) {
@@ -376,7 +385,7 @@ CORE.vm.instructionSet = {
       var a = thread.stack.pop();
       var finalLength = thread.process.memory.length + a;
       for ( var ii = thread.process.memory.length; ii < finalLength; ii += 1) {
-         thread.process.memory[ii] = [0,0];
+         thread.process.memory[ii] = 0;
       }
       thread.executionPtr += 1;
    },

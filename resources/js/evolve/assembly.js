@@ -11,7 +11,7 @@ CORE.assembler = function() {
          for (var ii = 0; ii < code.length; ii += 1) {
             operatorCode = CORE.vm.codeInstructions[code[ii][0]];
             if (operatorCode !== undefined) {
-               compiledCode.push([operatorCode, code[ii][1]]);
+               compiledCode.push(CORE.vm.encode(operatorCode, code[ii][1]));
             } else {
                $.debug(new Error("code not found: " + code[ii][0] + ", instr: " + ii));
                $.debug(code);
@@ -25,16 +25,17 @@ CORE.assembler = function() {
        */
       deCompile : function deCompile(code) {
          var compiledCode = [];
-         var operatorName, operator;
+         var operatorName, operatorFn, operation;
          for (var ii = 0; ii < code.length; ii += 1) {
-            operator = CORE.vm.instructionCodes[code[ii][0]];
-            if (operator !== undefined) {
-               operatorName = CORE.getFunctionName(operator);
+            operation = CORE.vm.decode(code[ii]);
+            operatorFn = CORE.vm.instructionCodes[operation[0]];
+            if (operatorFn !== undefined) {
+               operatorName = CORE.getFunctionName(operatorFn);
             }
             if (operatorName === undefined) {
                operatorName = "nop";
             }
-            compiledCode.push([operatorName, code[ii][1]]);
+            compiledCode.push([operatorName, operation[1]]);
          }
          return compiledCode;
       },
@@ -59,6 +60,24 @@ CORE.assembler = function() {
          }
          return codeHtml;
          
+      },
+      convertStringToCode : function convertStringToCode(codeString) {
+         if (codeString===null) { return [];}
+         var codeStringArray = codeString.split(",");
+         var codeArray = [];
+         var operation;
+         for (var ii = 0; ii < codeStringArray.length; ii += 1) {
+            codeArray.push(Number(codeStringArray[ii]) >>> 0);
+         }
+         return codeArray;
+      },
+      /*
+       * This converts the array of [operator, operand] pairs to a string of 32bit integers. The
+       * operator is shifted left 24 bits and the operand is added. All the integers are then
+       * concatenated into a comma delimited string.
+       */
+      convertCodeToString : function(codeArray) {
+          return codeArray.join(",");
       }
       
       

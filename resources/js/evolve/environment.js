@@ -7,9 +7,9 @@ CORE.environment = {
    _timeDelay : 10, // time to delay between simulation cycles
    _instructionsPerCycle : 50,
    _running : false, // if the simulation should keep running
-   _INITIAL_POPULATION_SIZE_FROM_SERVER : 15,
+   _INITIAL_POPULATION_SIZE_FROM_SERVER : 5,
    _currentProcesses : [], // all the currently alive processes.
-   _currentProcessExecuteIndex:0,
+   _currentProcessExecuteIndex : 0,
    _grid : [], // the grid that the processes move about on. They are not actually stored here.
 
    _loopCount : 0, // number of instructions executed
@@ -26,33 +26,29 @@ CORE.environment = {
       if (species.length !== 0) {
          // construct a process from each species
          for ( var ii = 0; ii < species.length; ii += 1) {
-            var code = CORE.data
-                  .convertStringToCode(species[ii].fields.code);
+            var code = CORE.assembler.convertStringToCode(species[ii].fields.code);
             species[ii].code = code;
             var specie = new CORE.species.Species(species[ii]);
-            specie.saved=true;
-            
+            specie.saved = true;
+
             CORE.speciesLibrary.addSpeciesFromServer(specie);
             var process = new CORE.Process(code, specie.name);
             process.facing = Math.round(Math.random() * 3);
             population.push(process);
          }
       } else {
-         population = [
-               new CORE.Process(CORE.ancestor.tree(), "tree"),
-               new CORE.Process(CORE.ancestor.blindAnimal(),
-                     "blindAnimal"),
-               new CORE.Process(CORE.ancestor.seeingAnimal(),
-                     "seeingAnimal") ];
+         population = [ new CORE.Process(CORE.ancestor.tree(), "tree"),
+               new CORE.Process(CORE.ancestor.blindAnimal(), "blindAnimal"),
+               new CORE.Process(CORE.ancestor.seeingAnimal(), "seeingAnimal") ];
       }
       CORE.environment._initialisePopulation(population);
    },
-   
+
    _initialiseEnvironment : function() {
       CORE.environment._resizeGrid();
       // inject the first Process(s)
       CORE.data.getSpecies(CORE.environment._INITIAL_POPULATION_SIZE_FROM_SERVER,
-                           CORE.environment._getSpeciesCallback);
+            CORE.environment._getSpeciesCallback);
       setInterval(CORE.environment._resetCpuRate, 5000);
    },
 
@@ -87,7 +83,7 @@ CORE.environment = {
       }
       return false;
    },
-   
+
    _initialiseProcess : function(process, parentProcess, x, y) {
       CORE.environment._grid[x][y] = process;
       process.gridX = x;
@@ -97,8 +93,7 @@ CORE.environment = {
       }
       CORE.environment._currentProcesses.push(process);
       var species = CORE.speciesLibrary.placeProcess(process, parentProcess);
-      jQuery(document).trigger(CORE.environment.EVENT_PROCESS_CREATED,
-            [ process ]);
+      jQuery(document).trigger(CORE.environment.EVENT_PROCESS_CREATED, [ process ]);
       return species;
    },
 
@@ -111,8 +106,7 @@ CORE.environment = {
          process.gridX = x;
          process.gridY = y;
          CORE.environment._grid[x][y] = process;
-         jQuery(document).trigger(CORE.environment.EVENT_PROCESS_MOVED,
-               [ process ]);
+         jQuery(document).trigger(CORE.environment.EVENT_PROCESS_MOVED, [ process ]);
       }
    },
 
@@ -126,8 +120,7 @@ CORE.environment = {
       }
       CORE.speciesLibrary.removeProcess(process);
       CORE.environment._grid[process.gridX][process.gridY] = 0;
-      jQuery(document).trigger(CORE.environment.EVENT_PROCESS_KILLED,
-            [ process ]);
+      jQuery(document).trigger(CORE.environment.EVENT_PROCESS_KILLED, [ process ]);
    },
 
    /*
@@ -139,13 +132,17 @@ CORE.environment = {
    _attack : function attack(attacker, x, y) {
       var defender = CORE.environment._grid[x][y];
       var lowCpu = Math.min(attacker.cputime, defender.cputime);
-      //$.debug(attacker.cputime, defender.cputime, defender.memory.length, CORE.environment._embodiedEnergy);
-      if (defender.cputime -lowCpu <=0) {
+      // $.debug(attacker.cputime, defender.cputime, defender.memory.length,
+      // CORE.environment._embodiedEnergy);
+      if (defender.cputime - lowCpu <= 0) {
          //$.debug("defender killed, attacker gained ", defender.memory.length * CORE.environment._embodiedEnergy);
          var gain = (defender.memory.length * CORE.environment._embodiedEnergy) - (lowCpu * 0.8);
-         attacker.cputime += gain ;
+         attacker.cputime += gain;
          // give the attacker cputime and the embodied energy in the body size
-         //$.debug("KILLED: process {defender} was attacked by {attacker} and lost. Attacker gained {gain} and ended up with {cputime}".supplant({attacker:attacker.name,defender:defender.name,gain:gain,cputime:attacker.cputime }));
+         // $.debug("KILLED: process {defender} was attacked by {attacker} and
+         // lost. Attacker gained {gain} and ended up with
+         // {cputime}".supplant({attacker:attacker.name,defender:defender.name,gain:gain,cputime:attacker.cputime
+         // }));
          CORE.environment._kill(defender);
       }
    },
@@ -175,35 +172,36 @@ CORE.environment = {
    _runSimulationLoop : function() {
       var jj;
       var start = (new Date()).getTime();
-      for (jj = 0; (new Date()).getTime() - start < CORE.environment._instructionsPerCycle; jj += 1) {
-         if (CORE.environment._currentProcessExecuteIndex >= CORE.environment._currentProcesses.length) {
-            // do this first, the length of currentProcesses may have changed (one killed)
-            CORE.environment._currentProcessExecuteIndex = 0;
-            CORE.environment._loopCount += 1;
-            CORE.environment._shineSun();
-            if (CORE.environment._stepping) {
-               break;
-            }
+      // TODO: getting the time every loop is potentially expensive. Is there a
+      // better way?
+   for (jj = 0; (new Date()).getTime() - start < CORE.environment._instructionsPerCycle; jj += 1) {
+      if (CORE.environment._currentProcessExecuteIndex >= CORE.environment._currentProcesses.length) {
+         // do this first, the length of currentProcesses may have changed (one killed)
+         CORE.environment._currentProcessExecuteIndex = 0;
+         CORE.environment._loopCount += 1;
+         CORE.environment._shineSun();
+         if (CORE.environment._stepping) {
+            break;
          }
-         // $.debug(currentProcesses[CORE.environment._currentProcessExecuteIndex].id, currentProcesses[CORE.environment._currentProcessExecuteIndex].getState());
-         CORE.environment._currentProcesses[CORE.environment._currentProcessExecuteIndex].step();
-         CORE.environment._currentProcessExecuteIndex += 1;
       }
-      // TODO: ii should not increment if the most recent process was killed.
-      if (CORE.environment._running) {
-         setTimeout(CORE.environment._runSimulationLoop, CORE.environment._timeDelay);
-      }
+      // $.debug(currentProcesses[CORE.environment._currentProcessExecuteIndex].id, currentProcesses[CORE.environment._currentProcessExecuteIndex].getState());
+      CORE.environment._currentProcesses[CORE.environment._currentProcessExecuteIndex].step();
+      CORE.environment._currentProcessExecuteIndex += 1;
+   }
+   // TODO: ii should not increment if the most recent process was killed.
+   if (CORE.environment._running) {
+      setTimeout(CORE.environment._runSimulationLoop, CORE.environment._timeDelay);
+   }
 
-   },
-   _resetCpuRate: function() {
-      var secsSinceStart = (Number(new Date()) - CORE.environment
-            .getStartTime()) / 1000;
-      CORE.environment.current_rate = Math.round(CORE.vm.getInstrCount() / secsSinceStart);
-      CORE.environment.resetStartTime();
-      CORE.vm.resetInstrCount();
-      //$.debug("cpu rate: ", CORE.environment.current_rate);
-   },
-   // *****************************************
+},
+_resetCpuRate : function() {
+   var secsSinceStart = (Number(new Date()) - CORE.environment.getStartTime()) / 1000;
+   CORE.environment.current_rate = Math.round(CORE.vm.getInstrCount() / secsSinceStart);
+   CORE.environment.resetStartTime();
+   CORE.vm.resetInstrCount();
+   // $.debug("cpu rate: ", CORE.environment.current_rate);
+},
+// *****************************************
    // these are PUBLIC functions and variables
    // *****************************************
    NORTH : 0,
@@ -217,8 +215,8 @@ CORE.environment = {
    EVENT_SPECIES_CREATED : "speciesCreated",
    EVENT_SPECIES_EXTINCT : "speciesExtinct",
 
-   VALID_SPECIES: 10, 
-   SUCCESS_PROXY: 75, 
+   VALID_SPECIES : 10,
+   SUCCESS_PROXY : 75,
    mutationRate : 1000, // approximate chance of mutation (1 in x copy operations)
    startTime : 0,
    horizon : 10,
@@ -296,9 +294,8 @@ CORE.environment = {
          return null;
       }
    },
-   checkCanBirth: function(x,y) {
-      return ! Boolean(CORE.environment._grid[x][y]);
+   checkCanBirth : function(x, y) {
+      return !Boolean(CORE.environment._grid[x][y]);
    }
-
 
 };
