@@ -89,11 +89,11 @@ CORE.display = {   // *****************************************
    _processMoveHandler : function(e, process) {
       e.stopImmediatePropagation();
       // console.log(e, process.id, process.gridX, process.gridY);
-      CORE.display._processDivStore[process.id].stop(); // removes all current
-      // animations
+      //CORE.display._processDivStore[process.id].stop(); 
+      // removes all current animations
+      // todo: change this to .animate to have nice animations
       CORE.display._processDivStore[process.id].css( {
-         top : CORE.display._markerHeight * process.gridY, // todo: change this to .animate to have nice
-         // animations
+         top : CORE.display._markerHeight * process.gridY, 
          left : CORE.display._markerWidth * process.gridX
       });
    },
@@ -116,9 +116,11 @@ CORE.display = {   // *****************************************
    _speciesCreateHandler : function(e, species) {
       //$.debug(e, species);
       e.stopImmediatePropagation();
-      var sidebar = $("#sidebar div.speciesList");
-      sidebar.append('<div class="species" id="' + species.id + '"></div>');
-      var divMarker = $("#sidebar div.speciesList div.species:last");
+      if (CORE.display._speciesList === undefined) {
+         CORE.display._speciesList = $("#sidebar div.speciesList");
+      }
+      CORE.display._speciesList.append('<div class="species" id="' + species.id + '"></div>');
+      var divMarker = CORE.display._speciesList.find("div.species:last");
       var colour = CORE.display._colours.shift();
       var contrast = Contrast.match(colour, CORE.display._colours);
       divMarker.css( {
@@ -255,7 +257,8 @@ CORE.display = {   // *****************************************
    // these are Lifecycle Events
    // *****************************************
    initialise : function() {
-      $(document).bind(CORE.environment.EVENT_PROCESS_CREATED,
+  
+       $(document).bind(CORE.environment.EVENT_PROCESS_CREATED,
             CORE.display._processCreateHandler);
       $(document).bind(CORE.environment.EVENT_PROCESS_MOVED,
             CORE.display._processMoveHandler);
@@ -268,14 +271,14 @@ CORE.display = {   // *****************************************
       $(document).bind(CORE.EVENT_LOG_MESSAGE, CORE.display._logMessageHandler);
       $("#gridDisplay").click(CORE.display._processClickedHandler); 
 
+      setTimeout( function() {
+         $(".speciesList").bind("click", CORE.display._speciesClickedHandler);
+      }, 1000);
       $(document).ready(CORE.display._calculateMarkerSize);
       $(window).resize(CORE.display._calculateMarkerSize);
       setInterval(CORE.display.updateDisplay, CORE.display._timeDelay);
       // TODO: fix this terrible hack. The specieslist hasn't been created
       // yet
-      setTimeout( function() {
-         $(".speciesList").bind("click", CORE.display._speciesClickedHandler);
-      }, 1000);
    },
 
    // *****************************************

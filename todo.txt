@@ -2,29 +2,27 @@ bugs:
 registration should not require referral source
 seeing animal goes one too far when calculating distance to prey
 jmp* should have no effect if the label that they are jumping to is not found
+why do animals currently create a cross?
+fix memory leaks
+fix problem with process being set to null
 
 high priority: (before first public alpha release)
 better documentation
 	the format for adding a species should be documented, and document the process
 for scoring, two pieces of information need to be stored:
 	which user created an species
-	which user uploaded a set of births
-counting how many animals have been created per species on the server is pointless, instead should be recording -1,0,+1 for went extinct, didn't succeed, succeeded(generated more than 100 animals as a proxy)
-species chart/tree showing ancestors
-limit max size of stack, probably just cut off the end of the stack if a new element is added
-download species for simulation that have either not been tested (less than 10 entries in score list) or those with high scores.
-	species with lower recent scores should drop off the list of species that are downloaded
-
+	how much cputime has a user run
+species chart/tree showing ancestors and descendants
 
 medium priority: (before first public beta release)
-tutorial (in the same style as mooleer)
+tutorial
 calculate a users score:
-  total species reproduced from my species
+  total species evolved from my species
   total cputime run in my environment
+  total species evolved
 show users their score
 allow users to change their notification options
 allow users to change their password
-show all species on server
 show all users with their scores (allow users to opt out)
 highlight currently selected animal
 select a species needs to be more obvious
@@ -46,5 +44,4 @@ add a random (low) chance that an animal will die in any one round
 debug mode: turn off mutations, turn off sending to server
 
 animals:
-animal moves forward one and places baby behind it
 animal does not cannibalise / how does the animal check that the other animal is the same species?

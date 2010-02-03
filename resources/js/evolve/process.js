@@ -36,7 +36,7 @@ CORE.Process.prototype.spliceMemory = function(position, elementCount, element) 
 CORE.Process.prototype.decrCpuTime = function decrCpuTime(decrement) {
    this.cputime -= decrement;
    if (this.cputime < 0) {
-      $.debug("KILLED: {name} process ran out of cputime".supplant(this));
+      //$.debug("KILLED: {name} process ran out of cputime".supplant(this));
       CORE.environment.killProcess(this);
    }
 };

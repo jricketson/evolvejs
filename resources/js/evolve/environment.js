@@ -4,8 +4,8 @@ CORE.environment = {
    // *****************************************
    _gridX : 80, // these are default values
    _gridY : 40,
-   _timeDelay : 10, // time to delay between simulation cycles
-   _instructionsPerCycle : 50,
+   _timeDelay : 30, // time to delay between simulation cycles
+   _instructionsPerCycle : 20,
    _running : false, // if the simulation should keep running
    _INITIAL_POPULATION_SIZE_FROM_SERVER : 5,
    _currentProcesses : [], // all the currently alive processes.

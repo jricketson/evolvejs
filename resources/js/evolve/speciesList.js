@@ -41,7 +41,7 @@ CORE.speciesList = function () {
          });
       },
       displayCode: function(code, target){
-         var codeArray = CORE.data.convertStringToCode(code);
+         var codeArray = CORE.assembly.convertStringToCode(code);
          $(target).find(".display")
             .html(CORE.assembler.makeDisplayableHtml(codeArray))
             .attr("data-codeText",CORE.assembler.makeDisplayableText(codeArray));

@@ -138,6 +138,7 @@ CORE.vm = {
       CORE.vm._instrCount = 0;
    },
    execute : function execute(thread) { // executes a function on a thread
+      try {
       if (thread.executionPtr > thread.process.memory.length - 1) {
          throw new Error("Attempted to execute beyond memory limits (executed : " +
                      thread.executionPtr + ", thread.process.memory.length: " +
@@ -146,8 +147,17 @@ CORE.vm = {
       var opcode = thread.process.memory[thread.executionPtr] >> 24;
       var operand = thread.process.memory[thread.executionPtr] & this._OPERAND_MASK;
       var operator =this.instructionCodes[opcode];
+      } catch (err) {
+         $.debug("A",err);
+         throw err;
+      }
       if (operator) {
-         operator(thread, operand);
+         try {
+            operator(thread, operand);
+         } catch (err) {
+            $.debug("B",err);
+            throw err;
+         }
          if (thread.process.debug) {
             var logtemplate = "{operator} {operand} stack[{stack}], counters[{counters}], shortMem[{shortMem}], ePtr: {ePtr}, rPtr:{rPtr}, wPtr:{wPtr}";
             $(document).trigger(
