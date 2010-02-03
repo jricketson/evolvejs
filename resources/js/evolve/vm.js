@@ -154,9 +154,9 @@ CORE.vm = {
       if (operator) {
          try {
             operator(thread, operand);
-         } catch (err) {
-            $.debug("B",err);
-            throw err;
+         } catch (errb) {
+            $.debug("B",errb);
+            throw errb;
          }
          if (thread.process.debug) {
             var logtemplate = "{operator} {operand} stack[{stack}], counters[{counters}], shortMem[{shortMem}], ePtr: {ePtr}, rPtr:{rPtr}, wPtr:{wPtr}";

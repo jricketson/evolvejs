@@ -1,74 +1,51 @@
-CORE.indexHtml = function() {
-   var rpcCount = 0;
-   function hideTitle() {
-      $("div#ft").animate({
-               opacity : 0.3
-            }, "slow");
-   }
+CORE.indexHtml = {
+   _hideTitle : function() {
+      $("div#ft").animate( {
+         opacity : 0.3
+      }, "slow");
+   },
 
-   function rpcStart() {
-      if (rpcCount === 0) {
-         $("#loadingMessage").fadeIn(500);
-      }
-      rpcCount += 1;
-   }
-   function rpcEnd() {
-      rpcCount -= 1;
-      if (rpcCount === 0) {
-         $("#loadingMessage").fadeOut(500);
-      }
-   }
-   return {
-      initialise : function() {
-         $.ajaxSetup({
-                  beforeSend : rpcStart,
-                  complete : rpcEnd
-               });
-
-         // hide the title after 10 secs, or the user clicks
-         setTimeout(hideTitle, 10000);
-         CORE.data.getUserProfile(function(userProfile) {
-                  CORE.userProfile = userProfile;
-                  if (CORE.userProfile === null) {
-                     $('#logoutLink').hide();
-                     $('#loginLink').show();
-                  } else {
-                     $("#username").html(CORE.userProfile.username);
-                     $('#logoutLink').show();
-                     $('#loginLink').hide();
-                  }
-               });
-         $("div#ft").click(hideTitle);
-
-         // links for the user to start the simulation. These swap themselves
-         $("#play").click(function() {
-                  CORE.environment.start();
-                  $(this).hide();
-                  $("#pause").show();
-                  $("#step").hide();
-               });
-         $("#step").click(function() {
-            CORE.environment.step();
-         });
-         $("#pause").click(function() {
-                  CORE.environment.stop();
-                  $(this).hide();
-                  $("#play").show();
-                  $("#step").show();
-               });
-         // initialise the environment
-         $("#layoutCenter").createGadget("sidebar", function(gadget) {
-                  self.sidebar = gadget;
-               }, {
-                  method : "append"
-               });
-         CORE.display.initialise();
-         CORE.environment.initialise();
-      }
-   };
-
-}();
-
-$(document).ready(function() {
-         CORE.indexHtml.initialise();
+   initialise : function() {
+      // hide the title after 10 secs, or the user clicks
+      setTimeout(this._hideTitle, 10000);
+      CORE.data.getUserProfile( function(userProfile) {
+         CORE.userProfile = userProfile;
+         if (CORE.userProfile === null) {
+            $('#logoutLink').hide();
+            $('#loginLink').show();
+         } else {
+            $("#username").html(CORE.userProfile.username);
+            $('#logoutLink').show();
+            $('#loginLink').hide();
+         }
       });
+      $("div#ft").click(this._hideTitle);
+   
+      // links for the user to start the simulation. These swap themselves
+      $("#play").click( function() {
+         CORE.environment.start();
+         $(this).hide();
+         $("#pause").show();
+         $("#step").hide();
+      });
+      $("#step").click( function() {
+         CORE.environment.step();
+      });
+      $("#pause").click( function() {
+         CORE.environment.stop();
+         $(this).hide();
+         $("#play").show();
+         $("#step").show();
+      });
+      // initialise the environment
+      $("#layoutCenter").createGadget("sidebar", function(gadget) {
+         self.sidebar = gadget;
+      }, {
+         method : "append"
+      });
+      CORE.display.initialise();
+      CORE.environment.initialise();
+   }
+};
+
+$(document).ready($.proxy(CORE.indexHtml.initialise, CORE.indexHtml));

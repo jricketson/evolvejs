@@ -66,4 +66,6 @@ INSTALLED_APPS = (
     'evolve',
 )
 
+ACCOUNT_ACTIVATION_DAYS=3
+
 from ragendja.settings_post import *

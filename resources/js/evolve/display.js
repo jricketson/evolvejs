@@ -52,19 +52,21 @@ CORE.display = {   // *****************************************
       $("#layoutCenter").height(($("#viewport").innerHeight()-$("#layoutTop").outerHeight()-2)+"px");
       var screenwidth = $("div#gridDisplay").width();
       var screenheight = $("div#gridDisplay").height();
-      CORE.display._markerWidth = Math.round(screenwidth / CORE.environment.getGridX());
-      CORE.display._markerHeight = Math.round(screenheight / CORE.environment.getGridY());
+      this._markerWidth = Math.round(screenwidth / CORE.environment.getGridX());
+      this._markerHeight = Math.round(screenheight / CORE.environment.getGridY());
 
       var marker, process;
-      for ( var processid in CORE.display._processStore) {
-         process = CORE.display._processStore[processid];
-         marker = CORE.display._processDivStore[process.id];
-         marker.css( {
-            top : CORE.display._markerHeight * process.gridY,
-            left : (CORE.display._markerWidth * process.gridX),
-            height : CORE.display._markerHeight - 1,
-            width : CORE.display._markerWidth - 1
-         });
+      for ( var processId in this._processStore) {
+         if (this._processStore.hasOwnProperty(processId)) {
+            process = this._processStore[processId];
+            marker = this._processDivStore[process.id];
+            marker.css( {
+               top : this._markerHeight * process.gridY,
+               left : (this._markerWidth * process.gridX),
+               height : this._markerHeight - 1,
+               width : this._markerWidth - 1
+            });
+         }
       }
    },
 
@@ -176,8 +178,9 @@ CORE.display = {   // *****************************************
    _processClickedHandler : function(e) {
       e.stopImmediatePropagation();
       var divClicked = $(e.target).closest(".process")[0];
-
-      CORE.display.setCurrentlyDisplayedProcess(CORE.display._processStore[divClicked.id]);
+      if (divClicked !== undefined) {
+         CORE.display.setCurrentlyDisplayedProcess(CORE.display._processStore[divClicked.id]);
+      }
    },
    _logMessageHandler : function(e, message) {
       e.stopPropagation();
@@ -259,26 +262,43 @@ CORE.display = {   // *****************************************
    initialise : function() {
   
        $(document).bind(CORE.environment.EVENT_PROCESS_CREATED,
-            CORE.display._processCreateHandler);
+             $.proxy(this._processCreateHandler,this));
       $(document).bind(CORE.environment.EVENT_PROCESS_MOVED,
-            CORE.display._processMoveHandler);
+            $.proxy(this._processMoveHandler,this));
       $(document).bind(CORE.environment.EVENT_PROCESS_KILLED,
-            CORE.display._processKillHandler);
+            $.proxy(this._processKillHandler,this));
       $(document).bind(CORE.environment.EVENT_SPECIES_CREATED,
-            CORE.display._speciesCreateHandler);
+            $.proxy(this._speciesCreateHandler,this));
       $(document).bind(CORE.environment.EVENT_SPECIES_EXTINCT,
-            CORE.display._speciesExtinctHandler);
+            $.proxy(this._speciesExtinctHandler,this));
       $(document).bind(CORE.EVENT_LOG_MESSAGE, CORE.display._logMessageHandler);
-      $("#gridDisplay").click(CORE.display._processClickedHandler); 
+      $("#gridDisplay").click($.proxy(this._processClickedHandler,this)); 
 
       setTimeout( function() {
-         $(".speciesList").bind("click", CORE.display._speciesClickedHandler);
+         $(".speciesList").bind("click", $.proxy(CORE.display._speciesClickedHandler,CORE.display));
       }, 1000);
-      $(document).ready(CORE.display._calculateMarkerSize);
-      $(window).resize(CORE.display._calculateMarkerSize);
-      setInterval(CORE.display.updateDisplay, CORE.display._timeDelay);
+      $(document).ready($.proxy(this._calculateMarkerSize,this));
+      $(window).resize($.proxy(this._calculateMarkerSize,this));
+      setInterval($.proxy(this.updateDisplay,this), CORE.display._timeDelay);
       // TODO: fix this terrible hack. The specieslist hasn't been created
       // yet
+      setInterval($.proxy(this.logDebugInfo,this), this._timeDelay);
+   },
+   _getObjectLength : function(obj) {
+      if (obj.__count__ !== undefined) {
+         return obj.__count__;
+      } else {
+         var count=0;
+         for (var k in obj) {
+            if (obj.hasOwnProperty(k)) {
+               count+=1;
+            }
+         }
+         return count;
+      }
+   },
+   logDebugInfo : function logDebugInfo() {
+      $.debug("speciesDivs: {sd}, processDivs: {pd}, processes: {p}".supplant({sd: this._getObjectLength(this._speciesDivStore),pd: this._getObjectLength(this._processDivStore),p: this._getObjectLength(this._processStore)}));
    },
 
    // *****************************************
@@ -288,6 +308,7 @@ CORE.display = {   // *****************************************
    updateDisplay : function updateDisplay() {
       $("div#loopCount").html("" + CORE.environment.getLoopCount());
       $("div#processCount").html("" + CORE.environment.getProcessCount());
+      $("div#speciesEvolved").html(CORE.species.count);
       $("div#instrRate").html(CORE.environment.current_rate);
 
       CORE.display._updateProcessDisplay();

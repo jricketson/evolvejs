@@ -7,7 +7,7 @@ CORE.environment = {
    _timeDelay : 30, // time to delay between simulation cycles
    _instructionsPerCycle : 20,
    _running : false, // if the simulation should keep running
-   _INITIAL_POPULATION_SIZE_FROM_SERVER : 5,
+   _INITIAL_POPULATION_SIZE_FROM_SERVER : 10,
    _currentProcesses : [], // all the currently alive processes.
    _currentProcessExecuteIndex : 0,
    _grid : [], // the grid that the processes move about on. They are not actually stored here.
@@ -32,7 +32,7 @@ CORE.environment = {
             specie.saved = true;
 
             CORE.speciesLibrary.addSpeciesFromServer(specie);
-            var process = new CORE.Process(code, specie.name);
+            var process = new CORE.Process(code.slice(), specie.name);
             process.facing = Math.round(Math.random() * 3);
             population.push(process);
          }

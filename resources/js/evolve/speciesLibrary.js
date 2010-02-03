@@ -7,9 +7,6 @@ CORE.speciesLibrary = {
       var species = CORE.speciesLibrary._speciesStore.findSpecies(process.memory, hashcode);
       if (species === null) {
          var parentSpecies = parentProcess === null ? null : parentProcess.species;
-         //if (process === null) {
-         //   $.debug("using name (a)");
-         //}
          species = new CORE.species.Species( {
             code : process.memory.slice(),
             hashCode : hashcode,
@@ -20,7 +17,6 @@ CORE.speciesLibrary = {
             name : process.name
          });
          CORE.speciesLibrary._speciesStore.addSpecies(species);
-         //$.debug("new species created. Old Species:",parentSpecies, "new Species:", species);
          jQuery(document).trigger(CORE.environment.EVENT_SPECIES_CREATED,
                [ species ]);
       } else {
@@ -33,9 +29,6 @@ CORE.speciesLibrary = {
          CORE.displayMessage("{name} species valid and being saved".supplant(species));
          $.debug("save it",species);
          CORE.data.saveSpecies(species, function(){
-            //if (species === null) {
-            //   $.debug("using name (b)");
-            //}
             console.info("species saved(", species.name, species.processes.length, ")");
             species.saved = true;
             species.beingSaved = false;
@@ -47,9 +40,6 @@ CORE.speciesLibrary = {
          $.debug("score it",species);
          CORE.displayMessage("{name} species successful".supplant(species));
          CORE.data.putScore(species,1, function(){
-            //if (species === null) {
-            //   $.debug("using name (c)");
-            //}
             console.info("species successful (", species.name, species.processes.length, ")");
             species.successScored = true;
             species.beingSuccessScored = false;

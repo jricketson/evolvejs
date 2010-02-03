@@ -1,5 +1,4 @@
-CORE.ancestor = function() {
-   return {
+CORE.ancestor = {
 
       /**
        * startThread at T3
@@ -299,4 +298,3 @@ CORE.ancestor = function() {
       }
 
    };
-}();

@@ -1,17 +1,16 @@
-from ragendja.settings_post import *
-from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
+from ragendja.settings_post import settings
 
-REST_CONTROLLERS["species"]="evolve.restfulControllers.SpeciesRestfulController"
-REST_CONTROLLERS["user"]="evolve.restfulControllers.UserRestfulController"
+settings.REST_CONTROLLERS["species"]="evolve.restfulControllers.SpeciesRestfulController"
+settings.REST_CONTROLLERS["user"]="evolve.restfulControllers.UserRestfulController"
 
-TEMPLATE_CONTEXT_PROCESSORS += (
+settings.TEMPLATE_CONTEXT_PROCESSORS += (
      'django.core.context_processors.request',
      'evolve.context_processors.core'
 ) 
 
-AUTH_USER_MODULE="evolve.models"
-AUTH_ADMIN_MODULE = 'evolve.userAdmin'
-APPLICATION_NAME="evolve"
+settings.AUTH_USER_MODULE="evolve.models"
+settings.AUTH_ADMIN_MODULE = 'evolve.userAdmin'
+settings.APPLICATION_NAME="evolvethefuture"
 
-DEFAULT_FROM_EMAIL="jricketson@redredred.com.au"
+settings.DEFAULT_FROM_EMAIL="jricketson@redredred.com.au"
 

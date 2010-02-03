@@ -2,7 +2,6 @@ bugs:
 registration should not require referral source
 seeing animal goes one too far when calculating distance to prey
 jmp* should have no effect if the label that they are jumping to is not found
-why do animals currently create a cross?
 fix memory leaks
 fix problem with process being set to null
 
