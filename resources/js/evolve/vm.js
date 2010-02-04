@@ -6,7 +6,6 @@ CORE.vm = {
    _maxOpCode : 27,
    _maxOperand : 10000,
 
-   _instrCount : 0,
    _OPERAND_MASK : 16777215,
    
    _indexOf : function(arr, elt, from) {
@@ -134,11 +133,13 @@ CORE.vm = {
    encode : function(operator, operand) {
       return (operator << 24) + operand;
    },
-   resetInstrCount : function() {
-      CORE.vm._instrCount = 0;
-   },
    execute : function execute(thread) { // executes a function on a thread
-      try {
+      if (thread.process === null) {
+         $.debug("thread.process is null");
+      }
+      if (thread.process.memory === null) {
+         $.debug("thread.process.memory is null");
+      }
       if (thread.executionPtr > thread.process.memory.length - 1) {
          throw new Error("Attempted to execute beyond memory limits (executed : " +
                      thread.executionPtr + ", thread.process.memory.length: " +
@@ -147,16 +148,13 @@ CORE.vm = {
       var opcode = thread.process.memory[thread.executionPtr] >> 24;
       var operand = thread.process.memory[thread.executionPtr] & this._OPERAND_MASK;
       var operator =this.instructionCodes[opcode];
-      } catch (err) {
-         $.debug("A",err);
-         throw err;
-      }
       if (operator) {
-         try {
-            operator(thread, operand);
-         } catch (errb) {
-            $.debug("B",errb);
-            throw errb;
+         operator(thread, operand);
+         if (thread.process === null) {
+            $.debug("thread.process is null");
+         }
+         if (thread.process.memory === null) {
+            $.debug("thread.process.memory is null");
          }
          if (thread.process.debug) {
             var logtemplate = "{operator} {operand} stack[{stack}], counters[{counters}], shortMem[{shortMem}], ePtr: {ePtr}, rPtr:{rPtr}, wPtr:{wPtr}";
@@ -178,10 +176,6 @@ CORE.vm = {
                CORE.EVENT_LOG_MESSAGE,
                invalidinstructionLogtemplate.supplant({instruction:instrCode.toString(),stack:thread.stack.toString()}));
       }
-      CORE.vm._instrCount += 1;
-   },
-   getInstrCount : function() {
-      return CORE.vm._instrCount;
    }
 };
 CORE.vm.instructionSet = {

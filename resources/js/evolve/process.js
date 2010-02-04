@@ -90,7 +90,9 @@ CORE.Thread = function(process, name) {
    this.name = name;
 };
 CORE.Thread._maxStackSize = 8;
+CORE.Thread.stepCount=0;
 CORE.Thread.prototype.step = function threadStep() {
+   CORE.Thread.stepCount+=1;
    if (this.sleepCycles > 0) {
       this.sleepCycles -= 1;
       return;
@@ -111,10 +113,11 @@ CORE.Thread.prototype.step = function threadStep() {
          //         "process threw an error: {err}".supplant({err:err.toString}));
          // }
          if (this.process !== null) {
-            $.debug("KILLED: {name} process made a mistake".supplant(this.process));
+            //$.debug("KILLED: {name} process made a mistake".supplant(this.process));
             $.debug("(" + this.process.name + ") process threw an error: ", this.process);
          }
          $.debug(err);
+         
          CORE.environment.killProcess(this.process);
       }
    }

@@ -26,7 +26,7 @@ CORE.speciesLibrary = {
       process.species = species;
 
       if (species.processes.length > CORE.environment.VALID_SPECIES && ! (species.saved || species.beingSaved)) {
-         CORE.displayMessage("{name} species valid and being saved".supplant(species));
+         CORE.displayMessage("New {name} species evolved and is being saved to the server".supplant(species));
          $.debug("save it",species);
          CORE.data.saveSpecies(species, function(){
             console.info("species saved(", species.name, species.processes.length, ")");

@@ -10,7 +10,7 @@ CORE.environment = {
    _INITIAL_POPULATION_SIZE_FROM_SERVER : 10,
    _currentProcesses : [], // all the currently alive processes.
    _currentProcessExecuteIndex : 0,
-   _grid : [], // the grid that the processes move about on. They are not actually stored here.
+   _grid : [], // the grid that the processes move about on.
 
    _loopCount : 0, // number of instructions executed
 
@@ -49,7 +49,7 @@ CORE.environment = {
       // inject the first Process(s)
       CORE.data.getSpecies(CORE.environment._INITIAL_POPULATION_SIZE_FROM_SERVER,
             CORE.environment._getSpeciesCallback);
-      setInterval(CORE.environment._resetCpuRate, 5000);
+      setInterval(CORE.environment._resetCpuRate, 2000);
    },
 
    _initialisePopulation : function(population) {
@@ -100,8 +100,7 @@ CORE.environment = {
    _move : function(process, x, y) {
       if (CORE.environment._grid[x][y] !== 0) {
          CORE.environment._attack(process, x, y);
-      }
-      if (CORE.environment._grid[x][y] === 0) {
+      } else {
          CORE.environment._grid[process.gridX][process.gridY] = 0;
          process.gridX = x;
          process.gridY = y;
@@ -196,9 +195,9 @@ CORE.environment = {
 },
 _resetCpuRate : function() {
    var secsSinceStart = (Number(new Date()) - CORE.environment.getStartTime()) / 1000;
-   CORE.environment.current_rate = Math.round(CORE.vm.getInstrCount() / secsSinceStart);
+   CORE.environment.current_rate = Math.round(CORE.Thread.stepCount / secsSinceStart);
    CORE.environment.resetStartTime();
-   CORE.vm.resetInstrCount();
+   CORE.Thread.stepCount=0;
    // $.debug("cpu rate: ", CORE.environment.current_rate);
 },
 // *****************************************

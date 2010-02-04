@@ -85,8 +85,9 @@ CORE.displayMessage = function(msg, timeout) {
    timeout = timeout || 10000;
    var msgDiv = $(CORE.messageTemplate.supplant({msg:msg})).hide();
    var close=function(){
-      msgDiv.slideUp("normal");
-      msgDiv.remove();
+      msgDiv.slideUp("normal", function() {
+         msgDiv.remove();
+      });
    };
    $("#messages").append(msgDiv);
    msgDiv.slideDown("normal").click(close);

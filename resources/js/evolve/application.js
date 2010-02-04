@@ -40,11 +40,11 @@ CORE.indexHtml = {
       // initialise the environment
       $("#layoutCenter").createGadget("sidebar", function(gadget) {
          self.sidebar = gadget;
+         CORE.environment.initialise();
+         CORE.display.initialise();
       }, {
          method : "append"
       });
-      CORE.display.initialise();
-      CORE.environment.initialise();
    }
 };
 

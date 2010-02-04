@@ -4,6 +4,7 @@ CORE.display = {   // *****************************************
    _processDivStore : {},
    _processStore : {},
    _speciesDivStore : {},
+   _gridDisplay : null,
    _timeDelay : 1000, // time to delay between simulation cycles
 
    _currentlyDisplayedProcess : null,
@@ -50,16 +51,18 @@ CORE.display = {   // *****************************************
 
    _calculateMarkerSize : function() {
       $("#layoutCenter").height(($("#viewport").innerHeight()-$("#layoutTop").outerHeight()-2)+"px");
-      var screenwidth = $("div#gridDisplay").width();
-      var screenheight = $("div#gridDisplay").height();
+      var screenwidth = this._gridDisplay.width();
+      var screenheight = this._gridDisplay.height();
       this._markerWidth = Math.round(screenwidth / CORE.environment.getGridX());
       this._markerHeight = Math.round(screenheight / CORE.environment.getGridY());
 
       var marker, process;
-      for ( var processId in this._processStore) {
-         if (this._processStore.hasOwnProperty(processId)) {
-            process = this._processStore[processId];
-            marker = this._processDivStore[process.id];
+      var markers = this._gridDisplay.find(".process");
+      var len = markers.length;
+      for ( var i =0;i< len;i++) {
+         marker = $(markers[i]);
+         process = this._processStore[markers[i].id];
+         if (process !== undefined) {
             marker.css( {
                top : this._markerHeight * process.gridY,
                left : (this._markerWidth * process.gridX),
@@ -73,18 +76,16 @@ CORE.display = {   // *****************************************
    _processCreateHandler : function(e, process) {
       e.stopImmediatePropagation();
       // $.debug(e, process.id, process.gridX, process.gridY);
-      $("div#gridDisplay").append(
-            '<div class="process" id="' + process.id + '">&nbsp;</div>');
-      var divMarker = $("div#gridDisplay div.process:last");
       CORE.display._processStore[process.id] = process;
-      divMarker.css( {
+      var divMarker = $('<div class="process species{speciesId}" id="{processId}">&nbsp;</div>'.supplant({speciesId:process.species.id,processId:process.id}))
+            .appendTo(this._gridDisplay)
+            .css( {
          top : CORE.display._markerHeight * process.gridY,
          left : (CORE.display._markerWidth * process.gridX),
          height : CORE.display._markerHeight - 1,
          width : CORE.display._markerWidth - 1,
-         background : CORE.display._speciesDivStore[process.species.id].colour
+         background : this._speciesDivStore[process.species.id].colour
       });
-      CORE.display._processDivStore[process.id] = divMarker;
 
    },
 
@@ -94,9 +95,9 @@ CORE.display = {   // *****************************************
       //CORE.display._processDivStore[process.id].stop(); 
       // removes all current animations
       // todo: change this to .animate to have nice animations
-      CORE.display._processDivStore[process.id].css( {
-         top : CORE.display._markerHeight * process.gridY, 
-         left : CORE.display._markerWidth * process.gridX
+      this._gridDisplay.find('#'+process.id).css( {
+         top : this._markerHeight * process.gridY, 
+         left : this._markerWidth * process.gridX
       });
    },
 
@@ -107,28 +108,26 @@ CORE.display = {   // *****************************************
    _processKillHandler : function(e, process) {
       e.stopImmediatePropagation();
       // console.log(e);
-      var processDiv = CORE.display._processDivStore[process.id];
+      var processDiv = this._gridDisplay.find('#'+process.id);
       if (processDiv) {
-         processDiv.fadeOut("normal", CORE.display._removeThisElement);
+         processDiv.fadeOut("normal", this._removeThisElement);
       }
-      delete CORE.display._processDivStore[process.id];
-      delete CORE.display._processStore[process.id];
+      delete this._processStore[process.id];
    },
 
+   _speciesDivTemplate : '<div class="species" id="{speciesId}"><span class="id"></span>'+
+   '<span class="totalCount"></span><span class="currentCount"></span><div style="clear:both;"></div></div>',
    _speciesCreateHandler : function(e, species) {
       //$.debug(e, species);
       e.stopImmediatePropagation();
-      if (CORE.display._speciesList === undefined) {
-         CORE.display._speciesList = $("#sidebar div.speciesList");
-      }
-      CORE.display._speciesList.append('<div class="species" id="' + species.id + '"></div>');
-      var divMarker = CORE.display._speciesList.find("div.species:last");
       var colour = CORE.display._colours.shift();
       var contrast = Contrast.match(colour, CORE.display._colours);
-      divMarker.css( {
-         background : colour,
-         color : contrast !== false ? contrast[1] : "white"
-      });
+      var divMarker = $(this._speciesDivTemplate.supplant({speciesId:species.id}))
+         .appendTo(this._speciesList)
+         .css( {
+            background : colour,
+            color : contrast !== false ? contrast[1] : "white"
+         });
       CORE.display._updateSpeciesDiv(divMarker, species);
       CORE.display._speciesDivStore[species.id] = {
          div : divMarker,
@@ -140,28 +139,29 @@ CORE.display = {   // *****************************************
       e.stopImmediatePropagation();
       var divClicked = $(e.target).closest(".species")[0];
 
-      var speciesEntry = CORE.display._speciesDivStore[divClicked.id];
-      if (speciesEntry !== undefined) {
-         var species = speciesEntry.species;
-         for ( var i = 0; i < species.processes.length; i++) {
-            CORE.display._processDivStore[species.processes[i]].fadeOut().fadeIn();
-         }
+      if (divClicked !== undefined) {
+         this._gridDisplay.find('.species'+divClicked.id).fadeOut().fadeIn();
       }
    },
 
    _updateSpeciesDiv : function updateSpeciesDiv(div, species) {
-     //if (species === null) {
-     //   $.debug("using name");
-     //}
       var name = species.name === undefined ? species.id : species.name;
-      div.html('<span class="id">' + name + '</span><span class="totalCount">' + 
-            species.count + '</span><span class="currentCount">' +
-            species.processes.length +
-            '</span><div style="clear:both;"></div>');
       if (species.count>1 || species.saved) {
+         div.find(".id").html(name);
+         div.find(".totalCount").html(species.count);
+         div.find(".currentCount").html(species.processes.length);
          div.show();
       } else {
          div.hide();
+      }
+   },
+   _updateSpeciesDisplay : function() {
+      for ( var speciesId in CORE.display._speciesDivStore) {
+         if (CORE.display._speciesDivStore.hasOwnProperty(speciesId)) {
+            CORE.display._updateSpeciesDiv(
+                  CORE.display._speciesDivStore[speciesId].div,
+                  CORE.display._speciesDivStore[speciesId].species);
+         }
       }
    },
 
@@ -246,15 +246,6 @@ CORE.display = {   // *****************************************
          tab.find("div.code").html("");
       }
    },
-   _updateSpeciesDisplay : function() {
-      for ( var speciesId in CORE.display._speciesDivStore) {
-         if (CORE.display._speciesDivStore.hasOwnProperty(speciesId)) {
-            CORE.display._updateSpeciesDiv(
-                  CORE.display._speciesDivStore[speciesId].div,
-                  CORE.display._speciesDivStore[speciesId].species);
-         }
-      }
-   },
 
    // *****************************************
    // these are Lifecycle Events
@@ -272,17 +263,13 @@ CORE.display = {   // *****************************************
       $(document).bind(CORE.environment.EVENT_SPECIES_EXTINCT,
             $.proxy(this._speciesExtinctHandler,this));
       $(document).bind(CORE.EVENT_LOG_MESSAGE, CORE.display._logMessageHandler);
-      $("#gridDisplay").click($.proxy(this._processClickedHandler,this)); 
+      this._gridDisplay = $("div#gridDisplay").click($.proxy(this._processClickedHandler,this)); 
 
-      setTimeout( function() {
-         $(".speciesList").bind("click", $.proxy(CORE.display._speciesClickedHandler,CORE.display));
-      }, 1000);
+      CORE.display._speciesList = $(".speciesList").bind("click", $.proxy(this._speciesClickedHandler,this));
       $(document).ready($.proxy(this._calculateMarkerSize,this));
       $(window).resize($.proxy(this._calculateMarkerSize,this));
       setInterval($.proxy(this.updateDisplay,this), CORE.display._timeDelay);
-      // TODO: fix this terrible hack. The specieslist hasn't been created
-      // yet
-      setInterval($.proxy(this.logDebugInfo,this), this._timeDelay);
+      //setInterval($.proxy(this.logDebugInfo,this), this._timeDelay);
    },
    _getObjectLength : function(obj) {
       if (obj.__count__ !== undefined) {
@@ -298,7 +285,7 @@ CORE.display = {   // *****************************************
       }
    },
    logDebugInfo : function logDebugInfo() {
-      $.debug("speciesDivs: {sd}, processDivs: {pd}, processes: {p}".supplant({sd: this._getObjectLength(this._speciesDivStore),pd: this._getObjectLength(this._processDivStore),p: this._getObjectLength(this._processStore)}));
+      $.debug("speciesDivs: {sd}, processes: {p}".supplant({sd: this._getObjectLength(this._speciesDivStore),p: this._getObjectLength(this._processStore)}));
    },
 
    // *****************************************
@@ -331,10 +318,8 @@ CORE.display = {   // *****************************************
       speciesEntry.div.css( {
          background : colour
       });
-      for ( var i = 0; i < species.processes.length; i++) {
-         CORE.display._processDivStore[species.processes[i]].css( {
+      this._gridDisplay.find('.process.species'+divClicked.id).css( {
             background : colour
-         });
-      }
+      });
    }
 };
