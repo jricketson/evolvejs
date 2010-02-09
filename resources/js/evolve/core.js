@@ -99,8 +99,12 @@ CORE.displayMessage = function(msg, timeout) {
 };
 
 CORE.sizeProcesses = function sp() {
+   var size;
    for (var i=0;i<CORE.environment._currentProcesses.length;i++){
-      $.debug(i,CORE.sizeInMemory(CORE.environment._currentProcesses[i]));
+      size=CORE.sizeInMemory(CORE.environment._currentProcesses[i]);
+      if (size>2000) {
+         $.debug(i,size,CORE.environment._currentProcesses[i]);
+      }
    }   
 }
 

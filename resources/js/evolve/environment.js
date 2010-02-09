@@ -15,7 +15,7 @@ CORE.environment = {
 
    _loopCount : 0, // number of instructions executed
 
-   _embodiedEnergy : 5,
+   embodiedEnergy : 5,
 
    _startTime : 0,
    _stepping : false,
@@ -98,7 +98,7 @@ CORE.environment = {
       return species;
    },
 
-   _move : function(process, x, y) {
+   _move : function(process, x, y, wrapped) {
       var attackerWon=false;
       if (this._grid[x][y] !== 0) {
           attackerWon= this._attack(process, x, y);
@@ -108,7 +108,7 @@ CORE.environment = {
          process.gridX = x;
          process.gridY = y;
          this._grid[x][y] = process;
-         jQuery(document).trigger(this.EVENT_PROCESS_MOVED, [ process ]);
+         jQuery(document).trigger(this.EVENT_PROCESS_MOVED, [ process, wrapped ]);
       }
    },
 
@@ -136,7 +136,7 @@ CORE.environment = {
       // $.debug(attacker.cputime, defender.cputime, defender.memory.length,
       // this._embodiedEnergy);
       if (defender.cputime - lowCpu <= 0) {
-         var attackerChange = (defender.memory.length * this._embodiedEnergy) - (lowCpu * this._attackerBonus);
+         var attackerChange = (defender.memory.length * this.embodiedEnergy) - (lowCpu * this._attackerBonus);
          attacker.cputime += attackerChange;
          //$.debug("defender killed, attacker gained ", attackerChange);
          // give the attacker cputime and the embodied energy in the body size
@@ -177,13 +177,13 @@ CORE.environment = {
 
    _runSimulationLoop : function() {
       var start = (new Date()).getTime();
-      while (true) {
+      while ((new Date()).getTime() - start < this._instructionsPerCycle) {
          if (this._currentProcessExecuteIndex >= CORE.environment._currentProcesses.length) {
             // do this first, the length of currentProcesses may have changed (one killed)
             this._currentProcessExecuteIndex = 0;
             this._loopCount += 1;
             this._shineSun();
-            if (this._stepping || (new Date()).getTime() - start >= this._instructionsPerCycle) {
+            if (this._stepping) {
                break;
             }
          }
@@ -199,9 +199,10 @@ CORE.environment = {
    _resetCpuRate : function() {
       var secsSinceStart = (Number(new Date()) - this.getStartTime()) / 1000;
       this.current_rate = Math.round(CORE.Thread.stepCount / secsSinceStart);
-      if (this.current_rate < 8000) {
+      /*if (this.current_rate < 8000 && this._running) {
          this.stop();
-      }
+         CORE.displayMessage("simulation stopped, I think we are going crash.");
+      }*/
       this.resetStartTime();
       CORE.Thread.stepCount=0;
       // $.debug("cpu rate: ", CORE.environment.current_rate);
@@ -252,8 +253,8 @@ CORE.environment = {
    addProcess : function(process, parentProcess, x, y) {
       return this._birthProcess(process, parentProcess, x, y);
    },
-   moveProcess : function(process, x, y) {
-      this._move(process, x, y);
+   moveProcess : function(process, x, y, wrapped) {
+      this._move(process, x, y, wrapped);
    },
    killProcess : function(process) {
       this._kill(process);

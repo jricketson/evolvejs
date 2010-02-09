@@ -88,16 +88,24 @@ CORE.display = {   // *****************************************
 
    },
 
-   _processMoveHandler : function(e, process) {
+   _processMoveHandler : function(e, process, wrapped) {
       e.stopImmediatePropagation();
       // console.log(e, process.id, process.gridX, process.gridY);
       //CORE.display._processDivStore[process.id].stop(); 
       // removes all current animations
       // todo: change this to .animate to have nice animations
-      this._gridDisplay.find('#'+process.id).stop().animate( {
-         top : this._markerHeight * process.gridY, 
-         left : this._markerWidth * process.gridX
-      });
+      if (wrapped) {
+         this._gridDisplay.find('#'+process.id).stop().css( {
+            top : this._markerHeight * process.gridY, 
+            left : this._markerWidth * process.gridX
+         });
+         
+      } else {
+         this._gridDisplay.find('#'+process.id).stop().animate( {
+            top : this._markerHeight * process.gridY, 
+            left : this._markerWidth * process.gridX
+         },"fast");
+      }
    },
 
    _removeThisElement : function() {

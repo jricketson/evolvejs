@@ -10,16 +10,15 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
-- kind: Species
-  properties:
-  - name: owner
-  - name: created
-
 - kind: django_admin_log
   properties:
   - name: user
   - name: action_time
     direction: desc
+
+- kind: evolve_species
+  properties:
+  - name: __key__
 
 - kind: evolve_species
   properties:

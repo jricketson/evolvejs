@@ -39,8 +39,13 @@ CORE.ancestor = {
                ["nop", 5], //T5 // 10
                ["jmpReadPtrB", 4], // jmp to template 4
                ["jmpWritePtrF", 2], // jmp to template 2
+               ["nop",201],
                ["pushMemSize", 0], 
                ["alloc", 0], 
+               ["ifNotDo", 200],
+               ["sleep", 450],
+               ["jmpB", 201],
+               ["nop",200],
                ["incWritePtr", 0], // inc write pointer to start of new animal
 
                ["nop", 1], //T1 // start copy loop //15
@@ -147,8 +152,13 @@ CORE.ancestor = {
 
                ["jmpReadPtrB", 10], // jmp to template 10
                ["jmpWritePtrF", 2], // jmp to template 2
+               ["nop",201],
                ["pushMemSize", 0], 
                ["alloc", 0], 
+               ["ifNotDo", 200],
+               ["sleep", 450],
+               ["jmpB", 201],
+               ["nop",200],
                ["incWritePtr", 0], // inc write pointer to start of new animal
 
                ["nop", 4], //T4 // start copy loop
@@ -257,8 +267,13 @@ CORE.ancestor = {
                ["nop", 5],
                ["jmpReadPtrB", 5], // jmp to template 5
                ["jmpWritePtrF", 2], // jmp to template 2
+               ["nop",201],
                ["pushMemSize", 0], 
                ["alloc", 0], 
+               ["ifNotDo", 200],
+               ["sleep", 450],
+               ["jmpB", 201],
+               ["nop",200],
                ["incWritePtr", 0], // inc write pointer to start of new animal, 5
 
                ["nop", 1], // start copy loop

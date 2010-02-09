@@ -50,13 +50,14 @@ CORE.vm = {
    },
 
    _calculateXYForward : function(curX, curY, direction) {
-      var newX, newY;
+      var newX, newY,wrap=false;
       switch (direction) {
       case CORE.environment.NORTH:
          newX = curX;
          newY = curY - 1;
          if (newY < 0) {
             newY = CORE.environment.getGridY() - 1;
+            wrap=true;
          }
          break;
       case CORE.environment.EAST:
@@ -64,6 +65,7 @@ CORE.vm = {
          newY = curY;
          if (newX > (CORE.environment.getGridX() - 1)) {
             newX = 0;
+            wrap=true;
          }
          break;
       case CORE.environment.SOUTH:
@@ -71,6 +73,7 @@ CORE.vm = {
          newY = curY + 1;
          if (newY > (CORE.environment.getGridY() - 1)) {
             newY = 0;
+            wrap=true;
          }
          break;
       case CORE.environment.WEST:
@@ -78,12 +81,13 @@ CORE.vm = {
          newY = curY;
          if (newX < 0) {
             newX = CORE.environment.getGridX() - 1;
+            wrap=true;
          }
          break;
       default:
          throw "Direction shouldn't be this value: " + direction;
       }
-      return [ newX, newY ];
+      return [ newX, newY, wrap ];
 
    },
 
@@ -374,10 +378,18 @@ CORE.vm.instructionSet = {
    },
    alloc : function alloc(thread, operand) {
       var a = thread.stack.pop();
-      var finalLength = thread.process.memory.length + a;
-      for ( var ii = thread.process.memory.length; ii < finalLength; ii += 1) {
-         thread.process.memory[ii] = 0;
+      var success;
+      if (thread.process.cputime > a) {
+         thread.process.decrCpuTime(a);
+         var finalLength = thread.process.memory.length + a;
+         for ( var ii = thread.process.memory.length; ii < finalLength; ii += 1) {
+            thread.process.memory[ii] = 0;
+         }
+         success = true
+      } else {
+         success = false;
       }
+      thread.stack.push(success);
       thread.executionPtr += 1;
    },
    /**
@@ -426,7 +438,7 @@ CORE.vm.instructionSet = {
    move : function move(thread) {
       var coords = CORE.vm._calculateXYForward(thread.process.gridX,
             thread.process.gridY, thread.process.facing);
-      CORE.environment.moveProcess(thread.process, coords[0], coords[1]);
+      CORE.environment.moveProcess(thread.process, coords[0], coords[1],coords[2]);
       thread.executionPtr += 1;
    },
    sleep : function sleep(thread, operand) {
