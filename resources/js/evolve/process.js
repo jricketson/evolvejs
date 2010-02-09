@@ -1,4 +1,4 @@
-CORE.Process = function(memory, name) {
+CORE.Process = function Process(memory, name) {
    this.memory = memory;
    this.threads = [];
    this.cputime = 3000;
@@ -13,6 +13,7 @@ CORE.Process = function(memory, name) {
    this.threads.push(new CORE.Thread(this, "0"));
    this.id = CORE.environment.getSerialCode();
 };
+
 /**
  * steps the process through a single cycle, may be multiple instructions, each
  * thread gets to execute
@@ -22,9 +23,10 @@ CORE.Process.prototype.step = function() {
    for ( var ii = 0; ii < this.threads.length; ii += 1) {
       this.threads[ii].step();
       if (this.dead) {
-         break;
+         return false;
       }
    }
+   return true;
 };
 CORE.Process.prototype.spliceMemory = function(position, elementCount, element) {
    this.memory.splice(position, elementCount, element);
@@ -75,7 +77,7 @@ CORE.SparseArray.prototype.toString = function() {
    return result.join(",");
 };
 
-CORE.Thread = function(process, name) {
+CORE.Thread = function Thread(process, name) {
    this.process = process;
    this.stack = [];
    this.counter = new CORE.SparseArray();
@@ -98,14 +100,15 @@ CORE.Thread.prototype.step = function threadStep() {
       return;
    }
    for ( var ii = 0; ii < this.speed; ii += 1) {
+      if (this.executionPtr > this.process.memory.length - 1) {
+         //$.debug("Attempted to execute beyond memory limits (executed : " +
+         //         this.executionPtr + ", thread.process.memory.length: " +
+         //         this.process.memory.length + ")");
+         CORE.environment.killProcess(this.process);
+         return;
+      }
       try {
          CORE.vm.execute(this);
-         if (this.stack.length > CORE.Thread._maxStackSize) {
-            this.process.decrCpuTime(this.speed * this.speed); 
-            // extra decrement if it does not control stack  size
-            this.stack.splice(CORE.Thread._maxStackSize, this.stack.length - CORE.Thread._maxStackSize);
-         }
-         this.process.decrCpuTime(this.speed * this.speed);
       } catch (err) {
          //if (this.process.debug) {
          //   $(document).trigger(
@@ -120,14 +123,22 @@ CORE.Thread.prototype.step = function threadStep() {
          
          CORE.environment.killProcess(this.process);
       }
+      if (! this.process.dead) {
+         this.process.decrCpuTime(this.speed * this.speed);
+         if (this.stack.length > CORE.Thread._maxStackSize && ! this.process.dead) {
+            this.stack.splice(CORE.Thread._maxStackSize, this.stack.length - CORE.Thread._maxStackSize);
+            // extra decrement if it does not control stack  size
+            this.process.decrCpuTime(this.speed * this.speed); //decrement can result in the process being killed
+         }
+      }
    }
 };
 CORE.Thread.prototype.getState = function getState() {
    return [ this.stack, this.process.memory.length, this.executionPtr, this.readPtr, this.writePtr ];
 };
 CORE.Thread.prototype.killMe = function() {
-   this.process = null;
-   this.shortTermMemory = null;
-   this.stack = null;
-   this.counter = null;
+//   this.process = null;
+//   this.shortTermMemory = null;
+//   this.stack = null;
+//   this.counter = null;
 };

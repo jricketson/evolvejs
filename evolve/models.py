@@ -29,10 +29,16 @@ class Species(AbstractOwnedModel):
     code = db.TextProperty()
     hashCode=db.StringProperty()
     parentRef=db.SelfReferenceProperty(collection_name="children_set")
-    ancestor = db.SelfReferenceProperty(collection_name="descendants-set")
+    ancestor = db.SelfReferenceProperty(collection_name="descendants_set")
     scoreList = db.ListProperty(int)
     timesEvolved = db.IntegerProperty(default=1)
-    
+
+    @DerivedProperty
+    def uniqueName(self):
+        try:
+            return "%s-%s" %(self.name,self.key().id_or_name())
+        except db.NotSavedError:
+            return self.name
     @DerivedProperty
     def randomFloat(self):
         return random.random()

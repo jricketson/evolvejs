@@ -13,7 +13,7 @@ from models import *
 class SpeciesForm(ModelForm):
     class Meta:
         model = Species
-        exclude =('randomFloat','scoreList', 'score', 'scoreCount','validScore','created','version','timesEvolved')
+        exclude =('randomFloat','scoreList', 'score', 'scoreCount','validScore','created','version','timesEvolved','uniqueName')
     def clean(self):
         super(SpeciesForm, self).clean()
 
@@ -40,6 +40,9 @@ class SpeciesRestfulController(RestfulController):
     def list (self, offset, limit):
         return self.modelClass.all().order("-score").order("randomFloat").fetch(int(limit),0)
     
+    def children (self, key):
+        species = db.get(key)
+        return species.children_set.fetch(1000) #make this pageable
     def addScore(self,key):
         score = self.request.GET['score']
         species = db.get(key)

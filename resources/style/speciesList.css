@@ -3,11 +3,11 @@
 div#speciesList {
    float:left;
 }
+
 div.box {
    float:left;
    text-align: left;
    margin: 0 0 10px 10px;
-   height: 100%;
    overflow: none;
    width: 200px;
    min-height: 400px;
@@ -33,21 +33,22 @@ div.dropTarget.active {
 	float: right;
 	width: 100px;
 }
-.ancestry .species {
+div.species {
 	border: 1px solid black;
-	width: 100px;
+	width: 12em;
 	padding: 2px;
 	cursor: pointer;
 	margin: 2px;
 }
 
-.ancestry .thisSpecies {
+div.species.thisSpecies {
 	background-color: #ddd;
 }
 
 #layoutCenter {
 	border: 1px solid black;
 	padding-top:1em;
+	position: relative;
 }
 
 #loadingMessage {

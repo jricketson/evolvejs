@@ -14,6 +14,8 @@ for scoring, two pieces of information need to be stored:
 species chart/tree showing ancestors and descendants
 
 medium priority: (before first public beta release)
+statements that don't use operand should not be mutated on that
+As a user I want to be able to tag interesting species from the simulation
 tutorial
 calculate a users score:
   total species evolved from my species

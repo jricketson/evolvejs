@@ -134,28 +134,11 @@ CORE.vm = {
       return (operator << 24) + operand;
    },
    execute : function execute(thread) { // executes a function on a thread
-      if (thread.process === null) {
-         $.debug("thread.process is null");
-      }
-      if (thread.process.memory === null) {
-         $.debug("thread.process.memory is null");
-      }
-      if (thread.executionPtr > thread.process.memory.length - 1) {
-         throw new Error("Attempted to execute beyond memory limits (executed : " +
-                     thread.executionPtr + ", thread.process.memory.length: " +
-                     thread.process.memory.length + ")");
-      }
       var opcode = thread.process.memory[thread.executionPtr] >> 24;
       var operand = thread.process.memory[thread.executionPtr] & this._OPERAND_MASK;
-      var operator =this.instructionCodes[opcode];
+      var operator = this.instructionCodes[opcode];
       if (operator) {
          operator(thread, operand);
-         if (thread.process === null) {
-            $.debug("thread.process is null");
-         }
-         if (thread.process.memory === null) {
-            $.debug("thread.process.memory is null");
-         }
          if (thread.process.debug) {
             var logtemplate = "{operator} {operand} stack[{stack}], counters[{counters}], shortMem[{shortMem}], ePtr: {ePtr}, rPtr:{rPtr}, wPtr:{wPtr}";
             $(document).trigger(
@@ -301,6 +284,10 @@ CORE.vm.instructionSet = {
    copy : function copy(thread) { // copies memory from readPtr to writePtr
       var eleToCopy = CORE.vm._elementsToCopy(thread.process.memory,
             thread.readPtr);
+      var memoryLength = thread.process.memory.length;
+      if (thread.writePtr > memoryLength || thread.readPtr > memoryLength) {
+         throw "writeptr or readptr points past the allocated space"
+      }
       if (eleToCopy.length == 1) {
          thread.process.spliceMemory(thread.writePtr, 1, eleToCopy[0]);
       } else if (eleToCopy.length === 0) {

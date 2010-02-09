@@ -27,7 +27,7 @@ CORE.speciesLibrary = {
 
       if (species.processes.length > CORE.environment.VALID_SPECIES && ! (species.saved || species.beingSaved)) {
          CORE.displayMessage("New {name} species evolved and is being saved to the server".supplant(species));
-         $.debug("save it",species);
+         //$.debug("save it",species);
          CORE.data.saveSpecies(species, function(){
             console.info("species saved(", species.name, species.processes.length, ")");
             species.saved = true;
@@ -37,10 +37,10 @@ CORE.speciesLibrary = {
       }
       // check if the count of processes around now for this species greater is greater than success proxy value
       if (species.processes.length > CORE.environment.SUCCESS_PROXY && ! (species.successScored || species.beingSuccessScored) && species.saved) {
-         $.debug("score it",species);
+         //$.debug("score it",species);
          CORE.displayMessage("{name} species successful".supplant(species));
          CORE.data.putScore(species,1, function(){
-            console.info("species successful (", species.name, species.processes.length, ")");
+            //console.info("species successful (", species.name, species.processes.length, ")");
             species.successScored = true;
             species.beingSuccessScored = false;
          });
@@ -49,12 +49,15 @@ CORE.speciesLibrary = {
       return species;
    },
 
-   removeProcess : function(process) {
+   removeProcess : function removeProcess(process) {
+      if (process.species == null) {
+         $.debug(process);
+      }
       CORE.removeElementFromArray(process.species.processes, process.id);
       if (process.species.processes.length === 0) {
          CORE.speciesLibrary._speciesStore.removeSpecies(process.species);
          if (process.species.saved) {
-            $.debug("extinct it",process.species);
+            //$.debug("extinct it",process.species);
             CORE.displayMessage("{name} species extinct".supplant(process.species));
             CORE.data.putScore(process.species,-1);
          }
@@ -72,11 +75,5 @@ CORE.speciesLibrary = {
    },
    getStore : function() {
       return CORE.speciesLibrary._speciesStore;
-   },
-   checkForExtinctSpeciesRegularly : function() {
-      CORE.speciesLibrary._speciesStore.checkForExtinctSpecies();
-      setTimeout(CORE.speciesLibrary.checkForExtinctSpeciesRegularly, 5000);
    }
 };
-
-jQuery(document).ready(CORE.speciesLibrary.checkForExtinctSpeciesRegularly);

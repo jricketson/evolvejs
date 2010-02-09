@@ -32,9 +32,12 @@ CORE.data = {
    getSpecies : function(count, callback) {
       $.getJSON(this.SPECIES_URL + "list/0/" + count, callback);
    },
+   getChildrenOfSpecies : function(id, callback) {
+      $.getJSON(this.SPECIES_URL + "children/" + id + "/", callback);
+   },
    getUserProfile : function(callback) {
       $.get("/data/user/id/0", function(data) {
-         callback(JSON.parse(data, this._stringToDate));
+         callback(data, this._stringToDate);
       });
    }
 

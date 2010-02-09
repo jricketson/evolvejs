@@ -2,6 +2,10 @@
 if (!window.console) {
    var console = {
       log : function() {
+      },
+      debug : function() {
+      },
+      info : function() {
       }
    };
 }
@@ -93,6 +97,53 @@ CORE.displayMessage = function(msg, timeout) {
    msgDiv.slideDown("normal").click(close);
    setTimeout(close, timeout);
 };
+
+CORE.sizeProcesses = function sp() {
+   for (var i=0;i<CORE.environment._currentProcesses.length;i++){
+      $.debug(i,CORE.sizeInMemory(CORE.environment._currentProcesses[i]));
+   }   
+}
+
+CORE.sizeInMemory = function(obj) {
+   var alreadySeenObjects=[]
+   function sim (obj, recurseLevel) {
+      var size = 0;
+      if (alreadySeenObjects.indexOf(obj) > -1 || recurseLevel > 8) {
+         return 0;
+      }
+      if (obj === null || obj === undefined) {
+         return 1; //assume 1 byte. I am sure that this is wrong.
+      } else if ($.isArray(obj)) {
+         alreadySeenObjects.push(obj);
+         for (var i=0;i < obj.length;i++) {
+            size += sim(obj[i], recurseLevel+1);
+         }
+      } else if ($.isPlainObject(obj) || (obj.constructor!== undefined && ["Process","Thread","Species"].indexOf(obj.constructor.name) != -1)) { //keep the jquery objects out
+         alreadySeenObjects.push(obj);
+         for (i in obj) {
+            if (obj.hasOwnProperty(i)) {
+                size += sim(obj[i],recurseLevel+1);
+            }
+         }
+      } else if (typeof obj == "object") {
+         return 1; //completely wrong
+      } else if (typeof obj == "string") {
+         return obj.length; //assume each char is one byte
+      } else if (typeof obj == "number") {
+         return 4; //assume 32 bit
+      } else if (typeof obj == "boolean") {
+         return 1; //assume 1 byte
+      } else if (typeof obj == "function") {
+         return 1; //assume 1 byte. I am sure that this is wrong.
+      } else {
+         //$.debug("not one of the expected types",obj.toString(), typeof obj, obj.context);
+         return 0;
+      }
+      return size;
+   }
+   return sim(obj,0);
+}
+
 $.ajaxSetup( {
    cache : false
 });

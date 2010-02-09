@@ -1,5 +1,5 @@
 var myroot = "../../..";
-var jquery="jquery.jquery-1-3-2";
+var jquery="jquery.jquery-1-4-1";
 var local=[
             "evolve.core",
             "jquery.jquery-depends",

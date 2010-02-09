@@ -63,22 +63,8 @@ CORE.species.SpeciesStore.prototype.findSpecies = function findSpecies(memory, h
    }
    return null;
 };
-CORE.species.SpeciesStore.prototype.removeSpecies = function(species) {
-   jQuery(document)
-         .trigger(CORE.environment.EVENT_SPECIES_EXTINCT, [ species ]);
+CORE.species.SpeciesStore.prototype.removeSpecies = function removeSpecies (species) {
+   jQuery(document).trigger(CORE.environment.EVENT_SPECIES_EXTINCT, [ species ]);
    var hashArray = this.store[species.hashCode];
    CORE.removeElementFromArray(hashArray, species);
-};
-CORE.species.SpeciesStore.prototype.checkForExtinctSpecies = function() {
-   for (hashcode in this.store) {
-      if (this.store.hasOwnProperty(hashcode)) {
-         var speciesArray = this.store[hashcode];
-         for ( var i = 0; i < speciesArray.length; i++) {
-            var species = speciesArray[i];
-            if (species.processes.length === 0) {
-               this.removeSpecies(species);
-            }
-         }
-      }
-   }
 };

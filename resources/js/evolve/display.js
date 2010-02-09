@@ -1,7 +1,6 @@
 CORE.display = {   // *****************************************
    // these are PRIVATE functions and variables
    // *****************************************
-   _processDivStore : {},
    _processStore : {},
    _speciesDivStore : {},
    _gridDisplay : null,
@@ -95,7 +94,7 @@ CORE.display = {   // *****************************************
       //CORE.display._processDivStore[process.id].stop(); 
       // removes all current animations
       // todo: change this to .animate to have nice animations
-      this._gridDisplay.find('#'+process.id).css( {
+      this._gridDisplay.find('#'+process.id).stop().animate( {
          top : this._markerHeight * process.gridY, 
          left : this._markerWidth * process.gridX
       });

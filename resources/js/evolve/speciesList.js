@@ -1,8 +1,16 @@
 CORE.speciesList = function () {
-   var code1Text="";
-   var code2Text="";
    return {
       initialise: function() {
+         $(window).scroll(function(e){
+            $('div.box').each(function(){
+               $(this).css({position:'absolute','top':$(document).scrollTop()});
+            });
+            $.dropManage();
+         });
+         $('div.box').each(function(){
+            var pos = $(this).position();
+            $(this).css('left',pos.left);
+         });
          CORE.speciesList._makeDraggable($('.species'));
          $('div.dropTarget').bind('dropstart',function(){
             $(this).addClass('active');
@@ -13,38 +21,62 @@ CORE.speciesList = function () {
             var target= this;
             $(target).find(".display").empty();
             CORE.data.getSingleSpecies($(event.dragProxy).attr("data-key"), function(species){
-               CORE.speciesList.displayCode(species[0].fields.code, target);
+               CORE.speciesList._displayCode(species[0], target);
             });
             $(event.dragProxy).fadeOut().remove();
          });
          $('div.dropTarget.ancestry').bind('drop',function(event){
-            var target= this;
-            $(target).find(".display").empty();
-            CORE.data.getSingleSpecies($(event.dragProxy).attr("data-key"), function(species){
-               var speciesDiv = $("<div class='thisSpecies species' data-key='{pk}'>{name}</div>".supplant({name:species[0].fields.name,pk:species[0].pk}));
-               $(target).find(".display").append(speciesDiv);
-               CORE.speciesList._makeDraggable(speciesDiv);
-               CORE.speciesList.displayAncestor(species[0], target);
-            });
+            $(this).find(".display").empty();
+            CORE.data.getSingleSpecies($(event.dragProxy).attr("data-key"), $.proxy(CORE.speciesList._displayAncestorCallback,CORE.speciesList));
             $(event.dragProxy).fadeOut().remove();
          });
       },
+      _documentScrolled: function(e) {
+         $.debug(e);
+         $('div.dropTarget').css('top',$(document).scrollTop());
+      },
+      _displayAncestorCallback : function(species){
+         var speciesDiv = $(this._generateSpecieDiv(species[0]));
+         $('div.dropTarget.ancestry .display').prepend(speciesDiv);
+         if ($('div.dropTarget.ancestry .display .ancestor').length ===1) {
+            speciesDiv.addClass("thisSpecies");
+            $('div.dropTarget.ancestry .display').append("<hr /><div>First generation children</div>");
+            CORE.speciesList.displayChildren(species[0]);
+         }
+         CORE.speciesList._makeDraggable(speciesDiv);
+         CORE.speciesList.displayAncestor(species[0]);
+      },
+      _ancestorTemplate:"<div class='ancestor species' data-key='{pk}'>{name} ({scoreList})</div><div class='divider' />",
+      _generateSpecieDiv:function(specie) {
+         return this._ancestorTemplate.supplant({pk:specie.pk,name:specie.fields.uniqueName,scoreList:specie.fields.scoreList.slice(-5).toString()});         
+      },
+      _displayChildrenCallback : function(species){
+         for (var i = 0;i<species.length;i++) {
+            var speciesDiv = $(this._generateSpecieDiv(species[i]));
+            $('div.dropTarget.ancestry .display').append(speciesDiv);
+            speciesDiv.addClass("child");
+            CORE.speciesList._makeDraggable(speciesDiv);
+         }
+      },
       _makeDraggable: function(element) {
          $(element).bind('dragstart',function(event){
-            var proxy = $("<div class='dragging'>&nbsp;</div>");
+            var proxy = $("<div class='dragging' />");
             proxy.appendTo($("body"))
                   .attr("data-key",$(this).attr("data-key"))
-                  .css({top:event.clientY,left:event.clientX});
+                  .css({top:event.clientY+$(document).scrollTop(),left:event.clientX+$(document).scrollLeft()});
             return proxy;
          }).bind('drag',function(event){
-            $(event.dragProxy).css({top:event.clientY,left:event.clientX});
+            $(event.dragProxy).css({top:event.clientY+$(document).scrollTop(),left:event.clientX+$(document).scrollLeft()});
+         }).bind('dragend',function(event){
+            $(event.dragProxy).fadeOut().remove();
          });
       },
-      displayCode: function(code, target){
-         var codeArray = CORE.assembly.convertStringToCode(code);
+      _displayCode: function(specie, target){
+         var codeArray = CORE.assembler.convertStringToCode(specie.fields.code);
          $(target).find(".display")
             .html(CORE.assembler.makeDisplayableHtml(codeArray))
-            .attr("data-codeText",CORE.assembler.makeDisplayableText(codeArray));
+            .attr("data-codeText",CORE.assembler.makeDisplayableText(codeArray))
+            .prepend($(this._generateSpecieDiv(specie)).addClass("thisSpecies"));
          CORE.speciesList._displayDiffIfTwoCodesAreDisplayed();
       },
       _displayDiffIfTwoCodesAreDisplayed: function() {
@@ -57,16 +89,13 @@ CORE.speciesList = function () {
             $(".differences .display").html(diff.diff_prettyHtml(diffs));
          }
       },
-      ancestorTemplate:"<div class='ancestor species' data-key='{pk}'>{name}</div><div class='divider'></div>",
-      displayAncestor: function(species, target) {
+      displayAncestor: function(species) {
          if (species.fields.parentRef !== null) {
-            CORE.data.getSingleSpecies(species.fields.parentRef, function(parent){
-               var species = $(CORE.speciesList.ancestorTemplate.supplant({pk:parent[0].pk,name:parent[0].fields.name}));
-               $(target).find(".display").prepend(species);
-               CORE.speciesList._makeDraggable(species);
-               CORE.speciesList.displayAncestor(parent[0], target);
-            });
+            CORE.data.getSingleSpecies(species.fields.parentRef, $.proxy(CORE.speciesList._displayAncestorCallback,CORE.speciesList));
          }
+      },
+      displayChildren: function(species) {
+         CORE.data.getChildrenOfSpecies(species.pk, $.proxy(CORE.speciesList._displayChildrenCallback,CORE.speciesList));
       }
    };
 }();

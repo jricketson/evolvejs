@@ -4,10 +4,11 @@ CORE.environment = {
    // *****************************************
    _gridX : 80, // these are default values
    _gridY : 40,
-   _timeDelay : 30, // time to delay between simulation cycles
-   _instructionsPerCycle : 20,
+   _timeDelay : 20, // time to delay between simulation cycles
+   _instructionsPerCycle : 50,
    _running : false, // if the simulation should keep running
-   _INITIAL_POPULATION_SIZE_FROM_SERVER : 10,
+   _INITIAL_POPULATION_SIZE_FROM_SERVER : 15,
+   _attackerBonus : 0.9,
    _currentProcesses : [], // all the currently alive processes.
    _currentProcessExecuteIndex : 0,
    _grid : [], // the grid that the processes move about on.
@@ -41,20 +42,20 @@ CORE.environment = {
                new CORE.Process(CORE.ancestor.blindAnimal(), "blindAnimal"),
                new CORE.Process(CORE.ancestor.seeingAnimal(), "seeingAnimal") ];
       }
-      CORE.environment._initialisePopulation(population);
+      this._initialisePopulation(population);
    },
 
    _initialiseEnvironment : function() {
-      CORE.environment._resizeGrid();
+      this._resizeGrid();
       // inject the first Process(s)
-      CORE.data.getSpecies(CORE.environment._INITIAL_POPULATION_SIZE_FROM_SERVER,
-            CORE.environment._getSpeciesCallback);
-      setInterval(CORE.environment._resetCpuRate, 2000);
+      CORE.data.getSpecies(this._INITIAL_POPULATION_SIZE_FROM_SERVER,
+            $.proxy(this._getSpeciesCallback,this));
+      setInterval($.proxy(this._resetCpuRate,this), 500);
    },
 
    _initialisePopulation : function(population) {
       for ( var ii = 0; ii < population.length; ii += 1) {
-         CORE.environment._birthProcess(population[ii], null);
+         this._birthProcess(population[ii], null);
       }
 
    },
@@ -65,18 +66,18 @@ CORE.environment = {
     */
    _birthProcess : function(process, parentProcess, x, y) {
       if (x !== undefined && y !== undefined) {
-         if (!CORE.environment._grid[x][y]) {
-            CORE.environment._initialiseProcess(process, parentProcess, x, y);
+         if (!this._grid[x][y]) {
+            this._initialiseProcess(process, parentProcess, x, y);
             return true;
          } else {
             return false;
          }
       } else {
          while (true) {
-            var xx = Math.round(Math.random() * (CORE.environment._gridX - 1));
-            var yy = Math.round(Math.random() * (CORE.environment._gridY - 1));
-            if (!CORE.environment._grid[xx][yy]) {
-               CORE.environment._initialiseProcess(process, parentProcess, xx, yy);
+            var xx = Math.round(Math.random() * (this._gridX - 1));
+            var yy = Math.round(Math.random() * (this._gridY - 1));
+            if (!this._grid[xx][yy]) {
+               this._initialiseProcess(process, parentProcess, xx, yy);
                return true;
             }
          }
@@ -85,41 +86,42 @@ CORE.environment = {
    },
 
    _initialiseProcess : function(process, parentProcess, x, y) {
-      CORE.environment._grid[x][y] = process;
+      this._grid[x][y] = process;
       process.gridX = x;
       process.gridY = y;
       if (parentProcess !== null) {
          process.facing = parentProcess.facing;
       }
-      CORE.environment._currentProcesses.push(process);
+      this._currentProcesses.push(process);
       var species = CORE.speciesLibrary.placeProcess(process, parentProcess);
-      jQuery(document).trigger(CORE.environment.EVENT_PROCESS_CREATED, [ process ]);
+      jQuery(document).trigger(this.EVENT_PROCESS_CREATED, [ process ]);
       return species;
    },
 
    _move : function(process, x, y) {
-      if (CORE.environment._grid[x][y] !== 0) {
-         CORE.environment._attack(process, x, y);
-      } else {
-         CORE.environment._grid[process.gridX][process.gridY] = 0;
+      var attackerWon=false;
+      if (this._grid[x][y] !== 0) {
+          attackerWon= this._attack(process, x, y);
+      } 
+      if (this._grid[x][y] === 0 || attackerWon) {
+         this._grid[process.gridX][process.gridY] = 0;
          process.gridX = x;
          process.gridY = y;
-         CORE.environment._grid[x][y] = process;
-         jQuery(document).trigger(CORE.environment.EVENT_PROCESS_MOVED, [ process ]);
+         this._grid[x][y] = process;
+         jQuery(document).trigger(this.EVENT_PROCESS_MOVED, [ process ]);
       }
    },
 
    _kill : function(process) {
       process.killMe();
-      for ( var ii = 0; ii < CORE.environment._currentProcesses.length; ii += 1) {
-         if (CORE.environment._currentProcesses[ii] == process) {
-            CORE.environment._currentProcesses.splice(ii, 1); // remove the
-            // killed process
+      for ( var ii = 0; ii < this._currentProcesses.length; ii += 1) {
+         if (this._currentProcesses[ii] == process) {
+            this._currentProcesses.splice(ii, 1); // remove the killed process
          }
       }
       CORE.speciesLibrary.removeProcess(process);
-      CORE.environment._grid[process.gridX][process.gridY] = 0;
-      jQuery(document).trigger(CORE.environment.EVENT_PROCESS_KILLED, [ process ]);
+      this._grid[process.gridX][process.gridY] = 0;
+      jQuery(document).trigger(this.EVENT_PROCESS_KILLED, [ process ]);
    },
 
    /*
@@ -129,20 +131,25 @@ CORE.environment = {
     * this means that if the attacker loses, it doesn't die
     */
    _attack : function attack(attacker, x, y) {
-      var defender = CORE.environment._grid[x][y];
+      var defender = this._grid[x][y];
       var lowCpu = Math.min(attacker.cputime, defender.cputime);
       // $.debug(attacker.cputime, defender.cputime, defender.memory.length,
-      // CORE.environment._embodiedEnergy);
+      // this._embodiedEnergy);
       if (defender.cputime - lowCpu <= 0) {
-         //$.debug("defender killed, attacker gained ", defender.memory.length * CORE.environment._embodiedEnergy);
-         var gain = (defender.memory.length * CORE.environment._embodiedEnergy) - (lowCpu * 0.8);
-         attacker.cputime += gain;
+         var attackerChange = (defender.memory.length * this._embodiedEnergy) - (lowCpu * this._attackerBonus);
+         attacker.cputime += attackerChange;
+         //$.debug("defender killed, attacker gained ", attackerChange);
          // give the attacker cputime and the embodied energy in the body size
          // $.debug("KILLED: process {defender} was attacked by {attacker} and
          // lost. Attacker gained {gain} and ended up with
          // {cputime}".supplant({attacker:attacker.name,defender:defender.name,gain:gain,cputime:attacker.cputime
          // }));
-         CORE.environment._kill(defender);
+         this._kill(defender);
+         return true;
+      } else {
+         defender.cputime -= lowCpu;
+         attacker.cputime -= (lowCpu * this._attackerBonus);
+         return false;
       }
    },
 
@@ -150,56 +157,55 @@ CORE.environment = {
 
       var xx;
       var yy;
-      for (xx = 0; xx < CORE.environment._gridX; xx += 1) {
-         for (yy = 0; yy < CORE.environment._gridY; yy += 1) {
-            if (!CORE.environment._grid[xx]) {
-               CORE.environment._grid[xx] = [];
+      for (xx = 0; xx < this._gridX; xx += 1) {
+         for (yy = 0; yy < this._gridY; yy += 1) {
+            if (!this._grid[xx]) {
+               this._grid[xx] = [];
             }
-            if (!CORE.environment._grid[xx][yy]) {
-               CORE.environment._grid[xx][yy] = 0;
+            if (!this._grid[xx][yy]) {
+               this._grid[xx][yy] = 0;
             }
          }
       }
    },
 
    _shineSun : function() {
-      for ( var ii = 0; ii < CORE.environment._currentProcesses.length; ii += 1) {
-         CORE.environment._currentProcesses[ii].incrCpuTime(1);
+      for ( var ii = 0; ii < this._currentProcesses.length; ii += 1) {
+         this._currentProcesses[ii].incrCpuTime(1);
       }
    },
 
    _runSimulationLoop : function() {
-      var jj;
       var start = (new Date()).getTime();
-      // TODO: getting the time every loop is potentially expensive. Is there a
-      // better way?
-   for (jj = 0; (new Date()).getTime() - start < CORE.environment._instructionsPerCycle; jj += 1) {
-      if (CORE.environment._currentProcessExecuteIndex >= CORE.environment._currentProcesses.length) {
-         // do this first, the length of currentProcesses may have changed (one killed)
-         CORE.environment._currentProcessExecuteIndex = 0;
-         CORE.environment._loopCount += 1;
-         CORE.environment._shineSun();
-         if (CORE.environment._stepping) {
-            break;
+      while (true) {
+         if (this._currentProcessExecuteIndex >= CORE.environment._currentProcesses.length) {
+            // do this first, the length of currentProcesses may have changed (one killed)
+            this._currentProcessExecuteIndex = 0;
+            this._loopCount += 1;
+            this._shineSun();
+            if (this._stepping || (new Date()).getTime() - start >= this._instructionsPerCycle) {
+               break;
+            }
+         }
+         if (this._currentProcesses[this._currentProcessExecuteIndex].step()) {
+            this._currentProcessExecuteIndex += 1;
          }
       }
-      // $.debug(currentProcesses[CORE.environment._currentProcessExecuteIndex].id, currentProcesses[CORE.environment._currentProcessExecuteIndex].getState());
-      CORE.environment._currentProcesses[CORE.environment._currentProcessExecuteIndex].step();
-      CORE.environment._currentProcessExecuteIndex += 1;
-   }
-   // TODO: ii should not increment if the most recent process was killed.
-   if (CORE.environment._running) {
-      setTimeout(CORE.environment._runSimulationLoop, CORE.environment._timeDelay);
-   }
+      if (this._running) {
+         setTimeout($.proxy(this._runSimulationLoop,this), this._timeDelay);
+      }
 
-},
-_resetCpuRate : function() {
-   var secsSinceStart = (Number(new Date()) - CORE.environment.getStartTime()) / 1000;
-   CORE.environment.current_rate = Math.round(CORE.Thread.stepCount / secsSinceStart);
-   CORE.environment.resetStartTime();
-   CORE.Thread.stepCount=0;
-   // $.debug("cpu rate: ", CORE.environment.current_rate);
-},
+   },
+   _resetCpuRate : function() {
+      var secsSinceStart = (Number(new Date()) - this.getStartTime()) / 1000;
+      this.current_rate = Math.round(CORE.Thread.stepCount / secsSinceStart);
+      if (this.current_rate < 8000) {
+         this.stop();
+      }
+      this.resetStartTime();
+      CORE.Thread.stepCount=0;
+      // $.debug("cpu rate: ", CORE.environment.current_rate);
+   },
 // *****************************************
    // these are PUBLIC functions and variables
    // *****************************************
@@ -224,77 +230,77 @@ _resetCpuRate : function() {
     * starts the environment and runs the simulation
     */
    initialise : function() {
-      CORE.environment._initialiseEnvironment();
+      this._initialiseEnvironment();
    },
    resetStartTime : function() {
-      CORE.environment._startTime = Number(new Date());
+      this._startTime = Number(new Date());
    },
    start : function() {
-      CORE.environment._running = true;
-      CORE.environment._stepping = false;
-      CORE.environment._runSimulationLoop();
-      CORE.environment._resetCpuRate();
+      this._running = true;
+      this._stepping = false;
+      this._runSimulationLoop();
+      this._resetCpuRate();
    },
    step : function() {
-      CORE.environment._stepping = true;
-      CORE.environment._runSimulationLoop();
+      this._stepping = true;
+      this._runSimulationLoop();
    },
    stop : function() {
-      CORE.environment._running = false;
+      this._running = false;
    },
 
    addProcess : function(process, parentProcess, x, y) {
-      return CORE.environment._birthProcess(process, parentProcess, x, y);
+      return this._birthProcess(process, parentProcess, x, y);
    },
    moveProcess : function(process, x, y) {
-      CORE.environment._move(process, x, y);
+      this._move(process, x, y);
    },
    killProcess : function(process) {
-      CORE.environment._kill(process);
+      this._kill(process);
    },
    getProcessCount : function() {
-      return CORE.environment._currentProcesses.length;
+      return this._currentProcesses.length;
    },
    getLoopCount : function() {
-      return CORE.environment._loopCount;
+      return this._loopCount;
    },
    getGridX : function() {
-      return CORE.environment._gridX;
+      return this._gridX;
    },
    getGridY : function() {
-      return CORE.environment._gridY;
+      return this._gridY;
    },
    isRunning : function() {
-      return CORE.environment._running;
+      return this._running;
    },
    getGrid : function() {
-      return CORE.environment._grid;
+      return this._grid;
    },
    getStartTime : function() {
-      return CORE.environment._startTime;
+      return this._startTime;
    },
    initialiseGrid : function() {
-      CORE.environment._resizeGrid();
+      this._resizeGrid();
    },
    getCurrentProcesses : function() {
-      return CORE.environment._currentProcesses;
+      return this._currentProcesses;
    },
    getSerialCode : function() {
-      CORE.environment._serialProcessIdSeries++;
-      return CORE.environment._serialProcessIdSeries;
+      this._serialProcessIdSeries++;
+      return this._serialProcessIdSeries;
    },
    setInstructionsPerCycle : function(value) {
-      CORE.environment._instructionsPerCycle = Math.round(value);
+      this._instructionsPerCycle = Math.round(value);
    },
    getProcessAtPosition : function(x, y) {
-      if (CORE.environment._grid[x][y] !== 0) {
-         return CORE.environment._grid[x][y];
+      if (this._grid[x][y] !== 0) {
+         return this._grid[x][y];
       } else {
          return null;
       }
    },
    checkCanBirth : function(x, y) {
-      return !Boolean(CORE.environment._grid[x][y]);
+      return !Boolean(this._grid[x][y]);
    }
 
 };

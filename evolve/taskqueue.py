@@ -27,10 +27,12 @@ def executeByPage(request, query, fn, workerUrl):
     
     lastKey=None
     count=0
+    listToBeSaved = []
     for i in query.fetch(FETCH_LIMIT):
-        fn(i)
+        listToBeSaved.append(fn(i))
         lastKey=i.key()
         count+=1
+    db.put(listToBeSaved)
     if lastKey:
         logging.info("enqueue task starting at %s for %s" % (lastKey, workerUrl))
         addTask(url=workerUrl, params=dict(startKey=lastKey))
