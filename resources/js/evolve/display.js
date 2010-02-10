@@ -209,9 +209,13 @@ CORE.display = {   // *****************************************
 
    
    _updateProcessDisplay : function updateProcessDisplay() {
+      
       var tab = $("div.processTab");
+      if (!tab.hasClass("expanded")) {
+         return;
+      }
       var process = CORE.display._currentlyDisplayedProcess;
-      if (process !== null && tab.hasClass("expanded")) {
+      if (process !== null) {
          tab.find("div.id").html(process.id);
          tab.find("div.cputime").html(process.cputime);
          tab.find("div.activeThreadCount").html(process.threads.length);
