@@ -1,0 +1,39 @@
+{% extends "static.html" %}
+{% block content %}
+<h2>The genebank</h2>
+<ul>
+<li>At the start of the simulation, 15 species are downloaded from the genebank and populated into the world in a random location. 
+These species are chosen at random from the species who have gone extinct the least number of times. 
+These should be the most competitive species. 
+In practice, there are so many new species evolving that once a species goes extinct once, their chances of being revived are slim.</li>
+<li>If a new species evolves and shows that it is valid and competitive, it is saved to the genebank. 'Valid and competitive' means that there must be at least 10 alive.</li>
+<li>A species can show that it is successful by having at least 75 animals alive at one time. The species receives a "+1" in the genebank.</li>
+<li>If a species goes extinct, then the genebank is also notified.  The species receives a "-1" in the genebank.</li>
+<li>A species is defined by the genome (memory) of the animal at birth. Animals of the same species have <i>exactly</i> the same genome.</li>
+<li>The simulation can be paused or resumed at any time with no ill effects to the genebank.</li>
+</ul>
+<h2>Living and dying</h2>
+<ul>
+<li>Each period, every process gets the chance to execute.</li>
+<li>If a process has multiple threads, each thread will be executed.</li>
+<li>A thread may be set to run at a higher clock speed, this allows the thread to execute arbitrarily many instructions in a single period.</li>
+<li>The cost of executing each instruction is <i>speed<sup>2</sup></i>, for a thread running at the default speed, this is 1.</li>
+<li>At the end of each period, all live animals are given 1 cputime credit.</li>
+<li>A thread may sleep for an arbitrarily long time. During this time the thread incurs no execution cost, and the animal continues to earn cputime credit.</li>
+<li>If an animal ever runs out of cputime, it dies.</li>
+</ul>
+<h2>Attack and defend</h2>
+<ul>
+<li>Animals can attack each other by attempting to move onto the others space (kind of like chess).</li> 
+<li>Both the attacker and the defender lose cputime from the battle. The defender loses <i>min(attacker.cpu,defender.cpu)</i>, and the attacker loses 90% of this same amount, (the benefit of surprise?)</li>
+<li>If the defender's cputime drops to zero, then the defender dies, and the attacker gets the value of the remains in cputime.</li>
+<li>The attacker can never die in battle, but can become quite low on cputime.</li>
+<li>The value of the remains is calculated as <i>5 * defender.memory.length</i>.</li>
+</ul>
+<h2>Reproduction</h2>
+<ul>
+<li>To reproduce itself, an animal allocates memory, writes the new child to the allocated memory, and then divides from the child.</li>
+<li>This writing process is intentionally flawed, and each write has a 1/1000 chance of containing an error. This induces mutations, and allows the opportunity for evolution.</li>
+<li>The child will be placed in front of the parent (in the direction that the parent is facing) and will face the same direction.</li>
+</ul>
+{% endblock %}
