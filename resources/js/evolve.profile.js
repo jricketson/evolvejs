@@ -10,7 +10,6 @@ var local=[
             "evolve.dataAccess",
             "evolve.species",
             "evolve.speciesLibrary",
-            "evolve.display",
             "evolve.assembly",
             "evolve.application",
             "evolve.ancestor",

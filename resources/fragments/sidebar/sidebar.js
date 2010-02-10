@@ -50,8 +50,8 @@
                         }
                         var process = new CORE.Process(CORE.assembler.compile(array), self.element.find(".createProcessId").val());
                         CORE.environment.addProcess(process, null);
-                        CORE.display.setColourForSpecies(process.species,self.element.find(".createProcessColour").val());
-                        CORE.display.setCurrentlyDisplayedProcess(process);
+                        CORE.evolve.setColourForSpecies(process.species,self.element.find(".createProcessColour").val());
+                        CORE.evolve.setCurrentlyDisplayedProcess(process);
                      });
 
                $("#sidebar .pane .title").live("click",function() {
