@@ -25,8 +25,8 @@ CORE.speciesLibrary = {
       }
       process.species = species;
 
-      if (species.processes.length > CORE.environment.VALID_SPECIES && ! (species.saved || species.beingSaved)) {
-         CORE.displayMessage("New {name} species evolved and is being saved to the server".supplant(species));
+      if (species.processes.length >= CORE.environment.VALID_SPECIES && ! (species.saved || species.beingSaved)) {
+         CORE.displayMessage("New {name} species evolved and is being saved to the genebank".supplant(species));
          //$.debug("save it",species);
          CORE.data.saveSpecies(species, function(){
             console.info("species saved(", species.name, species.processes.length, ")");
@@ -36,7 +36,7 @@ CORE.speciesLibrary = {
          species.beingSaved = true;
       }
       // check if the count of processes around now for this species greater is greater than success proxy value
-      if (species.processes.length > CORE.environment.SUCCESS_PROXY && ! (species.successScored || species.beingSuccessScored) && species.saved) {
+      if (species.processes.length >= CORE.environment.SUCCESS_PROXY && ! (species.successScored || species.beingSuccessScored) && species.saved) {
          //$.debug("score it",species);
          CORE.displayMessage("{name} species successful".supplant(species));
          CORE.data.putScore(species,1, function(){

@@ -10,7 +10,7 @@ CORE.data = {
       return value;
    },
    SPECIES_URL : "/data/species/",
-   saveSpecies : function saveSpecies(species) {
+   saveSpecies : function saveSpecies(species,callback) {
       var postData = {
          "code" : CORE.assembler.convertCodeToString(species.code),
          "name" : species.name,
@@ -22,6 +22,7 @@ CORE.data = {
       $.post(this.SPECIES_URL, postData, function saveSpeciesCallback(data) {
          species.pk = data[0].pk;
          species.displayName = data[0].fields.uniqueName;
+         callback();
       });
    },
    putScore : function(species, score, callback) {

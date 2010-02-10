@@ -23,6 +23,23 @@ CORE.environment = {
    _stepping : false,
 
    _serialProcessIdSeries : Number(new Date()), // initialise to an essentially random number
+   NORTH : 0,
+   EAST : 1,
+   SOUTH : 2,
+   WEST : 3,
+
+   EVENT_PROCESS_CREATED : "processCreated",
+   EVENT_PROCESS_MOVED : "processMoved",
+   EVENT_PROCESS_KILLED : "processKilled",
+   EVENT_SPECIES_CREATED : "speciesCreated",
+   EVENT_SPECIES_EXTINCT : "speciesExtinct",
+
+   VALID_SPECIES : 10,
+   SUCCESS_PROXY : 75,
+   mutationRate : 1000, // approximate chance of mutation (1 in x copy operations)
+   startTime : 0,
+   horizon : 10,
+
 
    _getSpeciesCallback : function getSpeciesCallback(species) {
       var population = [];
@@ -227,23 +244,6 @@ CORE.environment = {
 // *****************************************
    // these are PUBLIC functions and variables
    // *****************************************
-   NORTH : 0,
-   EAST : 1,
-   SOUTH : 2,
-   WEST : 3,
-
-   EVENT_PROCESS_CREATED : "processCreated",
-   EVENT_PROCESS_MOVED : "processMoved",
-   EVENT_PROCESS_KILLED : "processKilled",
-   EVENT_SPECIES_CREATED : "speciesCreated",
-   EVENT_SPECIES_EXTINCT : "speciesExtinct",
-
-   VALID_SPECIES : 10,
-   SUCCESS_PROXY : 75,
-   mutationRate : 1000, // approximate chance of mutation (1 in x copy operations)
-   startTime : 0,
-   horizon : 10,
-
    /**
     * starts the environment and runs the simulation
     */
