@@ -290,7 +290,7 @@ CORE.vm.instructionSet = {
             thread.readPtr);
       var memoryLength = thread.process.memory.length;
       if (thread.writePtr > memoryLength || thread.readPtr > memoryLength) {
-         throw "writeptr or readptr points past the allocated space"
+         throw "writeptr or readptr points past the allocated space";
       }
       if (eleToCopy.length == 1) {
          thread.process.spliceMemory(thread.writePtr, 1, eleToCopy[0]);
@@ -343,6 +343,7 @@ CORE.vm.instructionSet = {
       var newThread = new CORE.Thread(thread.process, "" + thread.process.threads.length);
       newThread.executionPtr = thread.readPtr;
       thread.process.threads.push(newThread);
+      CORE.environment.addThread(newThread);
       thread.executionPtr += 1;
    },
    /*
@@ -385,7 +386,7 @@ CORE.vm.instructionSet = {
          for ( var ii = thread.process.memory.length; ii < finalLength; ii += 1) {
             thread.process.memory[ii] = 0;
          }
-         success = true
+         success = true;
       } else {
          success = false;
       }

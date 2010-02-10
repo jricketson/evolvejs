@@ -21,10 +21,12 @@ CORE.data = {
       }
       $.post(this.SPECIES_URL, postData, function saveSpeciesCallback(data) {
          species.pk = data[0].pk;
+         species.displayName = data[0].fields.uniqueName;
       });
    },
    putScore : function(species, score, callback) {
       $.get(this.SPECIES_URL + "addScore/" + species.pk + "/?score=" + score, callback);
+      species.scoreList.push(score);
    },
    getSingleSpecies : function(id, callback) {
       $.getJSON(this.SPECIES_URL + "id/" + id + "/", callback);

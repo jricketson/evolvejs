@@ -18,10 +18,6 @@ indexes:
 
 - kind: evolve_species
   properties:
-  - name: __key__
-
-- kind: evolve_species
-  properties:
   - name: randomFloat>
   - name: randomFloat
   - name: score

@@ -7,10 +7,13 @@ CORE.species.Species = function Species(fromObject) {
    this.processes = fromObject.processes;
    this.name = fromObject.name;
    this.code = fromObject.code; // shallow copy
+   this.scoreList=[];
    if (fromObject.fields) {
+      this.displayName = fromObject.fields.uniqueName;
       this.name = fromObject.fields.name;
       this.id = fromObject.pk;
       this.pk = fromObject.pk;
+      this.scoreList=fromObject.fields.scoreList;
    }
    this.sentCount=0;
    this.successScored=false;
@@ -66,5 +69,8 @@ CORE.species.SpeciesStore.prototype.findSpecies = function findSpecies(memory, h
 CORE.species.SpeciesStore.prototype.removeSpecies = function removeSpecies (species) {
    jQuery(document).trigger(CORE.environment.EVENT_SPECIES_EXTINCT, [ species ]);
    var hashArray = this.store[species.hashCode];
+   if (hashArray === undefined) {
+      $.debug("hashArray is undefined");
+   }
    CORE.removeElementFromArray(hashArray, species);
 };

@@ -14,20 +14,6 @@ CORE.Process = function Process(memory, name) {
    this.id = CORE.environment.getSerialCode();
 };
 
-/**
- * steps the process through a single cycle, may be multiple instructions, each
- * thread gets to execute
- */
-CORE.Process.prototype.step = function() {
-   this.age += 1;
-   for ( var ii = 0; ii < this.threads.length; ii += 1) {
-      this.threads[ii].step();
-      if (this.dead) {
-         return false;
-      }
-   }
-   return true;
-};
 CORE.Process.prototype.spliceMemory = function(position, elementCount, element) {
    this.memory.splice(position, elementCount, element);
 };
@@ -47,8 +33,8 @@ CORE.Process.prototype.killMe = function() {
    for ( var i = 0; i < this.threads.length; i++) {
       this.threads[i].killMe();
    }
-   this.threads = [];
-   this.memory = [];
+   //this.threads = [];
+   //this.memory = [];
    this.dead = true;
 };
 CORE.Process.prototype.incrCpuTime = function(increment) {
@@ -92,12 +78,13 @@ CORE.Thread = function Thread(process, name) {
    this.name = name;
 };
 CORE.Thread._maxStackSize = 8;
-CORE.Thread.stepCount=0;
 CORE.Thread.prototype.step = function threadStep() {
-   CORE.Thread.stepCount+=1;
+   if (this == this.process.threads[0]) {
+      this.process.age+=1;
+   }
    if (this.sleepCycles > 0) {
       this.sleepCycles -= 1;
-      return;
+      return ! this.process.dead;
    }
    for ( var ii = 0; ii < this.speed; ii += 1) {
       if (this.executionPtr > this.process.memory.length - 1) {
@@ -105,7 +92,7 @@ CORE.Thread.prototype.step = function threadStep() {
          //         this.executionPtr + ", thread.process.memory.length: " +
          //         this.process.memory.length + ")");
          CORE.environment.killProcess(this.process);
-         return;
+         return ! this.process.dead;
       }
       try {
          CORE.vm.execute(this);
@@ -131,6 +118,7 @@ CORE.Thread.prototype.step = function threadStep() {
             this.process.decrCpuTime(this.speed * this.speed); //decrement can result in the process being killed
          }
       }
+      return ! this.process.dead;
    }
 };
 CORE.Thread.prototype.getState = function getState() {

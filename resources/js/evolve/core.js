@@ -106,10 +106,10 @@ CORE.sizeProcesses = function sp() {
          $.debug(i,size,CORE.environment._currentProcesses[i]);
       }
    }   
-}
+};
 
 CORE.sizeInMemory = function(obj) {
-   var alreadySeenObjects=[]
+   var alreadySeenObjects=[];
    function sim (obj, recurseLevel) {
       var size = 0;
       if (alreadySeenObjects.indexOf(obj) > -1 || recurseLevel > 8) {
@@ -146,7 +146,7 @@ CORE.sizeInMemory = function(obj) {
       return size;
    }
    return sim(obj,0);
-}
+};
 
 $.ajaxSetup( {
    cache : false

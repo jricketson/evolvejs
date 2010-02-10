@@ -45,8 +45,7 @@ CORE.display = {   // *****************************************
          "#FF33FF", "#FF6600", "#FF6633", "#FF6666", "#FF6699", "#FF66CC",
          "#FF66FF", "#FF9900", "#FF9933", "#FF9966", "#FF9999", "#FF99CC",
          "#FF99FF", "#FFCC00", "#FFCC33", "#FFCC66", "#FFCC99", "#FFCCCC",
-         "#FFCCFF", "#FFFF00", "#FFFF33", "#FFFF66", "#FFFF99", "#FFFFCC",
-         "#FFFFFF" ],
+         "#FFCCFF", "#FFFF00", "#FFFF33", "#FFFF66", "#FFFF99", "#FFFFCC"],
 
    _calculateMarkerSize : function() {
       $("#layoutCenter").height(($("#viewport").innerHeight()-$("#layoutTop").outerHeight()-2)+"px");
@@ -152,9 +151,9 @@ CORE.display = {   // *****************************************
    },
 
    _updateSpeciesDiv : function updateSpeciesDiv(div, species) {
-      var name = species.name === undefined ? species.id : species.name;
+      var name = species.displayName === undefined ? species.name : species.displayName;
       if (species.count>1 || species.saved) {
-         div.find(".id").html(name);
+         div.find(".id").html("{name} ({scoreList})".supplant({name:name,scoreList:species.scoreList.slice(-5).toString()}));
          div.find(".totalCount").html(species.count);
          div.find(".currentCount").html(species.processes.length);
          div.show();

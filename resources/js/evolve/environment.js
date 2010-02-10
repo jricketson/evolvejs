@@ -9,11 +9,13 @@ CORE.environment = {
    _running : false, // if the simulation should keep running
    _INITIAL_POPULATION_SIZE_FROM_SERVER : 15,
    _attackerBonus : 0.9,
-   _currentProcesses : [], // all the currently alive processes.
-   _currentProcessExecuteIndex : 0,
+   _allProcesses : [], // all the alive processes.
+   _runningThreads : [], // all the alive threads.
+   _currentThreadExecuteIndex : 0,
    _grid : [], // the grid that the processes move about on.
 
    _loopCount : 0, // number of instructions executed
+   stepCount :0,
 
    embodiedEnergy : 5,
 
@@ -92,7 +94,8 @@ CORE.environment = {
       if (parentProcess !== null) {
          process.facing = parentProcess.facing;
       }
-      this._currentProcesses.push(process);
+      this._runningThreads.push(process.threads[0]);
+      this._allProcesses.push(process);
       var species = CORE.speciesLibrary.placeProcess(process, parentProcess);
       jQuery(document).trigger(this.EVENT_PROCESS_CREATED, [ process ]);
       return species;
@@ -112,13 +115,23 @@ CORE.environment = {
       }
    },
 
-   _kill : function(process) {
-      process.killMe();
-      for ( var ii = 0; ii < this._currentProcesses.length; ii += 1) {
-         if (this._currentProcesses[ii] == process) {
-            this._currentProcesses.splice(ii, 1); // remove the killed process
+   _removeProcessFromArrays: function(process) {
+      for ( var jj = 0; jj < process.threads.length; jj += 1) {
+         var thread=process.threads[jj];
+         var threadIndex=this._runningThreads.indexOf(thread);
+         if (threadIndex >-1) {
+            this._runningThreads.splice(threadIndex, 1); // remove the killed thread
          }
       }
+      var procIndex=this._allProcesses.indexOf(process);
+      if (procIndex >-1) {
+         this._allProcesses.splice(procIndex, 1); // remove the killed process
+      }
+   },
+   
+   _kill : function(process) {
+      process.killMe();
+      this._removeProcessFromArrays(process);
       CORE.speciesLibrary.removeProcess(process);
       this._grid[process.gridX][process.gridY] = 0;
       jQuery(document).trigger(this.EVENT_PROCESS_KILLED, [ process ]);
@@ -170,25 +183,34 @@ CORE.environment = {
    },
 
    _shineSun : function() {
-      for ( var ii = 0; ii < this._currentProcesses.length; ii += 1) {
-         this._currentProcesses[ii].incrCpuTime(1);
+      for ( var ii = 0; ii < this._allProcesses.length; ii += 1) {
+         this._allProcesses[ii].incrCpuTime(1);
       }
    },
 
+   _endLoop: function() {
+      this._currentThreadExecuteIndex = 0;
+      this._loopCount += 1;
+      this._shineSun();
+   },
+   
    _runSimulationLoop : function() {
       var start = (new Date()).getTime();
       while ((new Date()).getTime() - start < this._instructionsPerCycle) {
-         if (this._currentProcessExecuteIndex >= CORE.environment._currentProcesses.length) {
-            // do this first, the length of currentProcesses may have changed (one killed)
-            this._currentProcessExecuteIndex = 0;
-            this._loopCount += 1;
-            this._shineSun();
+         this.stepCount++;
+         if (this._currentThreadExecuteIndex >= this._runningThreads.length) {
+            this._endLoop();
             if (this._stepping) {
                break;
             }
          }
-         if (this._currentProcesses[this._currentProcessExecuteIndex].step()) {
-            this._currentProcessExecuteIndex += 1;
+         var thread = this._runningThreads[this._currentThreadExecuteIndex];
+         if (thread.process.dead) {
+            this._removeProcessFromArrays(thread.process);
+         } else {
+            if (thread.step()) {
+               this._currentThreadExecuteIndex += 1;
+            }
          }
       }
       if (this._running) {
@@ -198,14 +220,9 @@ CORE.environment = {
    },
    _resetCpuRate : function() {
       var secsSinceStart = (Number(new Date()) - this.getStartTime()) / 1000;
-      this.current_rate = Math.round(CORE.Thread.stepCount / secsSinceStart);
-      /*if (this.current_rate < 8000 && this._running) {
-         this.stop();
-         CORE.displayMessage("simulation stopped, I think we are going crash.");
-      }*/
+      this.current_rate = Math.round(this.stepCount / secsSinceStart);
       this.resetStartTime();
-      CORE.Thread.stepCount=0;
-      // $.debug("cpu rate: ", CORE.environment.current_rate);
+      this.stepCount=0;
    },
 // *****************************************
    // these are PUBLIC functions and variables
@@ -260,7 +277,7 @@ CORE.environment = {
       this._kill(process);
    },
    getProcessCount : function() {
-      return this._currentProcesses.length;
+      return this._allProcesses.length;
    },
    getLoopCount : function() {
       return this._loopCount;
@@ -284,7 +301,7 @@ CORE.environment = {
       this._resizeGrid();
    },
    getCurrentProcesses : function() {
-      return this._currentProcesses;
+      return this._allProcesses;
    },
    getSerialCode : function() {
       this._serialProcessIdSeries++;
@@ -302,6 +319,9 @@ CORE.environment = {
    },
    checkCanBirth : function(x, y) {
       return !Boolean(this._grid[x][y]);
+   },
+   addThread : function(thread) {
+      this._runningThreads.push(thread);
    }
 
 };

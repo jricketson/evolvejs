@@ -50,8 +50,8 @@ CORE.speciesLibrary = {
    },
 
    removeProcess : function removeProcess(process) {
-      if (process.species == null) {
-         $.debug(process);
+      if (process.species === undefined) {
+         $.debug("species is undefined");
       }
       CORE.removeElementFromArray(process.species.processes, process.id);
       if (process.species.processes.length === 0) {
