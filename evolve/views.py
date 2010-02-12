@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import random
 
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template import RequestContext, loader
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
+from django.template import RequestContext, loader, TemplateDoesNotExist
 from django.views.decorators.cache import cache_page
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
+from django.views.generic.simple import direct_to_template
 
 from google.appengine.api import memcache
 from google.appengine.api import users
@@ -33,3 +34,9 @@ def randomiseSpecies(request):
         pass
     query = Species.all()
     return taskqueue.executeByPage(request, query, fn, reverse(randomiseSpecies))
+
+def static(request, template_name):
+    try:
+        return direct_to_template(request, template_name)
+    except TemplateDoesNotExist:
+        return HttpResponseNotFound()

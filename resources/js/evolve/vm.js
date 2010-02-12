@@ -46,6 +46,8 @@ CORE.vm = {
       }
       if (pos > -1) {
          thread[ptrName] = pos;
+      } else {
+         thread[ptrName] = start + 1;
       }
    },
 
@@ -181,7 +183,7 @@ CORE.vm.instructionSet = {
    mult : function mult(thread, operand) {
       var a = thread.stack.pop();
       if (a !== undefined) {
-         thread.stack.push(a + operand);
+         thread.stack.push(a * operand);
       } else {
          thread.stack.push(0);
       }
@@ -308,15 +310,23 @@ CORE.vm.instructionSet = {
    },
 
    lt : function lt(thread) {
-      var b = thread.stack.pop();
       var a = thread.stack.pop();
-      thread.stack.push((a < b) / 1);
+      var b = thread.stack.pop();
+      if (a === undefined || b === undefined) {
+         thread.stack.push(0);
+      } else {
+         thread.stack.push((b < a) / 1);
+      }
       thread.executionPtr += 1;
    },
    gte : function gte(thread) {
-      var b = thread.stack.pop();
       var a = thread.stack.pop();
-      thread.stack.push((a >= b) / 1);
+      var b = thread.stack.pop();
+      if (a === undefined || b === undefined) {
+         thread.stack.push(0);
+      } else {
+         thread.stack.push((b >= a) / 1);
+      }
       thread.executionPtr += 1;
    },
    ifDo : function ifDo(thread, operand) {
@@ -433,6 +443,15 @@ CORE.vm.instructionSet = {
       thread.process.facing = facing;
       thread.executionPtr += 1;
    },
+   turnL : function turnR(thread) {
+      var facing = thread.process.facing;
+      facing -= 1;
+      if (facing < 0) {
+         facing = 3;
+      }
+      thread.process.facing = facing;
+      thread.executionPtr += 1;
+   },
    /**
     * moves one space straight ahead, if the path is not blocked.
     */
@@ -487,6 +506,7 @@ CORE.vm.instructionCodes = {
    21 : CORE.vm.instructionSet.divideProcess,
    22 : CORE.vm.instructionSet.look,
    23 : CORE.vm.instructionSet.turnR,
+   36 : CORE.vm.instructionSet.turnL,
    24 : CORE.vm.instructionSet.move,
    25 : CORE.vm.instructionSet.sleep,
    35 : CORE.vm.instructionSet.setSpeed

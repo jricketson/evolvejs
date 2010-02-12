@@ -1,0 +1,172 @@
+<table>
+<tr>
+<td>nop</td>
+<td>This is a no-operation. It has no effect. The operand is used as a jmp* label.</td>
+</tr>
+<tr>
+<td>add</td>
+<td>Pops one element from the stack pushes <i>stack-top + operand</i>. If stack is empty, this pushes the operand.</td>
+</tr>
+<tr>
+<td>mult</td>
+<td>Pops one element from the stack pushes <i>stack-top * operand</i>. If stack is empty, this pushes 0.</td>
+</tr>
+<tr>
+<td>lt</td>
+<td>Pops A, and then B from the stack and pushes <i>B&lt;A</i>. If there are less than 2 elements on the stack, the stack is emptied, and this pushes 0. The operand is ignored.</td>
+</tr>
+<tr>
+<td>gte</td>
+<td>Pops A, and then B from the stack and pushes <i>B&gt;=A</i>. If there are less than 2 elements on the stack, the stack is emptied, and this pushes 0. The operand is ignored.</td>
+</tr>
+<tr>
+<td>ifDo</td>
+<td>Pops stack-top, if false, then the executionPtr jumps forward to the next nop with the same operand. If true, execution continues at the next instruction.</td> 
+</tr>
+<tr>
+<td>ifNotDo</td>
+<td>Pops stack-top, if true, then the executionPtr jumps forward to the next nop with the same operand. If false, execution continues at the next instruction.</td> 
+</tr>
+<tr>
+
+<td>push</td>
+<td>Pushes the operand to the stack.</td>
+</tr>
+<tr>
+<td>pop</td>
+<td>Pops a number of elements from the stack as identified by operand.</td>
+</tr>
+<tr>
+<td>dupTop</td>
+<td>Pushes a copy of stack-top onto the stack. Has no effect if the stack is empty. The operand is ignored.</td>
+</tr>
+<tr>
+
+<td>pushM</td>
+<td>Pushes the value located in short-term-memory[operand] to the stack. If there is no value in the requested location, it pushes 0.</td>
+</tr>
+<tr>
+<td>popM</td>
+<td>Pops a value from the stack to short-term-memory[operand]. If the stack is empty, 0 is written to this location.</td>
+</tr>
+<tr>
+<td>jmpF</td>
+<td>Jumps the execution pointer to the next nop with the same operand. The search looks forward, and wraps around. If the requested label is not found, this is equivalent to a nop.</td>
+</tr>
+<tr>
+<td>jmpB</td>
+<td>Jumps the execution pointer to the previous nop with the same operand. The search looks backward, and wraps around. If the requested label is not found, this is equivalent to a nop.</td>
+</tr>
+<tr>
+<td>copy</td>
+<td>Copies from the read pointer in main memory to the write pointer in main memory. This copy has a 1/1000 chance to fail. If it fails it will be in one of three ways.
+<ul>
+<li>Element does not get written. In this case the write pointer is decremented.</li>
+<li>Element is replaced with a random mutation.</li>
+<li>Element is written, and a random mutation is inserted after. In this case the write pointer is incremented.</li>
+</ul>
+If either the read or write pointers point outside of allocated memory, then the animal is considered disfunctional and is killed.
+</td>
+</tr>
+<tr>
+
+<td>incCounter</td>
+<td>Increment counter[operand]. If counter[operand] does not already exist, then counter[operand] is set to 1.</td>
+</tr>
+<tr>
+<td>resetCounter</td>
+<td>Set counter[operand] to 0.</td>
+</tr>
+<tr>
+<td>pushCounter</td>
+<td>Push counter[operand] to the stack. If counter[operand] does not exist, then 0 is pushed.</td>
+</tr>
+<tr>
+
+<td>pushMemSize</td>
+<td>Pushes the current length of main memory to the stack.</td>
+</tr>
+<tr>
+<td>pushCpuTime</td>
+<td>Pushes the current cputime to the stack.</td>
+</tr>
+<tr>
+
+<td>pushReadPtr</td>
+<td>Pushes the current read pointer to the stack.</td>
+</tr>
+<tr>
+<td>jmpReadPtrB</td>
+<td>Jumps the read pointer. Please see jmpB for more detail</td>
+</tr>
+<tr>
+<td>jmpReadPtrF</td>
+<td>Jumps the read pointer. Please see jmpF for more detail</td>
+</tr>
+<tr>
+<td>incReadPtr</td>
+<td>Increments the read pointer. This does not wrap, so may point into unallocated memory.</td>
+</tr>
+<tr>
+
+<td>pushWritePtr</td>
+<td>Pushes the current write pointer to the stack.</td>
+</tr>
+<tr>
+<td>jmpWritePtrB</td>
+<td>Jumps the write pointer. Please see jmpB for more detail</td>
+</tr>
+<tr>
+<td>jmpWritePtrF</td>
+<td>Jumps the read pointer. Please see jmpF for more detail</td>
+</tr>
+<tr>
+<td>incWritePtr</td>
+<td>Increments the write pointer. This does not wrap, so may point into unallocated memory.</td>
+</tr>
+<tr>
+
+<td>runThread</td>
+<td>Starts a new thread running with the execution pointer set to this threads readPointer. All other thread state is set to default. </td>
+</tr>
+<tr>
+<td>alloc</td>
+<td>Attempts to allocate memory at the end of this animal. The amount of space requested is popped from the stack.
+The allocation only occurs if the animal has enough cputime to afford this allocation. Allocation costs 5*request_size.
+The boolean result of allocation is pushed to the stack.</td>
+</tr>
+<tr>
+<td>divideProcess</td>
+<td>Attempts to birth a child. The attempt will succeed if there is space directly in front of the parent.
+The boolean result of allocation is pushed to the stack.
+The child is facing the same direction as the parent.
+The child's main memory is initialised to everything between the read pointer and the write pointer. This memory is removed from the parent</td>
+</tr>
+<tr>
+<td>look</td>
+<td>Looks forward and puts false on stack if no animal is seen within the horizon (10 spaces). 
+If an animal is seen, [otherProcess.memoryLength, otherProcess.cputime, distance to other process] are pushed to the stack.</td>
+</tr>
+<tr>
+<td>turnR</td>
+<td>Changes the direction the animal is facing.</td>
+</tr>
+<tr>
+<td>turnL</td>
+<td>Changes the direction the animal is facing.</td>
+</tr>
+<tr>
+<td>move</td>
+<td>Moves forward one space.</td>
+</tr>
+<tr>
+<td>sleep</td>
+<td>Sleeps for [operand] loops.</td>
+</tr>
+<tr>
+<td>setSpeed</td>
+<td>Sets the threads execution speed. 
+A thread may be set to run at a higher clock speed, this allows the thread to execute arbitrarily many instructions in a single period.
+The cost of executing each instruction is <i>speed<sup>2</sup></i>, for a thread running at the default speed, this is 1.</td>
+</tr>
+</table>
