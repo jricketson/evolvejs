@@ -17,11 +17,12 @@ var local=[
             "evolve.vm",
             "fragments.sidebar.sidebar"
          ];
-var about=[
+var staticpage=[
             jquery,
             "jquery.jquery-log",
             "evolve.core",
-            "jquery.jquery-depends"
+            "evolve.data",
+            "evolve.util"
 ];
 var foreign = [
             jquery,
@@ -35,8 +36,8 @@ dependencies = {
          dependencies: local
       },
       {
-         name: "about.js",
-         dependencies: about
+         name: "static.js",
+         dependencies: staticpage
       },
       {
          name: "foreign.js",
@@ -58,6 +59,7 @@ dependencies = {
                         'evolve.speciesList',
                         "evolve.assembly",
                         "evolve.vm",
+                        "evolve.util",
                         'evolve.dataAccess']
       }
    ],

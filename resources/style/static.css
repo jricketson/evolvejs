@@ -1,10 +1,14 @@
 @import url("core.css");
 
-#contentDisplay {
-    padding: 2em;
-    font-size: 150%;
+#viewport {
 }
 
 .callToAction {
     text-align: center;
+}
+
+#layoutCenter {
+	padding-left: 1em;
+	padding-top: 1em;
+	font-size: 150%;
 }

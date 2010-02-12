@@ -59,3 +59,12 @@ a, a:link, a:visited, a:active, a:hover {
 #jslog {
     display: none;
 }
+
+#layoutCenter {
+	border-top: 1px solid black;
+}
+
+#layoutTop {
+    font-size: 150%;
+    padding-left: 1em;
+}

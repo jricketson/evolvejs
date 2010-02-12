@@ -9,6 +9,19 @@ CORE.util = {
          hash += memory[ii] * ii;
       }
       return hash;
+   },
+   getUserProfile : function() {
+      CORE.data.getUserProfile( function(userProfile) {
+         CORE.userProfile = userProfile;
+         if (CORE.userProfile === null) {
+            $('#logoutLink').hide();
+            $('#loginLink').show();
+         } else {
+            $("#username").html(CORE.userProfile.username);
+            $('#logoutLink').show();
+            $('#loginLink').hide();
+         }
+      });
    }
 
 };

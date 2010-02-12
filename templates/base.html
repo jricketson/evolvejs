@@ -1,26 +1,22 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-    dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}"
-    xml:lang="{% firstof LANGUAGE_CODE 'en' %}"
-    lang="{% firstof LANGUAGE_CODE 'en' %}">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
   <head>
     <title>Evolve the Future {% block title %}{% endblock %}</title>
     <meta http-equiv="keywords" content="evolution,javascript" />
     <meta http-equiv="description" content="Evolution of animals in javascript" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     {% block css %}
-       <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}combined-{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}.css" />
     {% endblock %}
   </head>
-   <body class="tundra"> 
+   <body> 
         <div id="loadingMessage">Loading...</div>
         <div id="viewport">
             <div id="layoutTop">
                   <div class="topLinks">
                       <span id="username"></span> | 
+                      <a href="/evolve.html">evolve</a> | 
                       <a href="/speciesList.html">gene bank</a> |
-                      <a href="/about.html">about</a> | 
-                      <a href="/faq.html">faqs</a> |
+                      <a href="/findOutMore.html">find out more</a> | 
                       <a id="logoutLink" href="/account/logout/?next=/" >logout</a>
                       <a id="loginLink" href="/account/login/" >login or register</a>
                   </div>
@@ -48,33 +44,9 @@
         <div id="jslog"></div>
         {% block extraPage %}{% endblock %}
         <script type="text/javascript">
-            var djConfig = {
-                  parseOnLoad:true,
-                  baseUrl:"{{ MEDIA_URL }}dojo/"
-              };
             CORE = {};
             CORE.on_production_server = "{{on_production_server}}";
             CORE.mediaUrl = "{{ MEDIA_URL }}";
-            {% if on_production_server %}
-            {% else %}
-            {% if False %}
-            function getDependencies(layerName) {
-                for (var i=0;i<dependencies.layers.length;i++) {
-                   var layer=dependencies.layers[i];
-                   if (layerName==layer.name) {
-                      return layer.dependencies;
-                   }
-                }
-                return [];
-             }
-             function loadDependencies(layerName) {
-                 var deps=getDependencies(layerName);
-                 for (var i=0;i<deps.length;i++) {
-                     dojo.require(deps[i], true);
-                 }
-             }
-             {% endif %}
-             {% endif %}
         </script>
         {% block js %}{% endblock js %}
         <script>

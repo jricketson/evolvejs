@@ -1,6 +1,7 @@
 CORE.speciesList = function () {
    return {
       initialise: function() {
+         CORE.util.getUserProfile();
          $(window).scroll(function(e){
             $('div.box').each(function(){
                $(this).css({position:'absolute','top':$(document).scrollTop()});

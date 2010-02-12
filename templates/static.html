@@ -1,58 +1,20 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
-   <head>
-       <meta http-equiv="keywords" content="evolution,javascript" />
-       <meta http-equiv="description" content="Evolution of animals in javascript" />
-       <title>{% block title %}{% endblock %}evolve the future</title>
-        {% block css %}
-           {% if on_production_server %}
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}combined/static.css" />
-           {% else %}
-               <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}dijit/themes/tundra/tundra.css" />
-               <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}dojo/resources/dojo.css" />
-               <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}devStyle/static.css" />
-           {% endif %}
-        {% endblock css %}
-    </head>
-    <body> 
-    <div id="page">
-        <div id="header">
-            <div class="topLinks">
-                <a href="/about.html">about</a>
-                <a href="/evolve.html">evolve</a>
-                <a href="/account/register/" class="emphasise">sign up</a>
-                <a href="/account/login/">log in</a>
-            </div>
-            <span class="headerText"><a href="/">evolve the future</a></span> <span class="beta">(alpha)</span>
-            <div style="clear: both"></div>
-        </div>
-        <div id="contentDisplay">
-        {% block content %}
-        {% endblock content %}
-        </div>
-        <div class="bottomLinks">
-            <div>
-            </div>
-            <div>
-            </div>
-            <div style="clear:both"></div>
-        </div>
-    </div>
-{% block js %}{% endblock js %}
-    <script type="text/javascript">
-	var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-5647908-3']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script');
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 
-        'http://www') + '.google-analytics.com/ga.js';
-    ga.setAttribute('async', 'true');
-    document.documentElement.firstChild.appendChild(ga);
-  })();
-  
-    </script>
-   </body>
-</html>
-
+{% extends 'base.html' %}
+{% block css %}
+   {% if on_production_server %}
+        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}combined/static.css" />
+   {% else %}
+       <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}devStyle/static.css" />
+   {% endif %}
+{% endblock %}
+{% block js %}
+{% if on_production_server %}
+    <script type="text/javascript" src="{{ MEDIA_URL }}combined/static.js"></script>
+{% else %}
+    <script type="text/javascript" src="{{ MEDIA_URL }}jquery/jquery-1-4-1.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}jquery/jquery-log.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}evolve/core.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}evolve/static.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}evolve/dataAccess.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}evolve/util.js"></script>
+{% endif %}
+{% endblock %}

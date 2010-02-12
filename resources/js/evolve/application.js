@@ -104,7 +104,7 @@ CORE.evolve = {
    },
    _calculateMarkerSize : function() {
       $("#layoutCenter").height(
-            ($("#viewport").innerHeight() - $("#layoutTop").outerHeight() - 2) + "px");
+            ($("#viewport").innerHeight() - $("#layoutTop").outerHeight() - 12) + "px");
       var screenwidth = this._gridDisplay.width();
       var screenheight = this._gridDisplay.height();
       this._markerWidth = Math.round(screenwidth / CORE.environment.getGridX());
