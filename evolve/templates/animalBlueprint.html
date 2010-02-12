@@ -1,3 +1,26 @@
 {% extends 'static.html' %} {% block content %}
-show the layout of an animal and how one works.
+<h2>Animal properties</h2>
+An animal is a list of instructions (main-memory) and a set of threads each of which run with their own separate state.
+The animal has a number of properties some of which can be manipulated by instructions executed in a thread.
+<dl>
+<dd>cputime</dd><dt>How much cputime this animal has available. Each cycle, every animal receives an additional unit of cputime. If this ever runs out, the animal dies.</dt>
+<dd>gridX/Y</dd><dt>Each animal is in a certain coordinate in the space. No two animals are at the same location.</dt>
+<dd>facing</dd><dt>What direction are they facing.</dt>
+<dd>age</dd><dt>How many cycles this animal has lived.</dt>
+<dd>main memory</dd><dt>The animals genome.</dt>
+<dd>threads</dd><dt>all the threads executing in this animal.</dt>
+</dl> 
+<h2>Thread properties</h2>
+Each thread maintains it's own state. This state is made up of the following information.
+<dl>
+  <dt>stack</dt>  <dd>A stack that the thread can push and pop</dd>
+  <dt>counters</dt> <dd>A list of counters</dd>
+  <dt>short term memory</dt><dd>values stored by the animal</dd>
+  <dt>execution pointer</dt><dd>a pointer to the next instruction to execute</dd>
+  <dt>read pointer</dt><dd>a pointer to the next instruction to copy, also used for division</dd>
+  <dt>write pointer</dt><dd>a pointer to the next location to write to</dd>
+  <dt>speed</dt><dd>the number of instructions to execute per loop for this thread</dd>
+  <dt>sleep cycles left</dt><dd>this number > 0 if this thread is sleeping</dd>
+</dl>
+
 {% endblock %}
