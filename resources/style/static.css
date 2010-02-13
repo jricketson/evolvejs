@@ -12,3 +12,31 @@
 	padding-top: 1em;
 	font-size: 150%;
 }
+
+table#findOutMoreContent {
+	width:100%;
+}
+td {
+	vertical-align: top;
+}
+
+table#findOutMoreContent .index {
+ 	width:20%;
+ 	padding-right: 2em;
+}
+table#findOutMoreContent ul.nav{
+	padding:0 1em;
+}
+
+table#findOutMoreContent li{
+	padding-top: 0.5em;
+}
+
+table#api td {
+	padding:0.4em 0;
+	border-top: 1px dashed #444;
+}
+table#api ul {
+	padding:1em;
+	margin:0;
+}

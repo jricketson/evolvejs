@@ -21,7 +21,8 @@ var staticpage=[
             jquery,
             "jquery.jquery-log",
             "evolve.core",
-            "evolve.data",
+            "evolve.static",
+            "evolve.dataAccess",
             "evolve.util"
 ];
 var foreign = [
