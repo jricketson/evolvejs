@@ -1,4 +1,4 @@
-{% extends "findOutMore.html" %}{% block help_content %}
+{% extends "index.html" %}{% block help_content %}
 <h2>Assembly Instruction Set</h2>
 <table id="api">
 <tr>
@@ -135,7 +135,8 @@ If either the read or write pointers point outside of allocated memory, then the
 <td>alloc</td>
 <td>Attempts to allocate memory at the end of this animal. The amount of space requested is popped from the stack.
 The allocation only occurs if the animal has enough cputime to afford this allocation. Allocation costs 5*request_size.
-The boolean result of allocation is pushed to the stack.</td>
+The boolean result of allocation is pushed to the stack.
+If the stack is empty, then no memory is allocated, and true is pushed on the stack.</td>
 </tr>
 <tr>
 <td>divideProcess</td>

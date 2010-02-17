@@ -251,6 +251,10 @@ CORE.vm.instructionSet = {
       thread.stack.push(thread.process.cputime);
       thread.executionPtr += 1;
    },
+   pushSpeciesHashcode : function pushSpeciesHashcode(thread, operand) {
+      thread.stack.push(thread.process.species.hashcode);
+      thread.executionPtr += 1;
+   },
    pushReadPtr : function pushReadPtr(thread, operand) {
       thread.stack.push(thread.readPtr);
       thread.executionPtr += 1;
@@ -329,6 +333,16 @@ CORE.vm.instructionSet = {
       }
       thread.executionPtr += 1;
    },
+   eq : function eq(thread) {
+      var a = thread.stack.pop();
+      var b = thread.stack.pop();
+      if (a === undefined || b === undefined) {
+         thread.stack.push(0);
+      } else {
+         thread.stack.push((b == a) / 1);
+      }
+      thread.executionPtr += 1;
+   },
    ifDo : function ifDo(thread, operand) {
       var a = thread.stack.pop();
       if (a) {
@@ -389,16 +403,18 @@ CORE.vm.instructionSet = {
    },
    alloc : function alloc(thread, operand) {
       var a = thread.stack.pop();
-      var success;
-      if (thread.process.cputime > a) {
-         thread.process.decrCpuTime(a);
-         var finalLength = thread.process.memory.length + a;
-         for ( var ii = thread.process.memory.length; ii < finalLength; ii += 1) {
-            thread.process.memory[ii] = 0;
+      var success = true;
+      if (a !== undefined) {
+         var cost = CORE.environment.embodiedEnergy * a;
+         if (thread.process.cputime > cost) {
+            thread.process.decrCpuTime(cost);
+            var finalLength = thread.process.memory.length + a;
+            for ( var ii = thread.process.memory.length; ii < finalLength; ii += 1) {
+               thread.process.memory[ii] = 0;
+            }
+         } else {
+            success = false;
          }
-         success = true;
-      } else {
-         success = false;
       }
       thread.stack.push(success);
       thread.executionPtr += 1;
@@ -422,6 +438,7 @@ CORE.vm.instructionSet = {
          var otherProcess = CORE.environment.getProcessAtPosition(coords[0],
                coords[1]);
          if (otherProcess !== null) {
+            thread.stack.push(otherProcess.species.hashCode);
             thread.stack.push(otherProcess.memory.length);
             thread.stack.push(otherProcess.cputime);
             thread.stack.push(i + 1);
@@ -430,6 +447,9 @@ CORE.vm.instructionSet = {
          }
       }
       if (!found) {
+         thread.stack.push(0);
+         thread.stack.push(0);
+         thread.stack.push(0);
          thread.stack.push(-1);
       }
       thread.executionPtr += 1;
@@ -486,6 +506,7 @@ CORE.vm.instructionCodes = {
    33 : CORE.vm.instructionSet.pushCounter,
    5 : CORE.vm.instructionSet.pushMemSize,
    27 : CORE.vm.instructionSet.pushCpuTime,
+   5 : CORE.vm.instructionSet.pushSpeciesHashcode,
    6 : CORE.vm.instructionSet.pushWritePtr,
    7 : CORE.vm.instructionSet.pushReadPtr,
    8 : CORE.vm.instructionSet.jmpReadPtrB,
@@ -509,7 +530,8 @@ CORE.vm.instructionCodes = {
    36 : CORE.vm.instructionSet.turnL,
    24 : CORE.vm.instructionSet.move,
    25 : CORE.vm.instructionSet.sleep,
-   35 : CORE.vm.instructionSet.setSpeed
+   35 : CORE.vm.instructionSet.setSpeed,
+   36 : CORE.vm.instructionSet.eq
 };
 
 // This contains a methodName -> code mapping

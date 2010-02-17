@@ -2,12 +2,15 @@ CORE.speciesList = function () {
    return {
       initialise: function() {
          CORE.util.getUserProfile();
-         $(window).scroll(function(e){
+         /*$(window).scroll(function(e){
             $('div.box').each(function(){
                $(this).css({position:'absolute','top':$(document).scrollTop()});
             });
             $.dropManage();
-         });
+         });*/
+         this._windowResized();
+         $(window).resize($.proxy(this._windowResized, this));
+
          $('div.box').each(function(){
             var pos = $(this).position();
             $(this).css('left',pos.left);
@@ -31,6 +34,12 @@ CORE.speciesList = function () {
             CORE.data.getSingleSpecies($(event.dragProxy).attr("data-key"), $.proxy(CORE.speciesList._displayAncestorCallback,CORE.speciesList));
             $(event.dragProxy).fadeOut().remove();
          });
+      },
+      _windowResized: function() {
+         $("#layoutCenter").height(
+               ($("#viewport").innerHeight() - $("#layoutTop").outerHeight() - 21) + "px");
+         $("#speciesList").height(($("#layoutCenter").innerHeight()-20) + "px");
+         $("#boxContainer").height(($("#layoutCenter").innerHeight()-20) + "px");
       },
       _documentScrolled: function(e) {
          $.debug(e);
@@ -102,4 +111,4 @@ CORE.speciesList = function () {
 }();
 
 
-jQuery(document).ready(CORE.speciesList.initialise);
+jQuery(document).ready($.proxy(CORE.speciesList.initialise,CORE.speciesList));

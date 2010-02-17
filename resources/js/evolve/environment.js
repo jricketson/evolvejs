@@ -4,7 +4,7 @@ CORE.environment = {
    // *****************************************
    _gridX : 80, // these are default values
    _gridY : 40,
-   _timeDelay : 20, // time to delay between simulation cycles
+   _timeDelay : 50, // time to delay between simulation cycles
    _instructionsPerCycle : 50,
    _running : false, // if the simulation should keep running
    _INITIAL_POPULATION_SIZE_FROM_SERVER : 15,
@@ -21,6 +21,7 @@ CORE.environment = {
 
    _startTime : 0,
    _stepping : false,
+   _slow: false,
 
    _serialProcessIdSeries : Number(new Date()), // initialise to an essentially random number
    NORTH : 0,
@@ -217,7 +218,7 @@ CORE.environment = {
          this.stepCount++;
          if (this._currentThreadExecuteIndex >= this._runningThreads.length) {
             this._endLoop();
-            if (this._stepping) {
+            if (this._stepping || this._slow) {
                break;
             }
          }
@@ -256,6 +257,14 @@ CORE.environment = {
    start : function() {
       this._running = true;
       this._stepping = false;
+      this._slow = false;
+      this._runSimulationLoop();
+      this._resetCpuRate();
+   },
+   slow : function() {
+      this._running = true;
+      this._stepping = false;
+      this._slow = true;
       this._runSimulationLoop();
       this._resetCpuRate();
    },

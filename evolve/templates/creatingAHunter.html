@@ -1,0 +1,191 @@
+{% extends "index.html" %}{% block help_content %}
+<h2>Assembly Instruction Set</h2>
+This is version 7 of my hunter. 
+All of the previous hunters had major problems that meant that they just didn't compete very well against trees and blind animals.
+<h3>My first hunter</h3>
+My first hunter was two-threaded (one reproduction, the other looking and movement). 
+To start, it's reproduction thread would go to sleep for about 400 cycles.
+The hunting thread would look around, and if it didn't see anything, then it would move forward and look around again. 
+If it found something that it could attack and kill, then it would move to that location.
+<p>
+One problem with this was that if it spotted a blindAnimal that was moving away from it, it would never quite catch it. 
+So they often died of starvation with prey just out of reach. 
+<p>
+Another problem was that the child or the mother would often eat each other, so I included a sequence of move and turn instructions to try and take the child out of line-of-sight.
+This of course only makes the animal longer.
+<p>
+And another problem: the animal would attack animals that it would cost more to attack, than it would get from eating their corpse.
+<p>
+So these animals, even though faster and smarter, were out-competed by the dumb and small ones almost every time.
+<h3>New ideas for this one</h3>
+I am going to try and incorporate some new ideas in this one, which I hope will mean that it can finally take over the world.
+<ol>
+<li>No cannibalism. The hunter will attempt to detect if the prey is the same species, and if it is then it will find other prey.</li>
+<li>Go fast. If the hunter has a lot of cputime built up, then it will start reproducing and hunting faster.</li>
+<li>Only attack an animal if there is a net benefit.</li>
+</ol>
+
+<div class="codeBlockExplanation">
+Run the hunter thread at nop/3.
+<pre>
+["nop", 10],
+["jmpReadPtrF", 3],
+["runThread", 0],
+</pre>
+</div>
+<div class="codeBlockExplanation">
+If cputime is less than 3000, then sleep(400).
+If cputime is greater than 10000, then setSpeed(2), otherwise setSpeed(1).
+<pre>
+["nop", 5],
+["pushCpuTime", 0],
+["push", 3000],
+["lt", 0],
+["ifDo", 27],
+["sleep", 400],
+["jmpB",5],
+["nop", 27],
+["pushCpuTime", 0],
+["push", 10000],
+["gte", 0],
+["ifDo", 25],
+["setSpeed", 2],
+["jmpF",26],
+["nop", 25],
+["setSpeed", 1],
+["nop", 26],
+</pre>
+</div>
+<div class="codeBlockExplanation">
+This is a pretty standard reproduction loop. Have a look at <a href="anatomyOfaTree.html">How a tree works</a> for a refresher.
+The only difference is, that this doesn't attempt to sleep if division fails, instead it tries to move to a new spot.
+
+<pre>
+["jmpReadPtrB", 10],
+["jmpWritePtrF", 2],
+["nop", 201],
+["pushMemSize", 0],
+["alloc", 0],
+["ifNotDo", 200],
+["sleep", 400],
+["jmpB", 201],
+["nop", 200],
+["incWritePtr", 0],
+["nop", 4],
+["copy", 0],
+["incReadPtr", 0],
+["incWritePtr", 0],
+["pushWritePtr", 0],
+["pushMemSize", 0],
+["lt", 0],
+["ifDo", 6],
+["jmpB", 4],
+["nop", 6],
+
+["divide", 0],
+["ifDo", 21],
+["jmpB", 5],
+["nop", 21],
+["turnR", 0],
+["move", 0],
+["jmpB", 6],
+</pre>
+</div>
+<div class="codeBlockExplanation">
+This is the start of the hunter thread. This is nop/3 where we jumped the read pointer right at the start.
+Almost the first thing we do, (from line 4) is check if we can make this thread go fast too.
+
+<pre>
+["nop", 3],
+["resetCounter", 3],
+["pushCpuTime", 0],
+["push", 4000],
+["gte", 0],
+["ifDo", 24],
+["setSpeed", 2],
+["jmpF",7],
+["nop", 24],
+["setSpeed", 1],
+</pre>
+</div>
+<div class="codeBlockExplanation">
+Look straight ahead, and store the distance and cputime of the target into short-term-memory (0 and 1 respectively).
+Then on line 4, we put the distance (from memory[0]) back on the stack and compare to 0.
+If we didn't see an animal, then we jump to nop/8 (line 7).
+If we did see an animal, then we put the targets cputime back on the stack and compare it to our cputime to see if we would win.
+Check that the targets cputime is less than ours.
+<p>
+I also implement the 'no cannibalise' test here. My first attempt was to check it's memory size, but unfortunately this just didn't work very well.
+Pregnant animals were often attacked by animals that weren't and vice versa. 
+So, I changed the <i>look</i> method to include the species hashcode, and implemented a 'pushSpeciesHashcode' method too.
+ 
+<pre>
+["nop", 7],
+["look", 0],
+["popM", 0],
+["popM", 1],
+["popM", 2],
+["popM", 3],
+
+["pushM", 0],
+["push", 0],
+["lt", 0],
+["ifNotDo", 8],
+
+["pushM", 1],
+["pushCpuTime", 0],
+["lt", 0],
+["ifDo", 8],
+
+["pushM", 2],
+["mult", 5],
+["pushM", 1],
+["gte", 0],
+["ifDo", 8],
+
+["pushM", 3],
+["pushSpeciesHashcode", 0],
+["eq", 0],
+["ifDo", 9],
+</pre>
+</div>
+<div class="codeBlockExplanation">
+This is the 'else' clause. 
+If we didn't find an appropriate animal to attack, then turnR, increment the counter and check if we have looked at all 4 directions from this spot.
+If we have looked all around, then move forward and reset the look counter.
+
+<pre>
+["nop", 8],
+["turnR", 0],
+["incCounter", 3],
+["pushCounter", 3],
+["push", 4],
+["gte", 0],
+["ifDo", 22],
+["move", 0],
+["jmpB", 3],
+["nop", 22],
+["jmpB", 7],
+</pre>
+</div>
+<div class="codeBlockExplanation">
+This is the move_to_target function.
+It compares memory[0] to counter[2], and if it hasn't moved enough, then it moves.
+Otherwise, it jumps back to nop/7, to start looking again.
+<pre>
+["nop", 9],
+["resetCounter", 2],
+["nop", 1],
+["pushM", 0],
+["incCounter", 2],
+["pushCounter", 2],
+["lt", 0],
+["ifDo", 23],
+["jmpB", 7],
+["nop", 23],
+["move", 0],
+["jmpB", 1],
+["nop", 2]
+</pre>
+</div>
+{% endblock %}

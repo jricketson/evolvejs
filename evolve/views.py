@@ -31,7 +31,7 @@ def speciesList(request):
 #The randomFloat field automatically randomises on a put
 def randomiseSpecies(request):
     def fn(p):
-        pass
+        return p
     query = Species.all()
     return taskqueue.executeByPage(request, query, fn, reverse(randomiseSpecies))
 

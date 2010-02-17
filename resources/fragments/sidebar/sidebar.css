@@ -74,3 +74,8 @@
 #sidebar div.pane.collapsed .content {
 	display: none;
 }
+
+#sidebar div.code {
+	overflow: auto;
+	max-height: 500px;
+}

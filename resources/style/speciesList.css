@@ -4,8 +4,13 @@ div#speciesList {
    float:left;
 }
 
+div#boxContainer {
+	float:left;
+	overflow: auto;
+	width: 950px;
+}
 div.box {
-   float:left;
+	float:left;
    text-align: left;
    margin: 0 0 10px 10px;
    overflow: none;
@@ -58,6 +63,7 @@ div.species.thisSpecies {
 #speciesList {
 	font-size: 1.2em;
 	position: relative;
+	overflow: auto;
 }
 
 #speciesList td {

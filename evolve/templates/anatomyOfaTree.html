@@ -1,4 +1,4 @@
-{% extends "findOutMore.html" %}{% block help_content %}
+{% extends "index.html" %}{% block help_content %}
 <h2>Writing your first animal</h2>
 Animals here are written in a custom assembly code for a stack machine. 
 The code is written in JSON literal array form as an array of arrays.
@@ -25,7 +25,8 @@ Before an animal can start writing the childs genome, it must first allocate mem
 Allocation has an expense (5*requested size) in cputime, and this allocation will fail if the animal does not have enough cputime.
 So, checking if allocation succeeded is probably a good idea, and if it failed the animal can sleep to try and build up more cputime.
 </p>
-<p>
+
+<div class="codeBlockExplanation">
 Ignore line 1 for the moment.
 <i>Alloc</i> allocates space at the end of the animal, the amount of memory to allocate is popped from the stack.
 So <i>pushMemSize</i> puts the current animals memory size on the stack. 
@@ -34,7 +35,6 @@ So <i>pushMemSize</i> puts the current animals memory size on the stack.
 If true, execution jumps to <i>[&quot;nop&quot;,200]</i>.
 If allocation fails, line 5 tells the animal to sleep for 450 loops, and then line 6 <i>jmp</i>s back to <i>[&quot;nop&quot;,5]</i> to try allocation again.  
 
-</p>
 <pre>
 ["nop", 5],
 ["pushMemSize", 0], 
@@ -44,15 +44,19 @@ If allocation fails, line 5 tells the animal to sleep for 450 loops, and then li
 ["jmpB", 5],
 ["nop",200],
 </pre>
+</div>
+<div class="codeBlockExplanation">
 All of the jmp* instructions move a particular pointer to point to a named nop instruction.
 On line 1 we are moving the read pointer to the start of the animal, and on line 2 and 3 we are moving the write pointer to the end of the animal, and then 1 past that, into the newly allocated space.
 
-<h3>Write the child</h3>
 <pre>
 ["jmpReadPtrB", 5],
 ["jmpWritePtrF", 2],
 ["incWritePtr", 0],
 </pre>
+</div>
+<h3>Write the child</h3>
+<div class="codeBlockExplanation">
 Here is the actual copy loop. Line 2 copies from the read pointer to the write pointer. 
 Then on line 3 and 4 the read and write pointers are incremented.
 On line 5 and 6, the current write pointer and total memory length are pushed to the stack.
@@ -60,7 +64,7 @@ Line 7 pops and compares those two values and puts back a boolean.
 On line 8, if we are finished (false), jump the execution pointer to <i>[&quot;nop&quot;,6]</i>, and finish the copy loop.
 If we aren't finished, then <i>jmpB</i> to <i>[&quot;nop&quot;,1]</i>.
 <pre>
-["nop", 1], // start copy loop
+["nop", 1],
 ["copy", 0], 
 ["incReadPtr", 0], 
 ["incWritePtr", 0],
@@ -71,7 +75,9 @@ If we aren't finished, then <i>jmpB</i> to <i>[&quot;nop&quot;,1]</i>.
 ["jmpB", 1],
 ["nop", 6], 
 </pre>
+</div>
 <h3>Divide</h3>
+<div class="codeBlockExplanation">
 Attempt to divide, and check success. If it worked, then <i>jmpB</i> all the way to the start of the animal. 
 The new animal has been placed in front of this animal.
 <i>Divide</i> won't work if there is no available space to put the child.
@@ -95,6 +101,7 @@ If after 4 times it still fails, then it <i>sleep</i>s for 450 loops, and then t
 ["jmpB", 6],
 ["nop", 2] 
 </pre>
+</div>
 
 <h2>Run your animal</h2>
 In the sidebar there is a section "Create a New Species", put your animal's code here to test it out. The name that you choose will be given to this animal and all descendants of this animal.

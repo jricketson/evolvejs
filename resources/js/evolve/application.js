@@ -64,6 +64,14 @@ CORE.evolve = {
          $(this).hide();
          $("#pause").show();
          $("#step").hide();
+         $("#slow").hide();
+      });
+      $("#slow").click( function() {
+         CORE.environment.slow();
+         $(this).hide();
+         $("#pause").show();
+         $("#play").hide();
+         $("#step").hide();
       });
       $("#step").click( function() {
          CORE.environment.step();
@@ -73,6 +81,7 @@ CORE.evolve = {
          $(this).hide();
          $("#play").show();
          $("#step").show();
+         $("#slow").show();
       });
       // initialise the environment
       $("#layoutCenter").createGadget("sidebar", $.proxy(this._sidebarCreatedCallback,this), {
@@ -104,11 +113,11 @@ CORE.evolve = {
    },
    _calculateMarkerSize : function() {
       $("#layoutCenter").height(
-            ($("#viewport").innerHeight() - $("#layoutTop").outerHeight() - 12) + "px");
-      var screenwidth = this._gridDisplay.width();
-      var screenheight = this._gridDisplay.height();
-      this._markerWidth = Math.round(screenwidth / CORE.environment.getGridX());
-      this._markerHeight = Math.round(screenheight / CORE.environment.getGridY());
+            ($("#viewport").innerHeight() - $("#layoutTop").outerHeight() - 3) + "px");
+      this._markerWidth = Math.floor(this._gridDisplay.innerWidth() / CORE.environment.getGridX());
+      this._markerHeight = Math.floor(this._gridDisplay.innerHeight() / CORE.environment.getGridY());
+      $.debug("width", this._markerWidth, this._gridDisplay.innerWidth() / CORE.environment.getGridX());
+      $.debug("height", this._markerHeight, this._gridDisplay.innerHeight() / CORE.environment.getGridY());
 
       var marker, process;
       var markers = this._gridDisplay.find(".process");
@@ -119,7 +128,7 @@ CORE.evolve = {
          if (process !== undefined) {
             marker.css( {
                top : this._markerHeight * process.gridY,
-               left : (this._markerWidth * process.gridX),
+               left : this._markerWidth * process.gridX,
                height : this._markerHeight - 1,
                width : this._markerWidth - 1
             });
@@ -258,6 +267,7 @@ CORE.evolve = {
           '<tr><td>execution pointer</td><td><div class="executionPointer"></div></td></tr>' +
           '<tr><td>read pointer</td><td><div class="readPointer"></div></td></tr>' +
           '<tr><td>write pointer</td><td><div class="writePointer"></div></td></tr>' +
+          '<tr><td>sleep</td><td><div class="sleepCycles"></div></td></tr>' +
           '<tr><td>speed</td><td><div class="speed"></div></td></tr>' + '</table>' + '</div>',
 
    _updateProcessDisplay : function updateProcessDisplay() {
@@ -274,6 +284,7 @@ CORE.evolve = {
          tab.find("div.name").html(process.name);
          tab.find("div.age").html(process.age);
          tab.find("div.facing").html(process.facing);
+         tab.find("div.memoryLength").html(process.memory.length);
          var displayableCode = CORE.assembler.makeDisplayableHtml(process.memory);
          if (tab.find("div.code").html() != displayableCode) {
             //don't update it with the same content. Makes it hard to select the text if it keeps getting updated
@@ -341,7 +352,7 @@ CORE.evolve = {
       speciesEntry.div.css( {
          background : colour
       });
-      this._gridDisplay.find('.process.species' + divClicked.id).css( {
+      this._gridDisplay.find('.process.species' + species.id).css( {
          background : colour
       });
    }
