@@ -1,0 +1,17 @@
+{% extends "static.html" %}
+{% block title %}{{post.title}} - {% endblock title %}
+{% block headerextra %}
+<link rel="alternate" type="application/atom+xml" href="/blog/feeds/atom.xml" />
+{% endblock %}
+
+{% block content %}
+<div class="main-content grid_8">
+	<div class="post">
+		<h2><a href="{% url blog.views.post post.path %}">{{post.title}}</a></h2>
+		<small>{{post.published|date:"F jS, Y"}}</small>
+		<div class="entry">
+			{{post.body|safe}}
+		</div>
+   </div>
+</div>
+{% endblock content %}

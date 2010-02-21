@@ -116,8 +116,6 @@ CORE.evolve = {
             ($("#viewport").innerHeight() - $("#layoutTop").outerHeight() - 3) + "px");
       this._markerWidth = Math.floor(this._gridDisplay.innerWidth() / CORE.environment.getGridX());
       this._markerHeight = Math.floor(this._gridDisplay.innerHeight() / CORE.environment.getGridY());
-      $.debug("width", this._markerWidth, this._gridDisplay.innerWidth() / CORE.environment.getGridX());
-      $.debug("height", this._markerHeight, this._gridDisplay.innerHeight() / CORE.environment.getGridY());
 
       var marker, process;
       var markers = this._gridDisplay.find(".process");

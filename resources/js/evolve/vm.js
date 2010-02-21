@@ -506,7 +506,7 @@ CORE.vm.instructionCodes = {
    33 : CORE.vm.instructionSet.pushCounter,
    5 : CORE.vm.instructionSet.pushMemSize,
    27 : CORE.vm.instructionSet.pushCpuTime,
-   5 : CORE.vm.instructionSet.pushSpeciesHashcode,
+   37 : CORE.vm.instructionSet.pushSpeciesHashcode,
    6 : CORE.vm.instructionSet.pushWritePtr,
    7 : CORE.vm.instructionSet.pushReadPtr,
    8 : CORE.vm.instructionSet.jmpReadPtrB,

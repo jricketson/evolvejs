@@ -28,6 +28,10 @@ table#findOutMoreContent ul.nav{
 	padding:0 1em;
 }
 
+table#findOutMoreContent td.news {
+	width: 30%;
+}
+
 table#findOutMoreContent li{
 	padding-top: 0.5em;
 }

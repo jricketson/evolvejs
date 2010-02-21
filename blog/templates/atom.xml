@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+ 
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title type="text">Igloo news</title>
+    <subtitle type="html">igloo at igloohq - igloo serves ads</subtitle>
+    <updated>{{posts.0.updated}}</updated>
+    <id>tag:www.igloohq.com,2009:atom.xml</id>
+    <link rel="alternate" type="text/html" hreflang="en" href="http://www.igloohq.com/blog/" />
+    <link rel="self" type="application/atom+xml" href="http://www.igloohq.com/blog/feeds/atom.xml" />
+    <rights>Copyright (c) 2009</rights>
+    <generator uri="http://www.igloohq.com/" version="1.0">
+        igloo blog 1.0
+    </generator>
+    {% for post in posts %}
+    <entry>
+        <title>{{post.title}}</title>
+        <link rel="alternate" type="text/html" href="http://www.igloohq.com{% url blog.views.post post.path %}" />
+        <id>tag:www.igloohq.com,2009:post:{{post.key.id}}</id>
+        <updated>{{post.updated|date:"Y-m-d\TH:i:s\Z"}}</updated>
+        <published>{{post.published|date:"Y-m-d\TH:i:s\Z"}}</published>
+        <author>
+            <name>Jonathan</name>
+            <uri>http://www.igloohq.com/</uri>
+        </author>
+        <content type="html">
+            {{post.body|escape}}
+        </content>
+    </entry>
+    {% endfor %}
+</feed>
+ 

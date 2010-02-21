@@ -1,0 +1,15 @@
+{% block content %}
+<div class="main-content grid_8">
+	{% for post in posts %}
+	<div class="post">
+		<h2><a href="{% url blog.views.post post.path %}">{{post.title}}</a></h2>
+		<small>{{post.published|date:"F jS, Y"}}</small>
+		<div class="entry">
+			{{post.body|safe|truncatewords_html:100}}
+		</div>
+		<a href="{% url blog.views.post post.path %}">Read more</a>
+   </div>
+	<div class="hr"></div>
+   {% endfor %}
+</div>
+{% endblock content %}
