@@ -17,7 +17,6 @@ AuthenticationForm.base_fields['username'].label = "Email"
 handler500 = 'ragendja.views.server_error'
 
 thesePatterns = patterns('django.views.generic.simple',
-                       (r'^$', 'direct_to_template', {'template': 'index.html'}),
                        (r'^runTests.html$', 'direct_to_template', {'template': 'tests/run-tests.html'}),
                        )
 

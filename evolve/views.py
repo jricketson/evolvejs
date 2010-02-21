@@ -13,6 +13,8 @@ from google.appengine.api import users
 
 from models import Species
 import taskqueue
+import blog.views as blog_views
+import logging
 
 from appenginepatcher import on_production_server
 if on_production_server:
@@ -35,7 +37,14 @@ def randomiseSpecies(request):
     query = Species.all()
     return taskqueue.executeByPage(request, query, fn, reverse(randomiseSpecies))
 
+def index(request):
+    logging.debug(blog_views.index(request).content)
+    return render_to_response("index.html",
+                              {"blog_content":blog_views.index(request).content},
+                              context_instance=RequestContext(request))
+
 def static(request, template_name):
+    logging.debug(template_name)
     try:
         return direct_to_template(request, template_name)
     except TemplateDoesNotExist:

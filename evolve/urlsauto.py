@@ -8,8 +8,10 @@ migrationpatterns = patterns("evolve.migrate",
 )
 
 rootpatterns = migrationpatterns + patterns('evolve.views',
-                       (r'^admin/clearCache$', 'clearCache'),
+                       (r'^index.html$', 'index'),
+                       (r'^$', 'index'),
                        (r'^speciesList.html$', 'speciesList'),
                        (r'^cron/randomiseSpecies$', 'randomiseSpecies'),
+                       (r'^admin/clearCache$', 'clearCache'),
                        (r'^(?P<template_name>[^/]+)$', 'static'),
 )
