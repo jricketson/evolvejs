@@ -16,7 +16,7 @@ CORE.environment = {
 
    _loopCount : 0, // number of instructions executed
    stepCount :0,
-
+   unsentStepCount:0,
    embodiedEnergy : 5,
 
    _startTime : 0,
@@ -71,6 +71,7 @@ CORE.environment = {
       CORE.data.getSpecies(this._INITIAL_POPULATION_SIZE_FROM_SERVER,
             $.proxy(this._getSpeciesCallback,this));
       setInterval($.proxy(this._resetCpuRate,this), 500);
+      setInterval($.proxy(this._sendCpuTimeUsed,this), 6000);
    },
 
    _initialisePopulation : function(population) {
@@ -236,10 +237,17 @@ CORE.environment = {
       }
 
    },
+   _sendCpuTimeUsed : function() {
+      if (this.unsentStepCount >0) {
+         CORE.data.putCpuTime(this.unsentStepCount);
+         this.unsentStepCount=0;
+      }
+   },
    _resetCpuRate : function() {
       var secsSinceStart = (Number(new Date()) - this.getStartTime()) / 1000;
       this.current_rate = Math.round(this.stepCount / secsSinceStart);
       this.resetStartTime();
+      this.unsentStepCount+=this.stepCount;
       this.stepCount=0;
    },
 // *****************************************

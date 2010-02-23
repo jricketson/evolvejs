@@ -10,6 +10,7 @@ CORE.data = {
       return value;
    },
    SPECIES_URL : "/data/species/",
+   CPUTIME_URL : "/data/cputime/",
    saveSpecies : function saveSpecies(species,callback) {
       var postData = {
          "code" : CORE.assembler.convertCodeToString(species.code),
@@ -28,6 +29,9 @@ CORE.data = {
    putScore : function(species, score, callback) {
       $.get(this.SPECIES_URL + "addScore/" + species.pk + "/?score=" + score, callback);
       species.scoreList.push(score);
+   },
+   putCpuTime : function(amount, callback) {
+      $.post(this.CPUTIME_URL, {time:amount}, callback);
    },
    getSingleSpecies : function(id, callback) {
       $.getJSON(this.SPECIES_URL + "id/" + id + "/", callback);

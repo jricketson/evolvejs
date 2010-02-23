@@ -2,6 +2,7 @@ from ragendja.settings_post import settings
 
 settings.REST_CONTROLLERS["species"]="evolve.restfulControllers.SpeciesRestfulController"
 settings.REST_CONTROLLERS["user"]="evolve.restfulControllers.UserRestfulController"
+settings.REST_CONTROLLERS["cputime"]="evolve.restfulControllers.CpuTimeRestfulController"
 
 settings.TEMPLATE_CONTEXT_PROCESSORS += (
      'django.core.context_processors.request',

@@ -10,10 +10,19 @@ from restful.restfulController import RestfulController
 
 from models import *
 
+class CpuTimeForm(ModelForm):
+    class Meta:
+        model = CpuTime
+        fields =('time',)
+
+class CpuTimeRestfulController(RestfulController):
+    modelClass = CpuTime
+    formClass = CpuTimeForm
+    
 class SpeciesForm(ModelForm):
     class Meta:
         model = Species
-        exclude =('randomFloat','scoreList', 'score', 'scoreCount','validScore','created','version','timesEvolved','uniqueName')
+        fields =('code', 'name', 'count',)
     def clean(self):
         super(SpeciesForm, self).clean()
 

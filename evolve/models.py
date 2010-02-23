@@ -23,6 +23,9 @@ class AbstractModel(db.Model):
 class AbstractOwnedModel(AbstractModel):
     owner = db.ReferenceProperty(User)
 
+class CpuTime(AbstractOwnedModel):
+    time = db.IntegerProperty(required=True)
+
 class Species(AbstractOwnedModel):
     name = db.StringProperty()
     count = db.IntegerProperty()
