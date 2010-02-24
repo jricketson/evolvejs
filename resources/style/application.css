@@ -125,3 +125,25 @@ div#messages .msg{
 .clear {
 	clear: both;
 }
+
+#encourageLogin {
+	display: none;
+}
+#encourageLogin .content {
+	border: 2px dashed grey;
+	padding: 2em;
+	position: absolute;
+	top: 20%;
+	left: 30%;
+	z-index: 100;
+	background-color: white;
+	width: 40%;
+	opacity:2;
+	font-size: 130%;
+}
+#encourageLogin ul {
+	margin: 0.5em 1.5em;
+}
+#encourageLogin li {
+list-style-type: circle;
+}

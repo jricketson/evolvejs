@@ -45,17 +45,18 @@ CORE.evolve = {
    initialise : function() {
       // hide the title after 10 secs, or the user clicks
       setTimeout(this._hideTitle, 10000);
-      CORE.data.getUserProfile( function(userProfile) {
+      CORE.data.getUserProfile($.proxy(function(userProfile) {
          CORE.userProfile = userProfile;
          if (CORE.userProfile === null) {
             $('#logoutLink').hide();
             $('#loginLink').show();
+            this._showEncourageLogin();
          } else {
             $("#username").html(CORE.userProfile.username);
             $('#logoutLink').show();
             $('#loginLink').hide();
          }
-      });
+      }, this));
       $("div#ft").click(this._hideTitle);
 
       // links for the user to start the simulation. These swap themselves
@@ -88,6 +89,18 @@ CORE.evolve = {
                method : "append"
             });
    },
+   _showEncourageLogin : function() {
+      $("div#encourageLogin").show();
+      var close = function(){
+         $("div#encourageLogin").hide();
+      };
+      setTimeout(close, 10000);
+      $("div#encourageLogin button.close").click(close);
+      $("div#encourageLogin button.login").click(function(){
+         location.href="/account/login/";
+      });
+   },
+   
    _sidebarCreatedCallback : function(gadget) {
       this.sidebar = gadget;
       CORE.environment.initialise();
