@@ -8,8 +8,7 @@
 }
 
 #layoutCenter {
-	padding-left: 1em;
-	padding-top: 1em;
+	padding:1em;
 	font-size: 150%;
 }
 
@@ -49,4 +48,8 @@ div.codeBlockExplanation {
 	padding: 0.5em 1em;
 	margin-top: 1em;
 	margin-right:1em;
+}
+
+a img {
+	border: none;
 }

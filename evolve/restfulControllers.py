@@ -1,14 +1,17 @@
 import random
+import datetime
 
 from django.forms import ModelForm
 from django.forms.util import ErrorList
 from django.core.paginator import Paginator
+from django.core.urlresolvers import reverse
 
 from google.appengine.api import users
 
 from restful.restfulController import RestfulController
 
 from models import *
+import taskqueue
 
 class CpuTimeForm(ModelForm):
     class Meta:
@@ -47,6 +50,8 @@ class SpeciesRestfulController(RestfulController):
         return super(SpeciesRestfulController, self).create()  
 
     def list (self, offset, limit):
+        #every time a list is requested, it attempts to add a task, this should fail, if it attempts to do it more than every minute
+        taskqueue.addTask(url=reverse("evolve.views.randomiseSpecies"), queueName=taskqueue.BACKGROUND_QUEUE, name=datetime.datetime.now().strftime("%Y%m%d%H%M"))
         return self.modelClass.all().order("-score").order("randomFloat").fetch(int(limit),0)
     
     def children (self, key):

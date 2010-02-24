@@ -71,7 +71,7 @@ CORE.environment = {
       CORE.data.getSpecies(this._INITIAL_POPULATION_SIZE_FROM_SERVER,
             $.proxy(this._getSpeciesCallback,this));
       setInterval($.proxy(this._resetCpuRate,this), 500);
-      setInterval($.proxy(this._sendCpuTimeUsed,this), 6000);
+      setInterval($.proxy(this._sendCpuTimeUsed,this), 60000);
    },
 
    _initialisePopulation : function(population) {
@@ -240,6 +240,7 @@ CORE.environment = {
    _sendCpuTimeUsed : function() {
       if (this.unsentStepCount >0) {
          CORE.data.putCpuTime(this.unsentStepCount);
+         CORE.displayMessage("{cpucycles}k cpu cycles sent to server".supplant({cpucycles:Math.round(this.unsentStepCount/1000)}));
          this.unsentStepCount=0;
       }
    },

@@ -7,17 +7,13 @@ handlers:
 - url: /media
   static_dir: media/
 
-- url: /fragments/(.*\.html)
-  static_files: compiled/evolve/fragments/\1
-  upload: compiled/evolve/fragments/(.*\.html)
-
 - url: /robots.txt
-  static_files: compiled/evolve/robots.txt
-  upload: compiled/evolve/robots.txt
+  static_files: media/robots.txt
+  upload: media/robots.txt
 
 - url: /favicon.ico
-  static_files: compiled/evolve/image/favicon.gif
-  upload: compiled/evolve/images/favicon.ico
+  static_files: media/favicon.ico
+  upload: media/favicon.ico
 
 - url: /remote_api_abcddd
   script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py

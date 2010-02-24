@@ -9,14 +9,17 @@ MAIL_QUEUE = 'mail-queue'
 BACKGROUND_QUEUE = 'background-processing'
 FETCH_LIMIT=50
 
-def addTask(url, params={}, queueName='default'):
+def addTask(url, params={}, queueName='default', **kw):
     try:
         logging.info("add task to %s [%s]" % (queueName, (url,params)))
-        task = taskqueue.Task(url=url, params=params)
+        task = taskqueue.Task(url=url, params=params, **kw)
         task.add(queueName)
     except taskqueue.TransientError, e:
         logging.exception("adding Task failed with a TransientError")
         addTask(url, params, queueName)
+    except taskqueue.TaskAlreadyExistsError, e:
+        logging.info("task not added: already existed")
+        # this is expected behaviour if the client has specified a taskname
     except apiproxy_errors.OverQuotaError, e:
         #but keep going
         logging.exception("adding Task failed with a TransientError")

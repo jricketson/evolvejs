@@ -20,6 +20,7 @@ mkdir $WD/$RD/$VERSION/combined
 cd $WD
 cp resources/robots.txt $RD/
 cp resources/image/favicon.gif $RD/
+cp resources/image/favicon.gif $RD/favicon.ico
 
 mv $RD/$VERSION/dojo/application.js.uncompressed.js $RD/$VERSION/dojo/application.js
 mv $RD/$VERSION/dojo/foreign.js.uncompressed.js $RD/$VERSION/dojo/foreign.js
