@@ -22,6 +22,16 @@ class CpuTimeRestfulController(RestfulController):
     modelClass = CpuTime
     formClass = CpuTimeForm
     
+    def create(self):
+        cpuTime= super(CpuTimeRestfulController, self).create()
+        if self.request.user.is_authenticated():
+            if self.request.user.totalCpuTime:
+                self.request.user.totalCpuTime+=cpuTime[0].time
+            else:
+                self.request.user.totalCpuTime=cpuTime[0].time
+            self.request.user.put()
+        return cpuTime
+    
 class SpeciesForm(ModelForm):
     class Meta:
         model = Species

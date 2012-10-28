@@ -11,7 +11,7 @@ from django.views.generic.simple import direct_to_template
 from google.appengine.api import memcache
 from google.appengine.api import users
 
-from models import Species
+from models import Species, User
 import taskqueue
 import blog.views as blog_views
 import logging
@@ -37,8 +37,16 @@ def randomiseSpecies(request):
     query = Species.all()
     return taskqueue.executeByPage(request, query, fn, reverse(randomiseSpecies))
 
+def calculateCommunityScore(request):
+    def fn(u):
+        pass
+        #add up all cputime
+        #add up all species created
+        #add up all species descended from created ones
+    query = User.all()
+    return taskqueue.executeByPage(request, query, fn, reverse(calculateCommunityScore))
+
 def index(request):
-    logging.debug(blog_views.index(request).content)
     return render_to_response("index.html",
                               {"blog_content":blog_views.index(request).content},
                               context_instance=RequestContext(request))

@@ -69,4 +69,11 @@ INSTALLED_APPS = (
 
 ACCOUNT_ACTIVATION_DAYS=3
 
+DATABASE_OPTIONS = {
+    # Override remoteapi handler's path (default: '/remote_api').
+    # This is a good idea, so you make it not too easy for hackers. ;)
+    # Don't forget to also update your app.yaml!
+    'remote_url': '/remote_api_abcddd'
+}
+
 from ragendja.settings_post import *

@@ -20,6 +20,9 @@ def addTask(url, params={}, queueName='default', **kw):
     except taskqueue.TaskAlreadyExistsError, e:
         logging.info("task not added: already existed")
         # this is expected behaviour if the client has specified a taskname
+    except taskqueue.TombstonedTaskError, e:
+        logging.info("task not added: already existed")
+        # this is expected behaviour if the client has specified a taskname
     except apiproxy_errors.OverQuotaError, e:
         #but keep going
         logging.exception("adding Task failed with a TransientError")
@@ -40,4 +43,4 @@ def executeByPage(request, query, fn, workerUrl):
         logging.info("enqueue task starting at %s for %s" % (lastKey, workerUrl))
         addTask(url=workerUrl, params=dict(startKey=lastKey))
     logging.info("completed processing %s for %s" % (count, workerUrl))
-    return HttpResponse("completed processing %s websites" % count)
+    return HttpResponse("completed processing %s items" % count)

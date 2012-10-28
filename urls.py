@@ -12,6 +12,7 @@ from evolve.forms import UserRegistrationForm
 admin.autodiscover()
 #patch AuthenticationForm to be an email
 AuthenticationForm.base_fields['username'].widget.attrs['maxlength'] = 75 
+AuthenticationForm.base_fields['username'].max_length = 75
 AuthenticationForm.base_fields['username'].label = "Email" 
 
 handler500 = 'ragendja.views.server_error'

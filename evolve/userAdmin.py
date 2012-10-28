@@ -10,6 +10,6 @@ class UserAdmin(admin.ModelAdmin):
         (_('Groups'), {'fields': ('groups',)}),
         (_('Flags'), {'fields': ('receiveAdminEmail', 'receiveNotifications')}),
     )    
-    list_display = ('email', 'username', 'is_staff', 'is_active', 'last_login', 'date_joined')
+    list_display = ('email', 'username', 'is_staff', 'is_active', 'last_login', 'date_joined', 'totalCpuTime','communityScore')
     list_filter = ('is_staff', 'is_superuser', 'is_active')
     

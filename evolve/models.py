@@ -13,20 +13,27 @@ class User(EmailUser):
     username = db.StringProperty()
     first_name = db.StringProperty()
     last_name = db.StringProperty()
+    
+    totalCpuTime = db.IntegerProperty(default=0)
+    communityScore = db.IntegerProperty()
 
     version = db.StringProperty()
 
-class AbstractModel(db.Model):
+class CpuTime(db.Model):
     version = db.StringProperty()
     created = db.DateTimeProperty(auto_now_add=True)
-
-class AbstractOwnedModel(AbstractModel):
     owner = db.ReferenceProperty(User)
-
-class CpuTime(AbstractOwnedModel):
+    
     time = db.IntegerProperty(required=True)
+    def ownerName(self):
+        return self.owner.username
 
-class Species(AbstractOwnedModel):
+
+class Species(db.Model):
+    version = db.StringProperty()
+    created = db.DateTimeProperty(auto_now_add=True)
+    owner = db.ReferenceProperty(User)
+    
     name = db.StringProperty()
     count = db.IntegerProperty()
     code = db.TextProperty()
@@ -36,6 +43,8 @@ class Species(AbstractOwnedModel):
     scoreList = db.ListProperty(int)
     timesEvolved = db.IntegerProperty(default=1)
 
+    def ownerName(self):
+        return self.owner.username
     @DerivedProperty
     def uniqueName(self):
         try:
