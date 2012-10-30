@@ -1,0 +1,5 @@
+to compile coffee
+# coffee -c -w -o resources/js/ resources/coffee/
+
+to run local server 
+# python manage.py runserver

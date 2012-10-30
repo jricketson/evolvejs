@@ -25,8 +25,7 @@
       return species.scoreList.push(score);
     },
     putCpuTime: function(amount, callback) {
-      return $.post({
-        url: this.CPUTIME_URL,
+      return $.post(this.CPUTIME_URL, {
         time: amount
       }, callback);
     },

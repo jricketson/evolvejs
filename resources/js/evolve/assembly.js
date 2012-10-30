@@ -81,7 +81,7 @@
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         code = _ref[_i];
-        _results.push(Number(codeStringArray[ii]) >>> 0);
+        _results.push(Number(code) >>> 0);
       }
       return _results;
     },

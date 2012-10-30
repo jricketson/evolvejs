@@ -4,20 +4,21 @@
   CORE.util = {
     MAXHASHCHECK: 50,
     getHashCode: function(memory) {
-      var hash, ii, maxcheck;
+      var hash, ii, maxcheck, op, _i, _len;
       hash = 0;
       maxcheck = CORE.util.MAXHASHCHECK;
-      ii = 0;
-      while (ii < memory.length && ii < maxcheck) {
-        hash += memory[ii] * ii;
-        ii += 1;
+      for (ii = _i = 0, _len = memory.length; _i < _len; ii = ++_i) {
+        op = memory[ii];
+        if (ii < maxcheck) {
+          hash += op * ii;
+        }
       }
       return hash;
     },
     getUserProfile: function() {
       return CORE.data.getUserProfile(function(userProfile) {
         CORE.userProfile = userProfile;
-        if (CORE.userProfile === null) {
+        if (CORE.userProfile == null) {
           $("#logoutLink").hide();
           return $("#loginLink").show();
         } else {

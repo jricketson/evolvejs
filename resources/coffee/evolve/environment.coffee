@@ -36,25 +36,27 @@ CORE.environment =
   mutationRate: 1000 # approximate chance of mutation (1 in x copy operations)
   startTime: 0
   horizon: 10
-  _getSpeciesCallback: getSpeciesCallback = (species) ->
-    population = []
-    if species.length isnt 0
-      
-      # construct a process from each species
-      ii = 0
 
-      while ii < species.length
-        code = CORE.assembler.convertStringToCode(species[ii].fields.code)
-        species[ii].code = code
-        specie = new CORE.species.Species(species[ii])
-        specie.saved = true
-        CORE.speciesLibrary().addSpeciesFromServer specie
-        process = new CORE.Process(code.slice(), specie.name)
-        process.facing = Math.round(Math.random() * 3)
-        population.push process
-        ii += 1
+  _getSpeciesCallback: (species) ->
+    if species.length isnt 0
+      # construct a process from each species
+      population = (
+        for specieCode in species
+          code = CORE.assembler.convertStringToCode(specieCode.fields.code)
+          specieCode.code = code
+          specie = new CORE.species.Species(specieCode)
+          specie.saved = true
+          CORE.speciesLibrary().addSpeciesFromServer specie
+          process = new CORE.Process(code.slice(), specie.name)
+          process.facing = Math.round(Math.random() * 3)
+          process
+      )
     else
-      population = [new CORE.Process(CORE.ancestor.tree(), "tree"), new CORE.Process(CORE.ancestor.blindAnimal(), "blindAnimal"), new CORE.Process(CORE.ancestor.seeingAnimal(), "seeingAnimal")]
+      population = [
+        new CORE.Process(CORE.ancestor.tree(), "tree"), 
+        new CORE.Process(CORE.ancestor.blindAnimal(), "blindAnimal"), 
+        new CORE.Process(CORE.ancestor.seeingAnimal(), "seeingAnimal")
+      ]
     @_initialisePopulation population
 
   _initialiseEnvironment: ->
@@ -66,19 +68,14 @@ CORE.environment =
     setInterval $.proxy(@_sendCpuTimeUsed, this), 60000
 
   _initialisePopulation: (population) ->
-    ii = 0
-
-    while ii < population.length
-      @_birthProcess population[ii], null
-      ii += 1
-
+    @_birthProcess(p, null) for p in population
   
   ###
   adds a process to the queue, also places it in the grid x and y are optional, if not supplied
   will be placed randomly
   ###
   _birthProcess: (process, parentProcess, x, y) ->
-    if x isnt `undefined` and y isnt `undefined`
+    if x? and y?
       unless @_grid[x][y]
         @_initialiseProcess process, parentProcess, x, y
         return true
@@ -115,13 +112,9 @@ CORE.environment =
       jQuery(document).trigger @EVENT_PROCESS_MOVED, [process, wrapped]
 
   _removeProcessFromArrays: (process) ->
-    jj = 0
-
-    while jj < process.threads.length
-      thread = process.threads[jj]
+    for thread in process.threads
       threadIndex = @_runningThreads.indexOf(thread)
       @_runningThreads.splice threadIndex, 1  if threadIndex > -1 # remove the killed thread
-      jj += 1
     procIndex = @_allProcesses.indexOf(process)
     @_allProcesses.splice procIndex, 1  if procIndex > -1 # remove the killed process
 
@@ -139,7 +132,7 @@ CORE.environment =
   #    * 
   #    * this means that if the attacker loses, it doesn't die
   #    
-  _attack: attack = (attacker, x, y) ->
+  _attack: (attacker, x, y) ->
     defender = @_grid[x][y]
     lowCpu = Math.min(attacker.cputime, defender.cputime)
     
@@ -163,23 +156,13 @@ CORE.environment =
       false
 
   _resizeGrid: ->
-    xx = undefined
-    yy = undefined
-    xx = 0
-    while xx < @_gridX
-      yy = 0
-      while yy < @_gridY
+    for xx in [0...@_gridX]
+      for yy in [0...@_gridY]
         @_grid[xx] = []  unless @_grid[xx]
         @_grid[xx][yy] = 0  unless @_grid[xx][yy]
-        yy += 1
-      xx += 1
 
   _shineSun: ->
-    ii = 0
-
-    while ii < @_allProcesses.length
-      @_allProcesses[ii].incrCpuTime 1
-      ii += 1
+    p.incrCpuTime(1) for p in @_allProcesses
 
   _endLoop: ->
     @_currentThreadExecuteIndex = 0
@@ -213,18 +196,15 @@ CORE.environment =
     @unsentStepCount += @stepCount
     @stepCount = 0
 
-  
   # *****************************************
   # these are PUBLIC functions and variables
   # *****************************************
   ###
   starts the environment and runs the simulation
   ###
-  initialise: ->
-    @_initialiseEnvironment()
+  initialise: -> @_initialiseEnvironment()
 
-  resetStartTime: ->
-    @_startTime = Number(new Date())
+  resetStartTime: -> @_startTime = Number(new Date())
 
   start: ->
     @_running = true
@@ -244,51 +224,26 @@ CORE.environment =
     @_stepping = true
     @_runSimulationLoop()
 
-  stop: ->
-    @_running = false
-
-  addProcess: (process, parentProcess, x, y) ->
-    @_birthProcess process, parentProcess, x, y
-
-  moveProcess: (process, x, y, wrapped) ->
-    @_move process, x, y, wrapped
-
-  killProcess: (process) ->
-    @_kill process
-
-  getProcessCount: ->
-    @_allProcesses.length
-
-  getLoopCount: ->
-    @_loopCount
-
-  getGridX: ->
-    @_gridX
-
-  getGridY: ->
-    @_gridY
-
-  isRunning: ->
-    @_running
-
-  getGrid: ->
-    @_grid
-
-  getStartTime: ->
-    @_startTime
-
-  initialiseGrid: ->
-    @_resizeGrid()
-
-  getCurrentProcesses: ->
-    @_allProcesses
+  stop: -> @_running = false
+  addProcess: (process, parentProcess, x, y) -> @_birthProcess process, parentProcess, x, y
+  moveProcess: (process, x, y, wrapped) -> @_move process, x, y, wrapped
+  killProcess: (process) -> @_kill process
+  getProcessCount: -> @_allProcesses.length
+  getLoopCount: -> @_loopCount
+  getGridX: -> @_gridX
+  getGridY: -> @_gridY
+  isRunning: -> @_running
+  getGrid: -> @_grid
+  getStartTime: -> @_startTime
+  initialiseGrid: -> @_resizeGrid()
+  getCurrentProcesses: -> @_allProcesses
+  setInstructionsPerCycle: (value) -> @_instructionsPerCycle = Math.round(value)
+  checkCanBirth: (x, y) -> not Boolean(@_grid[x][y])
+  addThread: (thread) -> @_runningThreads.push thread
 
   getSerialCode: ->
     @_serialProcessIdSeries++
     @_serialProcessIdSeries
-
-  setInstructionsPerCycle: (value) ->
-    @_instructionsPerCycle = Math.round(value)
 
   getProcessAtPosition: (x, y) ->
     if @_grid[x][y] isnt 0
@@ -296,8 +251,3 @@ CORE.environment =
     else
       null
 
-  checkCanBirth: (x, y) ->
-    not Boolean(@_grid[x][y])
-
-  addThread: (thread) ->
-    @_runningThreads.push thread

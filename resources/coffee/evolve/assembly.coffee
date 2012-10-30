@@ -55,7 +55,7 @@ CORE.assembler =
 
   convertStringToCode: (codeString) ->
     return [] unless codeString?
-    ((Number(codeStringArray[ii]) >>> 0) for code in codeString.split(","))
+    ((Number(code) >>> 0) for code in codeString.split(","))
   
   #
   #    * This converts the array of [operator, operand] pairs to a string of 32bit integers. The

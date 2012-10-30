@@ -19,10 +19,7 @@ CORE.data =
     species.scoreList.push score
 
   putCpuTime: (amount, callback) ->
-    $.post
-      url: @CPUTIME_URL
-      time: amount
-    , callback
+    $.post(@CPUTIME_URL, {time: amount}, callback)
 
   getSingleSpecies: (id, callback) ->
     $.getJSON "#{@SPECIES_URL}id/#{id}/", callback

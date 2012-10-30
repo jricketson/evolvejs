@@ -157,3 +157,5 @@ String::supplant = (o) ->
   @replace /\{([^\{\}]*)\}/g, (a, b) ->
     r = o[b]
     (if typeof r is "string" or typeof r is "number" then r else a)
+
+String::lpad = (l) -> l.substr(0, (l.length - this.length)) + this

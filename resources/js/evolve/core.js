@@ -263,4 +263,8 @@
     });
   };
 
+  String.prototype.lpad = function(l) {
+    return l.substr(0, l.length - this.length) + this;
+  };
+
 }).call(this);
