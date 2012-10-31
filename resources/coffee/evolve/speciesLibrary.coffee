@@ -29,15 +29,15 @@ class SpeciesLibrary
       name: process.name
     )
     @_speciesStore.addSpecies species
-    jQuery(document).trigger CORE.environment.EVENT_SPECIES_CREATED, [species]
+    jQuery(document).trigger CORE.environment().EVENT_SPECIES_CREATED, [species]
     species
 
   _saveToGeneBank: (species) ->
-    if species.processes.length >= CORE.environment.VALID_SPECIES and not (species.saved or species.beingSaved)
+    if species.processes.length >= CORE.environment().VALID_SPECIES and not (species.saved or species.beingSaved)
       CORE.displayMessage "New {name} species evolved and is being saved to the genebank".supplant(species)
       
       #$.debug("save it",species);
-      CORE.data.saveSpecies species, ->
+      CORE.data.saveSpecies(species).done ->
         console.info "species saved(", species.name, species.processes.length, ")"
         species.saved = true
         species.beingSaved = false
@@ -46,11 +46,11 @@ class SpeciesLibrary
 
   _checkSpeciesSuccess: (species) ->
     # check if the count of processes around now for this species greater is greater than success proxy value
-    if species.processes.length >= CORE.environment.SUCCESS_PROXY and not (species.successScored or species.beingSuccessScored) and species.saved
+    if species.processes.length >= CORE.environment().SUCCESS_PROXY and not (species.successScored or species.beingSuccessScored) and species.saved
       
       #$.debug("score it",species);
       CORE.displayMessage "{name} species successful".supplant(species)
-      CORE.data.putScore species, 1, ->
+      CORE.data.putScore(species, 1).done ->
         
         #console.info("species successful (", species.name, species.processes.length, ")");
         species.successScored = true
@@ -67,7 +67,7 @@ class SpeciesLibrary
         
         #$.debug("extinct it",process.species);
         CORE.displayMessage "{name} species extinct".supplant(process.species)
-        CORE.data.putScore process.species, -1
+        CORE.data.putScore(process.species, -1)
     process.species = null
 
   addSpeciesFromServer: (species) ->
@@ -75,7 +75,7 @@ class SpeciesLibrary
     species.processes = []
     species.count = 0
     @_speciesStore.addSpecies species
-    jQuery(document).trigger CORE.environment.EVENT_SPECIES_CREATED, [species]
+    jQuery(document).trigger CORE.environment().EVENT_SPECIES_CREATED, [species]
 
   getStore: ->
     @_speciesStore

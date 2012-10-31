@@ -37,14 +37,14 @@
         name: process.name
       });
       this._speciesStore.addSpecies(species);
-      jQuery(document).trigger(CORE.environment.EVENT_SPECIES_CREATED, [species]);
+      jQuery(document).trigger(CORE.environment().EVENT_SPECIES_CREATED, [species]);
       return species;
     };
 
     SpeciesLibrary.prototype._saveToGeneBank = function(species) {
-      if (species.processes.length >= CORE.environment.VALID_SPECIES && !(species.saved || species.beingSaved)) {
+      if (species.processes.length >= CORE.environment().VALID_SPECIES && !(species.saved || species.beingSaved)) {
         CORE.displayMessage("New {name} species evolved and is being saved to the genebank".supplant(species));
-        CORE.data.saveSpecies(species, function() {
+        CORE.data.saveSpecies(species).done(function() {
           console.info("species saved(", species.name, species.processes.length, ")");
           species.saved = true;
           return species.beingSaved = false;
@@ -54,9 +54,9 @@
     };
 
     SpeciesLibrary.prototype._checkSpeciesSuccess = function(species) {
-      if (species.processes.length >= CORE.environment.SUCCESS_PROXY && !(species.successScored || species.beingSuccessScored) && species.saved) {
+      if (species.processes.length >= CORE.environment().SUCCESS_PROXY && !(species.successScored || species.beingSuccessScored) && species.saved) {
         CORE.displayMessage("{name} species successful".supplant(species));
-        CORE.data.putScore(species, 1, function() {
+        CORE.data.putScore(species, 1).done(function() {
           species.successScored = true;
           return species.beingSuccessScored = false;
         });
@@ -84,7 +84,7 @@
       species.processes = [];
       species.count = 0;
       this._speciesStore.addSpecies(species);
-      return jQuery(document).trigger(CORE.environment.EVENT_SPECIES_CREATED, [species]);
+      return jQuery(document).trigger(CORE.environment().EVENT_SPECIES_CREATED, [species]);
     };
 
     SpeciesLibrary.prototype.getStore = function() {

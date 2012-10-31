@@ -31,25 +31,25 @@ CORE.vm =
     newY = curY
     wrap = false
     switch direction
-      when CORE.environment.NORTH
+      when CORE.environment().NORTH
         newY = curY - 1
         if newY < 0
-          newY = CORE.environment.getGridY() - 1
+          newY = CORE.environment().getGridY() - 1
           wrap = true
-      when CORE.environment.EAST
+      when CORE.environment().EAST
         newX = curX + 1
-        if newX > (CORE.environment.getGridX() - 1)
+        if newX > (CORE.environment().getGridX() - 1)
           newX = 0
           wrap = true
-      when CORE.environment.SOUTH
+      when CORE.environment().SOUTH
         newY = curY + 1
-        if newY > (CORE.environment.getGridY() - 1)
+        if newY > (CORE.environment().getGridY() - 1)
           newY = 0
           wrap = true
-      when CORE.environment.WEST
+      when CORE.environment().WEST
         newX = curX - 1
         if newX < 0
-          newX = CORE.environment.getGridX() - 1
+          newX = CORE.environment().getGridX() - 1
           wrap = true
       else
         throw "Direction shouldn't be this value: " + direction
@@ -63,7 +63,7 @@ CORE.vm =
   instruction 2 elements, the original plus a random instruction
   ###
   _elementsToCopy: (memory, ptr) ->
-    val = Math.random() * CORE.environment.mutationRate
+    val = Math.random() * CORE.environment().mutationRate
     if val < 1
       # mutate
       # $.debug("Mutate!");
@@ -310,7 +310,7 @@ CORE.vm.instructionSet =
     newThread = new CORE.Thread(thread.process, "" + thread.process.threads.length)
     newThread.executionPtr = thread.readPtr
     thread.process.threads.push newThread
-    CORE.environment.addThread newThread
+    CORE.environment().addThread newThread
     thread.executionPtr += 1
 
   
@@ -326,11 +326,11 @@ CORE.vm.instructionSet =
     
     #$.debug(thread.readPtr, thread.writePtr);
     coords = CORE.vm._calculateXYForward(thread.process.gridX, thread.process.gridY, thread.process.facing)
-    if CORE.environment.checkCanBirth(coords[0], coords[1])
+    if CORE.environment().checkCanBirth(coords[0], coords[1])
       newProcessMemory = thread.process.memory.splice(thread.readPtr, thread.writePtr - thread.readPtr)
       newProcess = new CORE.Process(newProcessMemory, thread.process.name)
       newProcess.facing = thread.process.facing
-      CORE.environment.addProcess newProcess, thread.process, coords[0], coords[1]
+      CORE.environment().addProcess newProcess, thread.process, coords[0], coords[1]
       thread.process.cputime = Math.round(thread.process.cputime / 2)
       newProcess.cputime = thread.process.cputime
       success = 1
@@ -344,7 +344,7 @@ CORE.vm.instructionSet =
     a = thread.stack.pop()
     success = true
     if a isnt `undefined`
-      cost = CORE.environment.embodiedEnergy * a
+      cost = CORE.environment().embodiedEnergy * a
       if thread.process.cputime > cost
         thread.process.decrCpuTime cost
         finalLength = thread.process.memory.length + a
@@ -365,14 +365,14 @@ CORE.vm.instructionSet =
   memory size of budget (only if target seen)
   ###
   look: (thread) ->
-    horizon = CORE.environment.horizon
+    horizon = CORE.environment().horizon
     coords = [thread.process.gridX, thread.process.gridY]
     found = false
     i = 0
 
     while i < horizon
       coords = CORE.vm._calculateXYForward(coords[0], coords[1], thread.process.facing)
-      otherProcess = CORE.environment.getProcessAtPosition(coords[0], coords[1])
+      otherProcess = CORE.environment().getProcessAtPosition(coords[0], coords[1])
       if otherProcess isnt null
         thread.stack.push otherProcess.species.hashCode
         thread.stack.push otherProcess.memory.length
@@ -408,7 +408,7 @@ CORE.vm.instructionSet =
   ###
   move: (thread) ->
     coords = CORE.vm._calculateXYForward(thread.process.gridX, thread.process.gridY, thread.process.facing)
-    CORE.environment.moveProcess thread.process, coords[0], coords[1], coords[2]
+    CORE.environment().moveProcess thread.process, coords[0], coords[1], coords[2]
     thread.executionPtr += 1
 
   sleep: (thread, operand) ->

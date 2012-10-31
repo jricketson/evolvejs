@@ -35,31 +35,31 @@
       newY = curY;
       wrap = false;
       switch (direction) {
-        case CORE.environment.NORTH:
+        case CORE.environment().NORTH:
           newY = curY - 1;
           if (newY < 0) {
-            newY = CORE.environment.getGridY() - 1;
+            newY = CORE.environment().getGridY() - 1;
             wrap = true;
           }
           break;
-        case CORE.environment.EAST:
+        case CORE.environment().EAST:
           newX = curX + 1;
-          if (newX > (CORE.environment.getGridX() - 1)) {
+          if (newX > (CORE.environment().getGridX() - 1)) {
             newX = 0;
             wrap = true;
           }
           break;
-        case CORE.environment.SOUTH:
+        case CORE.environment().SOUTH:
           newY = curY + 1;
-          if (newY > (CORE.environment.getGridY() - 1)) {
+          if (newY > (CORE.environment().getGridY() - 1)) {
             newY = 0;
             wrap = true;
           }
           break;
-        case CORE.environment.WEST:
+        case CORE.environment().WEST:
           newX = curX - 1;
           if (newX < 0) {
-            newX = CORE.environment.getGridX() - 1;
+            newX = CORE.environment().getGridX() - 1;
             wrap = true;
           }
           break;
@@ -77,7 +77,7 @@
 
     _elementsToCopy: function(memory, ptr) {
       var choice, val;
-      val = Math.random() * CORE.environment.mutationRate;
+      val = Math.random() * CORE.environment().mutationRate;
       if (val < 1) {
         choice = val * 30;
         if (choice <= 10) {
@@ -348,17 +348,17 @@
       newThread = new CORE.Thread(thread.process, "" + thread.process.threads.length);
       newThread.executionPtr = thread.readPtr;
       thread.process.threads.push(newThread);
-      CORE.environment.addThread(newThread);
+      CORE.environment().addThread(newThread);
       return thread.executionPtr += 1;
     },
     divide: function(thread) {
       var coords, newProcess, newProcessMemory, success;
       coords = CORE.vm._calculateXYForward(thread.process.gridX, thread.process.gridY, thread.process.facing);
-      if (CORE.environment.checkCanBirth(coords[0], coords[1])) {
+      if (CORE.environment().checkCanBirth(coords[0], coords[1])) {
         newProcessMemory = thread.process.memory.splice(thread.readPtr, thread.writePtr - thread.readPtr);
         newProcess = new CORE.Process(newProcessMemory, thread.process.name);
         newProcess.facing = thread.process.facing;
-        CORE.environment.addProcess(newProcess, thread.process, coords[0], coords[1]);
+        CORE.environment().addProcess(newProcess, thread.process, coords[0], coords[1]);
         thread.process.cputime = Math.round(thread.process.cputime / 2);
         newProcess.cputime = thread.process.cputime;
         success = 1;
@@ -374,7 +374,7 @@
       a = thread.stack.pop();
       success = true;
       if (a !== undefined) {
-        cost = CORE.environment.embodiedEnergy * a;
+        cost = CORE.environment().embodiedEnergy * a;
         if (thread.process.cputime > cost) {
           thread.process.decrCpuTime(cost);
           finalLength = thread.process.memory.length + a;
@@ -400,13 +400,13 @@
 
     look: function(thread) {
       var coords, found, horizon, i, otherProcess;
-      horizon = CORE.environment.horizon;
+      horizon = CORE.environment().horizon;
       coords = [thread.process.gridX, thread.process.gridY];
       found = false;
       i = 0;
       while (i < horizon) {
         coords = CORE.vm._calculateXYForward(coords[0], coords[1], thread.process.facing);
-        otherProcess = CORE.environment.getProcessAtPosition(coords[0], coords[1]);
+        otherProcess = CORE.environment().getProcessAtPosition(coords[0], coords[1]);
         if (otherProcess !== null) {
           thread.stack.push(otherProcess.species.hashCode);
           thread.stack.push(otherProcess.memory.length);
@@ -452,7 +452,7 @@
     move: function(thread) {
       var coords;
       coords = CORE.vm._calculateXYForward(thread.process.gridX, thread.process.gridY, thread.process.facing);
-      CORE.environment.moveProcess(thread.process, coords[0], coords[1], coords[2]);
+      CORE.environment().moveProcess(thread.process, coords[0], coords[1], coords[2]);
       return thread.executionPtr += 1;
     },
     sleep: function(thread, operand) {

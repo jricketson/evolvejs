@@ -88,7 +88,7 @@
 
     SpeciesStore.prototype.removeSpecies = function(species) {
       var hashArray;
-      jQuery(document).trigger(CORE.environment.EVENT_SPECIES_EXTINCT, [species]);
+      jQuery(document).trigger(CORE.environment().EVENT_SPECIES_EXTINCT, [species]);
       hashArray = this.store[species.hashCode];
       if (hashArray == null) {
         $.debug("hashArray is undefined");

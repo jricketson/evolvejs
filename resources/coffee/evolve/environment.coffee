@@ -1,4 +1,4 @@
-CORE.environment =
+class Environment
   
   # *****************************************
   # these are PRIVATE functions and variables
@@ -37,7 +37,7 @@ CORE.environment =
   startTime: 0
   horizon: 10
 
-  _getSpeciesCallback: (species) ->
+  _getSpeciesCallback: (species) =>
     if species.length isnt 0
       # construct a process from each species
       population = (
@@ -63,9 +63,9 @@ CORE.environment =
     @_resizeGrid()
     
     # inject the first Process(s)
-    CORE.data.getSpecies @_INITIAL_POPULATION_SIZE_FROM_SERVER, $.proxy(@_getSpeciesCallback, this)
-    setInterval $.proxy(@_resetCpuRate, this), 500
-    setInterval $.proxy(@_sendCpuTimeUsed, this), 60000
+    CORE.data.getSpecies(@_INITIAL_POPULATION_SIZE_FROM_SERVER).done(@_getSpeciesCallback)
+    setInterval @_resetCpuRate, 500
+    setInterval @_sendCpuTimeUsed, 60000
 
   _initialisePopulation: (population) ->
     @_birthProcess(p, null) for p in population
@@ -183,13 +183,13 @@ CORE.environment =
         @_currentThreadExecuteIndex += 1  if thread.step()
     setTimeout $.proxy(@_runSimulationLoop, this), @_timeDelay  if @_running
 
-  _sendCpuTimeUsed: ->
+  _sendCpuTimeUsed: =>
     if @unsentStepCount > 0
-      CORE.data.putCpuTime @unsentStepCount
-      CORE.displayMessage "{cpucycles}k cpu cycles sent to server".supplant(cpucycles: Math.round(@unsentStepCount / 1000))
-      @unsentStepCount = 0
+      CORE.data.putCpuTime(@unsentStepCount).done =>
+        CORE.displayMessage "{cpucycles}k cpu cycles sent to server".supplant(cpucycles: Math.round(@unsentStepCount / 1000))
+        @unsentStepCount = 0
 
-  _resetCpuRate: ->
+  _resetCpuRate: =>
     secsSinceStart = (Number(new Date()) - @getStartTime()) / 1000
     @current_rate = Math.round(@stepCount / secsSinceStart)
     @resetStartTime()
@@ -246,3 +246,5 @@ CORE.environment =
       @_grid[x][y]
     else
       null
+
+window.CORE.environment = -> @_environment ||= new Environment()

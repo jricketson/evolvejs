@@ -54,7 +54,7 @@ class SpeciesStore
     null
 
   removeSpecies: (species) ->
-    jQuery(document).trigger CORE.environment.EVENT_SPECIES_EXTINCT, [species]
+    jQuery(document).trigger CORE.environment().EVENT_SPECIES_EXTINCT, [species]
     hashArray = @store[species.hashCode]
     $.debug "hashArray is undefined" unless hashArray?
     CORE.removeElementFromArray hashArray, species

@@ -9,7 +9,7 @@ class Process
     @species = ""
     @age = 0
     @threads.push new CORE.Thread(this, "0")
-    @id = CORE.environment.getSerialCode()
+    @id = CORE.environment().getSerialCode()
 
   spliceMemory: (position, elementCount, element) ->
     @memory.splice position, elementCount, element
@@ -20,7 +20,7 @@ class Process
   ###
   decrCpuTime: (decrement) ->
     @cputime -= decrement
-    CORE.environment.killProcess this  if @cputime < 0
+    CORE.environment().killProcess this  if @cputime < 0
 
   killMe: ->
     thread.killMe() for thread in @threads
@@ -59,14 +59,14 @@ class Thread
 
     for ii in [0...@speed]
       if @executionPtr > @process.memory.length - 1
-        CORE.environment.killProcess @process
+        CORE.environment().killProcess @process
         return false
       try
         CORE.vm.execute this
       catch err
         $.debug "(" + @process.name + ") process threw an error: ", @process if @process?
         $.debug err
-        CORE.environment.killProcess @process
+        CORE.environment().killProcess @process
       unless @process.dead
         @process.decrCpuTime @speed * @speed
         if @stack.length > CORE.Thread._maxStackSize and not @process.dead

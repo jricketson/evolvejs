@@ -130,7 +130,7 @@
 
   CORE.sizeProcesses = function() {
     var process, size, _i, _len, _ref, _results;
-    _ref = CORE.environment._currentProcesses;
+    _ref = CORE.environment()._currentProcesses;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       process = _ref[_i];

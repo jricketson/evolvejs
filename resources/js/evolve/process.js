@@ -17,7 +17,7 @@
       this.species = "";
       this.age = 0;
       this.threads.push(new CORE.Thread(this, "0"));
-      this.id = CORE.environment.getSerialCode();
+      this.id = CORE.environment().getSerialCode();
     }
 
     Process.prototype.spliceMemory = function(position, elementCount, element) {
@@ -33,7 +33,7 @@
     Process.prototype.decrCpuTime = function(decrement) {
       this.cputime -= decrement;
       if (this.cputime < 0) {
-        return CORE.environment.killProcess(this);
+        return CORE.environment().killProcess(this);
       }
     };
 
@@ -124,7 +124,7 @@
       }
       for (ii = _i = 0, _ref = this.speed; 0 <= _ref ? _i < _ref : _i > _ref; ii = 0 <= _ref ? ++_i : --_i) {
         if (this.executionPtr > this.process.memory.length - 1) {
-          CORE.environment.killProcess(this.process);
+          CORE.environment().killProcess(this.process);
           return false;
         }
         try {
@@ -134,7 +134,7 @@
             $.debug("(" + this.process.name + ") process threw an error: ", this.process);
           }
           $.debug(err);
-          CORE.environment.killProcess(this.process);
+          CORE.environment().killProcess(this.process);
         }
         if (!this.process.dead) {
           this.process.decrCpuTime(this.speed * this.speed);

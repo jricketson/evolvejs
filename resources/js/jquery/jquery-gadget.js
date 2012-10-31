@@ -49,6 +49,7 @@
    };
 
    var registerGadget = function(gadgetId, object) {
+      console.info("Registering Gadget '" + gadgetId);
       var gadget = $.extend({
          dependsOn : [],
          defaultSettings : {},

@@ -81,7 +81,7 @@ CORE.displayMessage = (msg, timeout) ->
   setTimeout close, timeout
 
 CORE.sizeProcesses = ->
-  for process in CORE.environment._currentProcesses
+  for process in CORE.environment()._currentProcesses
     size = CORE.sizeInMemory(process)
     $.debug(i, size, process) if size > 2000
 

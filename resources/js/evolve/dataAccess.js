@@ -4,7 +4,7 @@
   CORE.data = {
     SPECIES_URL: "/data/species/",
     CPUTIME_URL: "/data/cputime/",
-    saveSpecies: function(species, callback) {
+    saveSpecies: function(species) {
       var postData;
       postData = {
         code: CORE.assembler.convertCodeToString(species.code),
@@ -14,44 +14,31 @@
       if (species.getParent() != null) {
         postData.parentRef = species.getParent().pk;
       }
-      return $.post(this.SPECIES_URL, postData, function(data) {
+      return $.post(this.SPECIES_URL, postData).done(function(data) {
         species.pk = data[0].pk;
-        species.displayName = data[0].fields.uniqueName;
-        return callback();
+        return species.displayName = data[0].fields.uniqueName;
       });
     },
-    putScore: function(species, score, callback) {
-      $.get(this.SPECIES_URL + "addScore/" + species.pk + "/?score=" + score, callback);
-      return species.scoreList.push(score);
+    putScore: function(species, score) {
+      species.scoreList.push(score);
+      return $.get("" + this.SPECIES_URL + "addScore/" + species.pk + "/?score=" + score);
     },
-    putCpuTime: function(amount, callback) {
+    putCpuTime: function(amount) {
       return $.post(this.CPUTIME_URL, {
         time: amount
-      }, callback);
+      });
     },
     getSingleSpecies: function(id, callback) {
       return $.getJSON("" + this.SPECIES_URL + "id/" + id + "/", callback);
     },
-    getSpecies: function(count, callback) {
-      return $.getJSON("" + this.SPECIES_URL + "list/0/" + count, callback);
+    getSpecies: function(count) {
+      return $.getJSON("" + this.SPECIES_URL + "list/0/" + count);
     },
     getChildrenOfSpecies: function(id, callback) {
       return $.getJSON("" + this.SPECIES_URL + "children/" + id + "/", callback);
     },
-    getUserProfile: function(callback) {
-      return $.get("/data/user/id/0", function(data) {
-        return callback(data, this._stringToDate);
-      });
-    },
-    _stringToDate: function(key, value) {
-      var a;
-      if (typeof value === "string") {
-        a = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
-        if (a) {
-          return new Date(Date.UTC(+a[1], +a[2] - 1, +a[3]));
-        }
-      }
-      return value;
+    getUserProfile: function() {
+      return $.get("/data/user/id/0");
     }
   };
 

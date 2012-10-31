@@ -9,7 +9,7 @@ CORE.util =
     hash
 
   getUserProfile: ->
-    CORE.data.getUserProfile (userProfile) ->
+    CORE.data.getUserProfile().done (userProfile) ->
       CORE.userProfile = userProfile
       unless CORE.userProfile?
         $("#logoutLink").hide()

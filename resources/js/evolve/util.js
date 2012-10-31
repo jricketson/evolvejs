@@ -16,7 +16,7 @@
       return hash;
     },
     getUserProfile: function() {
-      return CORE.data.getUserProfile(function(userProfile) {
+      return CORE.data.getUserProfile().done(function(userProfile) {
         CORE.userProfile = userProfile;
         if (CORE.userProfile == null) {
           $("#logoutLink").hide();

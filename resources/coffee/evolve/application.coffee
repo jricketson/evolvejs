@@ -1,4 +1,4 @@
-CORE.evolve =
+class EvolveApplication
   _processStore: {}
   _speciesDivStore: {}
   _gridDisplay: null
@@ -8,54 +8,44 @@ CORE.evolve =
   _markerHeight: 0
   _colours: (->
     result=[]
-    for red in [0x00..0xFF] by 0x33
+    for red  in [0x00..0xFF] by 0x33
       for green in [0x00..0xFF] by 0x33
-        for blue in [0x00..0xFF] by 0x33
+        for blue   in [0x00..0xFF] by 0x33
           result.push "##{red.toString(16).lpad('00')}#{green.toString(16).lpad('00')}#{blue.toString(16).lpad('00')}"
     result
   )()
 
   _hideTitle: ->
-    $("div#ft").animate
-      opacity: 0.3
-    , "slow"
+    $("div#ft").animate({opacity: 0.3}, "slow")
 
-  initialise: ->
+  constructor: ->
     # hide the title after 10 secs, or the user clicks
     setTimeout @_hideTitle, 10000
-    CORE.data.getUserProfile $.proxy((userProfile) ->
-      CORE.userProfile = userProfile
-      if CORE.userProfile is null
-        $("#logoutLink").hide()
-        $("#loginLink").show()
+    CORE.data.getUserProfile().done (userProfile) =>
+      if userProfile is null
         @_showEncourageLogin()
-      else
-        $("#username").html CORE.userProfile.username
-        $("#logoutLink").show()
-        $("#loginLink").hide()
-    , this)
     $("div#ft").click @_hideTitle
     
     # links for the user to start the simulation. These swap themselves
     $("#play").click ->
-      CORE.environment.start()
+      CORE.environment().start()
       $(this).hide()
       $("#pause").show()
       $("#step").hide()
       $("#slow").hide()
 
     $("#slow").click ->
-      CORE.environment.slow()
+      CORE.environment().slow()
       $(this).hide()
       $("#pause").show()
       $("#play").hide()
       $("#step").hide()
 
     $("#step").click ->
-      CORE.environment.step()
+      CORE.environment().step()
 
     $("#pause").click ->
-      CORE.environment.stop()
+      CORE.environment().stop()
       $(this).hide()
       $("#play").show()
       $("#step").show()
@@ -77,12 +67,12 @@ CORE.evolve =
 
   _sidebarCreatedCallback: (gadget) ->
     @sidebar = gadget
-    CORE.environment.initialise()
-    $(document).bind CORE.environment.EVENT_PROCESS_CREATED, $.proxy(@_processCreateHandler, this)
-    $(document).bind CORE.environment.EVENT_PROCESS_MOVED, $.proxy(@_processMoveHandler, this)
-    $(document).bind CORE.environment.EVENT_PROCESS_KILLED, $.proxy(@_processKillHandler, this)
-    $(document).bind CORE.environment.EVENT_SPECIES_CREATED, $.proxy(@_speciesCreateHandler, this)
-    $(document).bind CORE.environment.EVENT_SPECIES_EXTINCT, $.proxy(@_speciesExtinctHandler, this)
+    CORE.environment().initialise()
+    $(document).bind CORE.environment().EVENT_PROCESS_CREATED, $.proxy(@_processCreateHandler, this)
+    $(document).bind CORE.environment().EVENT_PROCESS_MOVED, $.proxy(@_processMoveHandler, this)
+    $(document).bind CORE.environment().EVENT_PROCESS_KILLED, $.proxy(@_processKillHandler, this)
+    $(document).bind CORE.environment().EVENT_SPECIES_CREATED, $.proxy(@_speciesCreateHandler, this)
+    $(document).bind CORE.environment().EVENT_SPECIES_EXTINCT, $.proxy(@_speciesExtinctHandler, this)
     $(document).bind CORE.EVENT_LOG_MESSAGE, @_logMessageHandler
     @_gridDisplay = $("div#gridDisplay").click($.proxy(@_processClickedHandler, this))
     @_speciesList = $(".speciesList").bind("click", $.proxy(@_speciesClickedHandler, this))
@@ -92,8 +82,8 @@ CORE.evolve =
 
   _calculateMarkerSize: ->
     $("#layoutCenter").height ($("#viewport").innerHeight() - $("#layoutTop").outerHeight() - 3) + "px"
-    @_markerWidth = Math.floor(@_gridDisplay.innerWidth() / CORE.environment.getGridX())
-    @_markerHeight = Math.floor(@_gridDisplay.innerHeight() / CORE.environment.getGridY())
+    @_markerWidth = Math.floor(@_gridDisplay.innerWidth() / CORE.environment().getGridX())
+    @_markerHeight = Math.floor(@_gridDisplay.innerHeight() / CORE.environment().getGridY())
     markers = @_gridDisplay.find(".process")
 
     for marker in markers
@@ -253,10 +243,10 @@ CORE.evolve =
   # these are PUBLIC functions and variables
   # *****************************************
   updateDisplay: updateDisplay = ->
-    $("div#loopCount").html "" + CORE.environment.getLoopCount()
-    $("div#processCount").html "" + CORE.environment.getProcessCount()
+    $("div#loopCount").html "" + CORE.environment().getLoopCount()
+    $("div#processCount").html "" + CORE.environment().getProcessCount()
     $("div#speciesEvolved").html CORE.species.count
-    $("div#instrRate").html CORE.environment.current_rate
+    $("div#instrRate").html CORE.environment().current_rate
     @_updateProcessDisplay()
     @_updateSpeciesDisplay()
 
@@ -274,4 +264,6 @@ CORE.evolve =
     speciesEntry.div.css background: colour
     @_gridDisplay.find(".process.species" + species.id).css background: colour
 
-$(document).ready $.proxy(CORE.evolve.initialise, CORE.evolve)
+CORE.evolveApplication = -> @_evolveApplication ||= new EvolveApplication()
+
+$(document).ready -> CORE.evolveApplication()

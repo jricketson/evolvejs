@@ -3,7 +3,7 @@
 PROJECT=evolve
 RD=media
 WD=`pwd`
-VERSION=5.0
+VERSION=6.0
 YUICOMPRESSJS="java -jar ../util/yuicompressor-2.4.2.jar --type js --line-break 0"
 YUICOMPRESSCSS="java -jar ../util/yuicompressor-2.4.2.jar --type css"
 
