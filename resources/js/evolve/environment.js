@@ -8,7 +8,7 @@
     _executeMillisecondsPerCycle: 50,
     _running: false,
     _INITIAL_POPULATION_SIZE_FROM_SERVER: 15,
-    _attackerBonus: 0.9,
+    _attackerBonus: 0.5,
     _allProcesses: [],
     _runningThreads: [],
     _currentThreadExecuteIndex: 0,
