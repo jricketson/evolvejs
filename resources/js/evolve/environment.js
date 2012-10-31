@@ -5,7 +5,7 @@
     _gridX: 80,
     _gridY: 40,
     _timeDelay: 50,
-    _instructionsPerCycle: 50,
+    _executeMillisecondsPerCycle: 50,
     _running: false,
     _INITIAL_POPULATION_SIZE_FROM_SERVER: 15,
     _attackerBonus: 0.9,
@@ -205,7 +205,7 @@
     _runSimulationLoop: function() {
       var start, thread;
       start = (new Date()).getTime();
-      while ((new Date()).getTime() - start < this._instructionsPerCycle) {
+      while ((new Date()).getTime() - start < this._executeMillisecondsPerCycle) {
         this.stepCount++;
         if (this._currentThreadExecuteIndex >= this._runningThreads.length) {
           this._endLoop();
@@ -320,7 +320,7 @@
       return this._allProcesses;
     },
     setInstructionsPerCycle: function(value) {
-      return this._instructionsPerCycle = Math.round(value);
+      return this._executeMillisecondsPerCycle = Math.round(value);
     },
     checkCanBirth: function(x, y) {
       return !Boolean(this._grid[x][y]);
@@ -329,8 +329,7 @@
       return this._runningThreads.push(thread);
     },
     getSerialCode: function() {
-      this._serialProcessIdSeries++;
-      return this._serialProcessIdSeries;
+      return this._serialProcessIdSeries++;
     },
     getProcessAtPosition: function(x, y) {
       if (this._grid[x][y] !== 0) {

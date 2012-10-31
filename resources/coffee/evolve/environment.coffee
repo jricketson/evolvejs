@@ -6,7 +6,7 @@ CORE.environment =
   _gridX: 80 # these are default values
   _gridY: 40
   _timeDelay: 50 # time to delay between simulation cycles
-  _instructionsPerCycle: 50
+  _executeMillisecondsPerCycle: 50
   _running: false # if the simulation should keep running
   _INITIAL_POPULATION_SIZE_FROM_SERVER: 15
   _attackerBonus: 0.9
@@ -171,7 +171,7 @@ CORE.environment =
 
   _runSimulationLoop: ->
     start = (new Date()).getTime()
-    while (new Date()).getTime() - start < @_instructionsPerCycle
+    while (new Date()).getTime() - start < @_executeMillisecondsPerCycle
       @stepCount++
       if @_currentThreadExecuteIndex >= @_runningThreads.length
         @_endLoop()
@@ -203,7 +203,6 @@ CORE.environment =
   starts the environment and runs the simulation
   ###
   initialise: -> @_initialiseEnvironment()
-
   resetStartTime: -> @_startTime = Number(new Date())
 
   start: ->
@@ -237,17 +236,13 @@ CORE.environment =
   getStartTime: -> @_startTime
   initialiseGrid: -> @_resizeGrid()
   getCurrentProcesses: -> @_allProcesses
-  setInstructionsPerCycle: (value) -> @_instructionsPerCycle = Math.round(value)
+  setInstructionsPerCycle: (value) -> @_executeMillisecondsPerCycle = Math.round(value)
   checkCanBirth: (x, y) -> not Boolean(@_grid[x][y])
   addThread: (thread) -> @_runningThreads.push thread
-
-  getSerialCode: ->
-    @_serialProcessIdSeries++
-    @_serialProcessIdSeries
+  getSerialCode: -> @_serialProcessIdSeries++
 
   getProcessAtPosition: (x, y) ->
     if @_grid[x][y] isnt 0
       @_grid[x][y]
     else
       null
-

@@ -17,15 +17,13 @@ class Species
     @sentCount = 0
     @successScored = false
 
-
   ###
   gets the id of the next parent in the chain that has been saved
   ###
   getParent: ->
     parent = @parent
-    parent = parent.parent  while parent isnt null and parent.id is `undefined`
+    parent = parent.parent while not (parent?.id)?
     parent
-
 
 class SpeciesStore
   ###
@@ -42,29 +40,23 @@ class SpeciesStore
     @store[species.hashCode].push species
 
   findSpecies: (memory, hashCode) ->
-    return null  unless @store.hasOwnProperty(hashCode)
+    return null unless @store.hasOwnProperty(hashCode)
     speciesArray = @store[hashCode]
-    ii = 0
 
-    while ii < speciesArray.length
+    for species in speciesArray when memory.length is species.code.length
       equal = true
-      storedMemory = speciesArray[ii].code
-      if memory.length is storedMemory.length
-        jj = 0
-
-        while jj < memory.length
-          if memory[jj][0] isnt storedMemory[jj][0] or memory[jj][1] isnt storedMemory[jj][1]
-            equal = false
-            break
-          jj += 1
-        return speciesArray[ii]  if equal
-      ii += 1
+      storedMemory = species.code
+      for item, jj in memory
+        if item[0] isnt storedMemory[jj][0] or item[1] isnt storedMemory[jj][1]
+          equal = false
+          break
+      return species if equal
     null
 
   removeSpecies: (species) ->
     jQuery(document).trigger CORE.environment.EVENT_SPECIES_EXTINCT, [species]
     hashArray = @store[species.hashCode]
-    $.debug "hashArray is undefined"  if hashArray is `undefined`
+    $.debug "hashArray is undefined" unless hashArray?
     CORE.removeElementFromArray hashArray, species
 
 window.CORE.species = count:0, SpeciesStore: SpeciesStore, Species: Species

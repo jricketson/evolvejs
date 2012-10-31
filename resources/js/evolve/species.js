@@ -32,7 +32,7 @@
     Species.prototype.getParent = function() {
       var parent;
       parent = this.parent;
-      while (parent !== null && parent.id === undefined) {
+      while (!((parent != null ? parent.id : void 0) != null)) {
         parent = parent.parent;
       }
       return parent;
@@ -60,29 +60,28 @@
     };
 
     SpeciesStore.prototype.findSpecies = function(memory, hashCode) {
-      var equal, ii, jj, speciesArray, storedMemory;
+      var equal, item, jj, species, speciesArray, storedMemory, _i, _j, _len, _len1;
       if (!this.store.hasOwnProperty(hashCode)) {
         return null;
       }
       speciesArray = this.store[hashCode];
-      ii = 0;
-      while (ii < speciesArray.length) {
+      for (_i = 0, _len = speciesArray.length; _i < _len; _i++) {
+        species = speciesArray[_i];
+        if (!(memory.length === species.code.length)) {
+          continue;
+        }
         equal = true;
-        storedMemory = speciesArray[ii].code;
-        if (memory.length === storedMemory.length) {
-          jj = 0;
-          while (jj < memory.length) {
-            if (memory[jj][0] !== storedMemory[jj][0] || memory[jj][1] !== storedMemory[jj][1]) {
-              equal = false;
-              break;
-            }
-            jj += 1;
-          }
-          if (equal) {
-            return speciesArray[ii];
+        storedMemory = species.code;
+        for (jj = _j = 0, _len1 = memory.length; _j < _len1; jj = ++_j) {
+          item = memory[jj];
+          if (item[0] !== storedMemory[jj][0] || item[1] !== storedMemory[jj][1]) {
+            equal = false;
+            break;
           }
         }
-        ii += 1;
+        if (equal) {
+          return species;
+        }
       }
       return null;
     };
@@ -91,7 +90,7 @@
       var hashArray;
       jQuery(document).trigger(CORE.environment.EVENT_SPECIES_EXTINCT, [species]);
       hashArray = this.store[species.hashCode];
-      if (hashArray === undefined) {
+      if (hashArray == null) {
         $.debug("hashArray is undefined");
       }
       return CORE.removeElementFromArray(hashArray, species);
