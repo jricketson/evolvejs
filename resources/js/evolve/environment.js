@@ -254,22 +254,31 @@
       return this._startTime = Number(new Date());
     },
     start: function() {
+      var _this = this;
       this._running = true;
       this._stepping = false;
       this._slow = false;
-      this._runSimulationLoop();
+      setTimeout((function() {
+        return _this._runSimulationLoop();
+      }), 10);
       return this._resetCpuRate();
     },
     slow: function() {
+      var _this = this;
       this._running = true;
       this._stepping = false;
       this._slow = true;
-      this._runSimulationLoop();
+      setTimeout((function() {
+        return _this._runSimulationLoop();
+      }), 10);
       return this._resetCpuRate();
     },
     step: function() {
+      var _this = this;
       this._stepping = true;
-      return this._runSimulationLoop();
+      return setTimeout((function() {
+        return _this._runSimulationLoop();
+      }), 10);
     },
     stop: function() {
       return this._running = false;

@@ -210,19 +210,19 @@ CORE.environment =
     @_running = true
     @_stepping = false
     @_slow = false
-    @_runSimulationLoop()
+    setTimeout((=> @_runSimulationLoop()),10)
     @_resetCpuRate()
 
   slow: ->
     @_running = true
     @_stepping = false
     @_slow = true
-    @_runSimulationLoop()
+    setTimeout((=> @_runSimulationLoop()),10)
     @_resetCpuRate()
 
   step: ->
     @_stepping = true
-    @_runSimulationLoop()
+    setTimeout((=> @_runSimulationLoop()),10)
 
   stop: -> @_running = false
   addProcess: (process, parentProcess, x, y) -> @_birthProcess process, parentProcess, x, y

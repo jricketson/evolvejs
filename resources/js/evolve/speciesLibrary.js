@@ -9,27 +9,39 @@
     }
 
     SpeciesLibrary.prototype.placeProcess = function(process, parentProcess) {
-      var hashcode, parentSpecies, species;
+      var hashcode, species;
       hashcode = process.getHashCode();
       species = this._speciesStore.findSpecies(process.memory, hashcode);
       if (species === null) {
-        parentSpecies = (parentProcess === null ? null : parentProcess.species);
-        species = new CORE.species.Species({
-          code: process.memory.slice(),
-          hashCode: hashcode,
-          count: 1,
-          parent: parentSpecies,
-          id: process.id,
-          processes: [process.id],
-          name: process.name
-        });
-        this._speciesStore.addSpecies(species);
-        jQuery(document).trigger(CORE.environment.EVENT_SPECIES_CREATED, [species]);
+        species = this._createSpecie(process, parentProcess, hashcode);
       } else {
         species.processes.push(process.id);
         species.count += 1;
       }
       process.species = species;
+      this._saveToGeneBank(species);
+      this._checkSpeciesSuccess(species);
+      return species;
+    };
+
+    SpeciesLibrary.prototype._createSpecie = function(process, parentProcess, hashcode) {
+      var parentSpecies, species;
+      parentSpecies = (parentProcess != null ? parentProcess.species : void 0) || null;
+      species = new CORE.species.Species({
+        code: process.memory.slice(),
+        hashCode: hashcode,
+        count: 1,
+        parent: parentSpecies,
+        id: process.id,
+        processes: [process.id],
+        name: process.name
+      });
+      this._speciesStore.addSpecies(species);
+      jQuery(document).trigger(CORE.environment.EVENT_SPECIES_CREATED, [species]);
+      return species;
+    };
+
+    SpeciesLibrary.prototype._saveToGeneBank = function(species) {
       if (species.processes.length >= CORE.environment.VALID_SPECIES && !(species.saved || species.beingSaved)) {
         CORE.displayMessage("New {name} species evolved and is being saved to the genebank".supplant(species));
         CORE.data.saveSpecies(species, function() {
@@ -37,17 +49,19 @@
           species.saved = true;
           return species.beingSaved = false;
         });
-        species.beingSaved = true;
+        return species.beingSaved = true;
       }
+    };
+
+    SpeciesLibrary.prototype._checkSpeciesSuccess = function(species) {
       if (species.processes.length >= CORE.environment.SUCCESS_PROXY && !(species.successScored || species.beingSuccessScored) && species.saved) {
         CORE.displayMessage("{name} species successful".supplant(species));
         CORE.data.putScore(species, 1, function() {
           species.successScored = true;
           return species.beingSuccessScored = false;
         });
-        species.beingSuccessScored = true;
+        return species.beingSuccessScored = true;
       }
-      return species;
     };
 
     SpeciesLibrary.prototype.removeProcess = function(process) {

@@ -1,5 +1,5 @@
-CORE.speciesList =
-  initialise: ->
+class SpeciesList
+  constructor: ->
     CORE.util.getUserProfile()
     
     #$(window).scroll(function(e){
@@ -72,13 +72,11 @@ CORE.speciesList =
       proxy.appendTo($("body")).attr("data-key", $(this).attr("data-key")).css
         top: event.clientY + $(document).scrollTop()
         left: event.clientX + $(document).scrollLeft()
-
       proxy
     ).bind("drag", (event) ->
       $(event.dragProxy).css
         top: event.clientY + $(document).scrollTop()
         left: event.clientX + $(document).scrollLeft()
-
     ).bind "dragend", (event) ->
       $(event.dragProxy).fadeOut().remove()
 
@@ -106,4 +104,6 @@ CORE.speciesList =
   displayChildren: (species) ->
     CORE.data.getChildrenOfSpecies species.pk, $.proxy(CORE.speciesList._displayChildrenCallback, CORE.speciesList)
 
-jQuery(document).ready -> CORE.speciesList.initialise()
+CORE.speciesList = -> @_speciesList ||= new SpeciesList()
+
+jQuery(document).ready -> CORE.speciesList()

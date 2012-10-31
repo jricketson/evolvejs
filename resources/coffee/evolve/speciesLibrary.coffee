@@ -8,22 +8,31 @@ class SpeciesLibrary
     hashcode = process.getHashCode()
     species = @_speciesStore.findSpecies(process.memory, hashcode)
     if species is null
-      parentSpecies = (if parentProcess is null then null else parentProcess.species)
-      species = new CORE.species.Species(
-        code: process.memory.slice()
-        hashCode: hashcode
-        count: 1
-        parent: parentSpecies
-        id: process.id
-        processes: [process.id]
-        name: process.name
-      )
-      @_speciesStore.addSpecies species
-      jQuery(document).trigger CORE.environment.EVENT_SPECIES_CREATED, [species]
+      species = @_createSpecie(process, parentProcess, hashcode)
     else
       species.processes.push process.id
       species.count += 1
     process.species = species
+    @_saveToGeneBank(species)
+    @_checkSpeciesSuccess(species)
+    species
+
+  _createSpecie: (process, parentProcess, hashcode) ->
+    parentSpecies = parentProcess?.species || null
+    species = new CORE.species.Species(
+      code: process.memory.slice()
+      hashCode: hashcode
+      count: 1
+      parent: parentSpecies
+      id: process.id
+      processes: [process.id]
+      name: process.name
+    )
+    @_speciesStore.addSpecies species
+    jQuery(document).trigger CORE.environment.EVENT_SPECIES_CREATED, [species]
+    species
+
+  _saveToGeneBank: (species) ->
     if species.processes.length >= CORE.environment.VALID_SPECIES and not (species.saved or species.beingSaved)
       CORE.displayMessage "New {name} species evolved and is being saved to the genebank".supplant(species)
       
@@ -34,7 +43,8 @@ class SpeciesLibrary
         species.beingSaved = false
 
       species.beingSaved = true
-    
+
+  _checkSpeciesSuccess: (species) ->
     # check if the count of processes around now for this species greater is greater than success proxy value
     if species.processes.length >= CORE.environment.SUCCESS_PROXY and not (species.successScored or species.beingSuccessScored) and species.saved
       
@@ -47,7 +57,6 @@ class SpeciesLibrary
         species.beingSuccessScored = false
 
       species.beingSuccessScored = true
-    species
 
   removeProcess: (process) ->
     $.debug "species is undefined"  if process.species is `undefined`
